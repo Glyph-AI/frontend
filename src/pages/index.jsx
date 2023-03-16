@@ -1,6 +1,8 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import '@chatscope/chat-ui-kit-styles/dist/default/styles.min.css'
-import { Sidebar, ConversationList, Conversation, MainContainer, ChatContainer, MessageList, Message, MessageInput, ConversationHeader, StarButton, VoiceCallButton, VideoCallButton, InfoButton } from '@chatscope/chat-ui-kit-react';
+import { TypingIndicator, Avatar, Sidebar, ConversationList, Conversation, MainContainer, ChatContainer, MessageList, Message, MessageInput, ConversationHeader, StarButton, VoiceCallButton, VideoCallButton, InfoButton } from '@chatscope/chat-ui-kit-react';
+import { genericRequest, getRequest } from '@/components/utility/request_helper';
+import { WS_ROOT } from '@/components/utility/apiConfig';
 
 const messages = [
   {
@@ -17,11 +19,17 @@ const messages = [
 
 export default function Home() {
   const [newMessage, setNewMessage] = useState("")
-  const [sidebarStyle, setSidebarStyle] = useState({});
-  const [chatContainerStyle, setChatContainerStyle] = useState({});
-  const [conversationContentStyle, setConversationContentStyle] = useState({});
-  const [conversationAvatarStyle, setConversationAvatarStyle] = useState({});
+  // const [sidebarStyle, setSidebarStyle] = useState({});
+  // const [chatContainerStyle, setChatContainerStyle] = useState({});
+  // const [conversationContentStyle, setConversationContentStyle] = useState({});
+  // const [conversationAvatarStyle, setConversationAvatarStyle] = useState({});
   const [sidebarVisible, setSidebarVisible] = useState(false);
+  const [botId, setBotId] = useState()
+  const [chatId, setChatId] = useState()
+  const [chatData, setChatData] = useState([])
+  const [chatToken, setChatToken] = useState("")
+  const [websckt, setWebsckt] = useState();
+  const [glyphTyping, setGlyphTyping] = useState(false)
 
   const botName = "Glpyh"
   const handleBackClick = () => setSidebarVisible(!sidebarVisible);
@@ -32,74 +40,164 @@ export default function Home() {
     }
   }, [sidebarVisible, setSidebarVisible]);
 
-  useEffect(() => {
-    if (sidebarVisible) {
-      setSidebarStyle({
-        display: "flex",
-        flexBasis: "auto",
-        width: "100%",
-        maxWidth: "100%"
-      });
-      setConversationContentStyle({
-        display: "flex"
-      });
-      setConversationAvatarStyle({
-        marginRight: "1em"
-      });
-      setChatContainerStyle({
-        display: "none"
-      });
+  const getBotsForUser = (callback = () => { }) => {
+    getRequest("/bots/", (data) => {
+      callback(data)
+    })
+  }
+
+  const createBotForUser = (callback = () => { }) => {
+    genericRequest("/bots/", "POST", JSON.stringify({ "name": "test bot" }), (data) => {
+      callback(data)
+    })
+  }
+
+  const createChatForBot = (bot_id, callback = () => { }) => {
+    genericRequest(`/bots/${bot_id}/chats/`, "POST", JSON.stringify({ "name": "test chat" }), (data) => {
+      callback(data)
+    })
+  }
+
+  const getChatById = (chat_id, bot_id, callback = () => { }) => {
+    getRequest(`/bots/${bot_id}/chats/${chat_id}/`, (data) => {
+      callback(data)
+    })
+  }
+
+  const formatSentTime = (sentTime) => {
+    var currentDateTime = Date.now()
+    if ((currentDateTime - sentTime) <= (1 * 60 * 1000)) {
+      return "Just now"
     } else {
-      setSidebarStyle({ display: "none" });
-      setConversationContentStyle({});
-      setConversationAvatarStyle({});
-      setChatContainerStyle({});
+      return sentTime
     }
-  }, [sidebarVisible, setSidebarVisible, setConversationContentStyle, setConversationAvatarStyle, setSidebarStyle, setChatContainerStyle]);
+  }
+
+  const formatChatData = (dbChats) => {
+    const formattedChats = dbChats.map((dbMessage, index) => ({
+      message: dbMessage.content,
+      sender: dbMessage.role === "assistant" ? "Glyph" : "You",
+      sentTime: formatSentTime(dbMessage.created_at),
+      direction: dbMessage.role === "assistant" ? "incoming" : "outgoing"
+    }))
+
+    return formattedChats
+  }
+
+  const openSocket = (bot_id, chat_id, chatToken) => {
+    const url = `${WS_ROOT}/bots/${bot_id}/chats/${chat_id}/${chatToken}`
+    const ws = new WebSocket(url)
+
+    ws.onopen = (event) => {
+      ws.send("Connect")
+    };
+
+    ws.onmessage = (e) => {
+      const message = JSON.parse(e.data)
+      const formattedMessages = formatChatData(message.chat_messages)
+      console.log(formattedMessages.at(-1))
+      if (formattedMessages.at(-1).sender === "Glyph") {
+        setGlyphTyping(false)
+      }
+      setChatData(formattedMessages)
+
+    }
+
+    setWebsckt(ws)
+
+
+    return () => ws.close()
+  }
+
+  useEffect(() => {
+    // REST pre-work for chats
+    getBotsForUser((data) => {
+      if (data.length === 0) {
+        createBotForUser((newBotData) => {
+          createChatForBot(newBotData.id, (newChatData) => {
+            const formattedChatData = formatChatData(newChatData.chat_messages)
+            setChatData(formattedChatData)
+            setBotId(newBotData.id)
+            setChatId(newChatData.id)
+            setChatToken(data[0].chats[0].chat_token)
+            openSocket(newBotData.id, newChatData.id, data[0].chats[0].chat_token)
+          })
+        })
+      } else {
+        var bot_id = data[0].id
+        var chat_id = data[0].chats[0].id
+        getChatById(chat_id, bot_id, (chatData) => {
+          const formattedChatData = formatChatData(chatData.chat_messages)
+          setChatData(formattedChatData)
+          setBotId(bot_id)
+          setChatId(chat_id)
+          setChatToken(data[0].chats[0].chat_token)
+          openSocket(bot_id, chat_id, data[0].chats[0].chat_token)
+        })
+      }
+    })
+
+  }, [])
 
   const handleNewMessage = () => {
-    messages.push(
-      {
-        message: newMessage,
-        sentTime: "just now",
-        sender: "You",
-        direction: "outgoing"
-      }
-    )
-    setNewMessage("")
+    const newMessageJson = {
+      role: "user",
+      content: newMessage,
+      chat_id: chatId
+    }
 
+    websckt.send(JSON.stringify(newMessageJson))
+
+    WebSocket.onmessage = (e) => {
+      const chatData = JSON.parse(e.data)
+      const formattedChatData = formatChatData(chatData.chat_messages)
+      setChatData(formattedChatData)
+    }
+
+    setNewMessage("")
+    setGlyphTyping(true)
+  }
+
+  const typingIndicator = () => {
+    if (glyphTyping) {
+      return <TypingIndicator content="Glpyh is typing" />
+    } else {
+      return null
+    }
   }
 
   return (
     <div style={{ position: "relative", height: "100%" }}>
       <MainContainer>
-        <Sidebar position="left" scrollable={false} style={sidebarStyle}>
-          <ConversationList>
+        {/* <Sidebar position="left" scrollable={false} style={sidebarStyle}> */}
+        {/* <ConversationList>
             <Conversation onClick={handleConversationClick} name="Lilly" lastSenderName="Lilly" info="HELLO" />
             <Conversation onClick={handleConversationClick} name="Lilly" lastSenderName="Lilly" info="HELLO" />
             <Conversation onClick={handleConversationClick} name="Lilly" lastSenderName="Lilly" info="HELLO" />
             <Conversation onClick={handleConversationClick} name="Lilly" lastSenderName="Lilly" info="HELLO" />
-          </ConversationList>
-        </Sidebar>
-        <ChatContainer style={chatContainerStyle}>
+          </ConversationList> */}
+        {/* </Sidebar> */}
+        <ChatContainer>
           <ConversationHeader >
-            <ConversationHeader.Back onClick={handleBackClick} />
-            <ConversationHeader.Content userName={botName} info="Active 10 mins ago" />
+            {/* TODO: Multiple Bots */}
+            {/* <ConversationHeader.Back onClick={handleBackClick} /> */}
+            <Avatar src={"/glpyh-avatar.png"} name={"Zoe"} />
+            <ConversationHeader.Content userName={botName} info="Active Now" />
             <ConversationHeader.Actions>
+              {/* TODO: Handle Voice Calls */}
               {/* <VoiceCallButton title="Start voice call" /> */}
-              {/* <InfoButton title="Show info" /> */}
             </ConversationHeader.Actions>
           </ConversationHeader>
-          <MessageList>
+          <MessageList typingIndicator={typingIndicator()}>
             {
-              messages.map((obj, index) => (
-                <Message model={obj} key={index} />
-              ))
+              chatData && chatData.map((obj, index) => {
+                return (<Message model={obj} key={index} />)
+              })
             }
           </MessageList>
           <MessageInput placeholder="Chat message" value={newMessage} onChange={(val) => { setNewMessage(val) }} onSend={handleNewMessage} />
         </ChatContainer>
       </MainContainer>
-    </div>
+    </div >
   )
 }

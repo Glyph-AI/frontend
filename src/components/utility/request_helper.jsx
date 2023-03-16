@@ -16,7 +16,7 @@ export const getRequest = async (endpoint, callback = () => { }) => {
     callback(data)
 }
 
-export const genericRequest = async (endpoint, method = 'POST', input_data = {}, callback = () => { }, headers = {}) => {
+export const genericRequest = async (endpoint, method = 'POST', input_data = {}, callback = () => { }, headers = { "Content-Type": "application/json" }) => {
     const request = await fetch(`${API_ROOT}${endpoint}`, {
         method: method,
         body: input_data,

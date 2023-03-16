@@ -14,3 +14,15 @@ if (env === 'development') {
 }
 
 export const API_ROOT = `${backendHost}`;
+
+if (env === 'development') {
+    backendHost = "ws://localhost:8000";
+} else if (hostname === 'staging.realsite.com') {
+    backendHost = 'wss://staging.api.realsite.com';
+} else if (/^qa/.test(hostname)) {
+    backendHost = `wss://api.${hostname}`;
+} else {
+    backendHost = process.env.REACT_APP_BACKEND_HOST || 'ws://localhost:8080';
+}
+
+export const WS_ROOT = `${backendHost}`;
