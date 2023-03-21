@@ -1,7 +1,28 @@
 import React, { useState, useCallback, useEffect, useRef } from 'react';
 import '@chatscope/chat-ui-kit-styles/dist/default/styles.min.css'
-import { TypingIndicator, Avatar, Sidebar, ConversationList, Conversation, MainContainer, ChatContainer, MessageList, Message, MessageInput, ConversationHeader, StarButton, VoiceCallButton, VideoCallButton, InfoButton } from '@chatscope/chat-ui-kit-react';
-import { genericRequest, getRequest } from '@/components/utility/request_helper';
+import {
+  TypingIndicator,
+  Avatar,
+  SendButton,
+  AttachmentButton,
+  InfoButton,
+  Sidebar,
+  ConversationList,
+  Conversation,
+  MainContainer,
+  ChatContainer,
+  MessageList,
+  Message,
+  MessageInput,
+  ConversationHeader,
+  StarButton,
+  VoiceCallButton,
+  VideoCallButton
+} from '@chatscope/chat-ui-kit-react';
+import {
+  genericRequest,
+  getRequest
+} from '@/components/utility/request_helper';
 import { WS_ROOT } from '@/components/utility/apiConfig';
 
 const messages = [
@@ -31,6 +52,7 @@ export default function Home() {
   const [websckt, setWebsckt] = useState();
   const [glyphTyping, setGlyphTyping] = useState(false)
   const inputFile = useRef(null)
+  const inputRef = useRef();
 
   const botName = "Glyph"
   const handleBackClick = () => setSidebarVisible(!sidebarVisible);
@@ -81,7 +103,7 @@ export default function Home() {
       sender: dbMessage.role === "assistant" ? "Glyph" : "You",
       sentTime: formatSentTime(dbMessage.created_at),
       direction: dbMessage.role === "assistant" ? "incoming" : "outgoing"
-    }))
+    })).sort((a, b) => new Date(a.sentTime) - new Date(b.sentTime))
 
     return formattedChats
   }
@@ -160,6 +182,7 @@ export default function Home() {
     setChatData(newChatData)
     setNewMessage("")
     setGlyphTyping(true)
+    inputRef.current.focus();
   }
 
   const typingIndicator = () => {
@@ -226,13 +249,35 @@ export default function Home() {
               })
             }
           </MessageList>
-          <MessageInput
-            onAttachClick={handleUploadClick}
-            autoFocus
-            placeholder="Chat message"
-            value={newMessage}
-            onChange={(val) => { setNewMessage(val) }} onSend={handleNewMessage}
-          />
+          <div as={MessageInput} style={{
+            display: "flex",
+            flexDirection: "row",
+            borderTop: "1px solid #d1dbe4"
+          }}>
+            <MessageInput ref={inputRef} onChange={(val) => { setNewMessage(val) }} value={newMessage} sendButton={false} attachButton={false} onSend={handleNewMessage} style={{
+              flexGrow: 1,
+              borderTop: 0,
+              flexShrink: "initial"
+            }} />
+            <SendButton onClick={() => handleNewMessage(newMessage)} disabled={newMessage.length === 0} style={{
+              fontSize: "1.2em",
+              marginLeft: 0,
+              paddingLeft: "0.2em",
+              paddingRight: "0.2em"
+            }} />
+            <AttachmentButton style={{
+              fontSize: "1.2em",
+              paddingLeft: "0.2em",
+              paddingRight: "0.2em"
+            }}
+              onClick={handleUploadClick}
+            />
+            <InfoButton onClick={() => alert("Important message!")} style={{
+              fontSize: "1.2em",
+              paddingLeft: "0.2em",
+              paddingRight: "0.2em"
+            }} />
+          </div>
         </ChatContainer>
       </MainContainer>
     </div >
