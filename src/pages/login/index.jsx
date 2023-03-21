@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { genericRequest } from '@/components/utility/request_helper'
 import { useRouter } from 'next/router';
+import { gLogin } from '@/components/utility/gLogin';
 
 export default function Login() {
     const router = useRouter()
@@ -13,7 +14,7 @@ export default function Login() {
             if (status === 200) {
                 router.push("/")
             } else if (status === 401) {
-                setSnackbarOpen(true)
+                console.log("Failed")
             }
         }, { "Content-Type": "application/json" })
     }
@@ -22,7 +23,7 @@ export default function Login() {
         if (window.google) {
             /* global google */
             google.accounts.id.initialize({
-                client_id: "991199193983-h5pq059ivvtim8q0hp86d7asigjbbjcc.apps.googleusercontent.com",
+                client_id: gLogin,
                 callback: handleGoogle,
             });
 
