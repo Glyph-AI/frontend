@@ -5,7 +5,8 @@ import {
   Avatar,
   SendButton,
   AttachmentButton,
-  InfoButton,
+  EllipsisButton,
+  MessageSeparator,
   Sidebar,
   ConversationList,
   Conversation,
@@ -97,12 +98,32 @@ export default function Home() {
     }
   }
 
+  const roleFormatter = (role) => {
+    if (role === "assistant") {
+      return "Glyph"
+    } else if (role === "system") {
+      return "system"
+    } else {
+      return "You"
+    }
+  }
+
+  const directionFormatter = (role) => {
+    if (role === "assistant") {
+      return "incoming"
+    } else if (role === "system") {
+      return "incoming"
+    } else {
+      return "outgoing"
+    }
+  }
+
   const formatChatData = (dbChats) => {
     const formattedChats = dbChats.filter((dbMessage) => (!dbMessage.hidden)).map((dbMessage, index) => ({
       message: dbMessage.content,
-      sender: dbMessage.role === "assistant" ? "Glyph" : "You",
+      sender: roleFormatter(dbMessage.role),
       sentTime: formatSentTime(dbMessage.created_at),
-      direction: dbMessage.role === "assistant" ? "incoming" : "outgoing"
+      direction: directionFormatter(dbMessage.role)
     })).sort((a, b) => new Date(a.sentTime) - new Date(b.sentTime))
 
     return formattedChats
@@ -205,9 +226,13 @@ export default function Home() {
 
     console.log(file)
 
-    genericRequest(`/bots/${botId}/user_upload/`, "POST", formData, (data, status) => {
+    genericRequest(`/bots/${botId}/chats/${chatId}/user_upload/`, "POST", formData, (data, status) => {
       if (status === 200) {
         console.log("Upload Successful")
+        getChatById(chatId, botId, (data) => {
+          const formattedChatData = formatChatData(data.chat_messages)
+          setChatData(formattedChatData)
+        })
       }
     }, {})
   }
@@ -245,7 +270,11 @@ export default function Home() {
           <MessageList typingIndicator={typingIndicator()}>
             {
               chatData && chatData.map((obj, index) => {
-                return (<Message model={obj} key={index} />)
+                if (obj.sender === "system") {
+                  return (<MessageSeparator>{obj.message}</MessageSeparator>)
+                } else {
+                  return (<Message model={obj} key={index} />)
+                }
               })
             }
           </MessageList>
@@ -254,17 +283,6 @@ export default function Home() {
             flexDirection: "row",
             borderTop: "1px solid #d1dbe4"
           }}>
-            <MessageInput ref={inputRef} onChange={(val) => { setNewMessage(val) }} value={newMessage} sendButton={false} attachButton={false} onSend={handleNewMessage} style={{
-              flexGrow: 1,
-              borderTop: 0,
-              flexShrink: "initial"
-            }} />
-            <SendButton onClick={() => handleNewMessage(newMessage)} disabled={newMessage.length === 0} style={{
-              fontSize: "1.2em",
-              marginLeft: 0,
-              paddingLeft: "0.2em",
-              paddingRight: "0.2em"
-            }} />
             <AttachmentButton style={{
               fontSize: "1.2em",
               paddingLeft: "0.2em",
@@ -272,11 +290,29 @@ export default function Home() {
             }}
               onClick={handleUploadClick}
             />
-            <InfoButton onClick={() => alert("Important message!")} style={{
+            <MessageInput 
+              ref={inputRef} 
+              onChange={(val) => { setNewMessage(val) }} 
+              value={newMessage} 
+              sendButton={false} 
+              attachButton={false} 
+              onSend={handleNewMessage} style={{
+                flexGrow: 1,
+                borderTop: 0,
+                flexShrink: "initial"
+              }} 
+              />
+            <SendButton onClick={() => handleNewMessage(newMessage)} disabled={newMessage.length === 0} style={{
               fontSize: "1.2em",
+              marginLeft: 0,
               paddingLeft: "0.2em",
               paddingRight: "0.2em"
             }} />
+            {/* <EllipsisButton orientation="vertical" onClick={() => alert("Important message!")} style={{
+              fontSize: "1.2em",
+              paddingLeft: "0.2em",
+              paddingRight: "0.2em"
+            }} /> */}
           </div>
         </ChatContainer>
       </MainContainer>
