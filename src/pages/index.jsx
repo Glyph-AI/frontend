@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useCallback, useEffect, useRef } from 'react';
 import '@chatscope/chat-ui-kit-styles/dist/default/styles.min.css'
 import { TypingIndicator, Avatar, Sidebar, ConversationList, Conversation, MainContainer, ChatContainer, MessageList, Message, MessageInput, ConversationHeader, StarButton, VoiceCallButton, VideoCallButton, InfoButton } from '@chatscope/chat-ui-kit-react';
 import { genericRequest, getRequest } from '@/components/utility/request_helper';
@@ -30,9 +30,11 @@ export default function Home() {
   const [chatToken, setChatToken] = useState("")
   const [websckt, setWebsckt] = useState();
   const [glyphTyping, setGlyphTyping] = useState(false)
+  const inputFile = useRef(null)
 
-  const botName = "Glpyh"
+  const botName = "Glyph"
   const handleBackClick = () => setSidebarVisible(!sidebarVisible);
+
 
   const handleConversationClick = useCallback(() => {
     if (sidebarVisible) {
@@ -74,7 +76,7 @@ export default function Home() {
   }
 
   const formatChatData = (dbChats) => {
-    const formattedChats = dbChats.map((dbMessage, index) => ({
+    const formattedChats = dbChats.filter((dbMessage) => (!dbMessage.hidden)).map((dbMessage, index) => ({
       message: dbMessage.content,
       sender: dbMessage.role === "assistant" ? "Glyph" : "You",
       sentTime: formatSentTime(dbMessage.created_at),
@@ -148,12 +150,14 @@ export default function Home() {
 
     websckt.send(JSON.stringify(newMessageJson))
 
-    WebSocket.onmessage = (e) => {
-      const chatData = JSON.parse(e.data)
-      const formattedChatData = formatChatData(chatData.chat_messages)
-      setChatData(formattedChatData)
-    }
+    // WebSocket.onmessage = (e) => {
+    //   const chatData = JSON.parse(e.data)
+    //   const formattedChatData = formatChatData(chatData.chat_messages)
+    //   setChatData(formattedChatData)
+    // }
 
+    const newChatData = [...chatData, { message: newMessage, sender: "You", sentTime: "Just now", direction: "outgoing" }]
+    setChatData(newChatData)
     setNewMessage("")
     setGlyphTyping(true)
   }
@@ -166,8 +170,35 @@ export default function Home() {
     }
   }
 
+  const handleUploadClick = (ev) => {
+    inputFile.current.click()
+  }
+
+  const handleUpload = (ev) => {
+    ev.preventDefault()
+    const file = ev.target.files[0]
+    const formData = new FormData()
+    formData.append('file', file)
+
+    console.log(file)
+
+    genericRequest(`/bots/${botId}/user_upload/`, "POST", formData, (data, status) => {
+      if (status === 200) {
+        console.log("Upload Successful")
+      }
+    }, {})
+  }
+
   return (
     <div style={{ position: "relative", height: "100%" }}>
+      <input
+        onChange={(ev) => { handleUpload(ev) }}
+        accept=".txt"
+        type='file'
+        id='file'
+        ref={inputFile}
+        style={{ display: 'none' }}
+      />
       <MainContainer>
         {/* <Sidebar position="left" scrollable={false} style={sidebarStyle}> */}
         {/* <ConversationList>
@@ -195,7 +226,13 @@ export default function Home() {
               })
             }
           </MessageList>
-          <MessageInput placeholder="Chat message" value={newMessage} onChange={(val) => { setNewMessage(val) }} onSend={handleNewMessage} />
+          <MessageInput
+            onAttachClick={handleUploadClick}
+            autoFocus
+            placeholder="Chat message"
+            value={newMessage}
+            onChange={(val) => { setNewMessage(val) }} onSend={handleNewMessage}
+          />
         </ChatContainer>
       </MainContainer>
     </div >
