@@ -241,7 +241,7 @@ export default function Home() {
     <div style={{ position: "relative", height: "100%" }}>
       <input
         onChange={(ev) => { handleUpload(ev) }}
-        accept=".txt"
+        accept="text/*,application/csv,application/pdf,image/*,.mp3,audio/mp3"
         type='file'
         id='file'
         ref={inputFile}
