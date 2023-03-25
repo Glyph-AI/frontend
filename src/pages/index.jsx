@@ -24,7 +24,11 @@ import {
   genericRequest,
   getRequest
 } from '@/components/utility/request_helper';
+import { useRouter } from 'next/router';
+import Layout from '../components/utility/layout.jsx'
 import { WS_ROOT } from '@/components/utility/apiConfig';
+import DropdownMenu from '@/components/common/dropdownMenu.jsx';
+import { motion } from "framer-motion";
 
 const messages = [
   {
@@ -41,10 +45,6 @@ const messages = [
 
 export default function Home() {
   const [newMessage, setNewMessage] = useState("")
-  // const [sidebarStyle, setSidebarStyle] = useState({});
-  // const [chatContainerStyle, setChatContainerStyle] = useState({});
-  // const [conversationContentStyle, setConversationContentStyle] = useState({});
-  // const [conversationAvatarStyle, setConversationAvatarStyle] = useState({});
   const [sidebarVisible, setSidebarVisible] = useState(false);
   const [botId, setBotId] = useState()
   const [chatId, setChatId] = useState()
@@ -52,18 +52,13 @@ export default function Home() {
   const [chatToken, setChatToken] = useState("")
   const [websckt, setWebsckt] = useState();
   const [glyphTyping, setGlyphTyping] = useState(false)
+  const [anchorEl, setAnchorEl] = useState(null)
   const inputFile = useRef(null)
   const inputRef = useRef();
+  const menuOpen = Boolean(anchorEl);
+  const router = useRouter()
 
   const botName = "Glyph"
-  const handleBackClick = () => setSidebarVisible(!sidebarVisible);
-
-
-  const handleConversationClick = useCallback(() => {
-    if (sidebarVisible) {
-      setSidebarVisible(false);
-    }
-  }, [sidebarVisible, setSidebarVisible]);
 
   const getBotsForUser = (callback = () => { }) => {
     getRequest("/bots/", (data) => {
@@ -193,12 +188,6 @@ export default function Home() {
 
     websckt.send(JSON.stringify(newMessageJson))
 
-    // WebSocket.onmessage = (e) => {
-    //   const chatData = JSON.parse(e.data)
-    //   const formattedChatData = formatChatData(chatData.chat_messages)
-    //   setChatData(formattedChatData)
-    // }
-
     const newChatData = [...chatData, { message: newMessage, sender: "You", sentTime: "Just now", direction: "outgoing" }]
     setChatData(newChatData)
     setNewMessage("")
@@ -237,85 +226,104 @@ export default function Home() {
     }, {})
   }
 
+  const handleMenuOpen = (ev) => {
+    setAnchorEl(ev.currentTarget)
+  }
+
+  const handleMenuClose = () => {
+    setAnchorEl(null)
+  }
+
   return (
-    <div style={{ position: "relative", height: "100%" }}>
-      <input
-        onChange={(ev) => { handleUpload(ev) }}
-        accept="text/*,application/csv,application/pdf,image/*,.mp3,audio/mp3"
-        type='file'
-        id='file'
-        ref={inputFile}
-        style={{ display: 'none' }}
-      />
-      <MainContainer>
-        {/* <Sidebar position="left" scrollable={false} style={sidebarStyle}> */}
-        {/* <ConversationList>
-            <Conversation onClick={handleConversationClick} name="Lilly" lastSenderName="Lilly" info="HELLO" />
-            <Conversation onClick={handleConversationClick} name="Lilly" lastSenderName="Lilly" info="HELLO" />
-            <Conversation onClick={handleConversationClick} name="Lilly" lastSenderName="Lilly" info="HELLO" />
-            <Conversation onClick={handleConversationClick} name="Lilly" lastSenderName="Lilly" info="HELLO" />
-          </ConversationList> */}
-        {/* </Sidebar> */}
-        <ChatContainer>
-          <ConversationHeader >
-            {/* TODO: Multiple Bots */}
-            {/* <ConversationHeader.Back onClick={handleBackClick} /> */}
-            <Avatar src={"/glpyh-avatar.png"} name={"Zoe"} />
-            <ConversationHeader.Content userName={botName} info="Active Now" />
-            <ConversationHeader.Actions>
-              {/* TODO: Handle Voice Calls */}
-              {/* <VoiceCallButton title="Start voice call" /> */}
-            </ConversationHeader.Actions>
-          </ConversationHeader>
-          <MessageList typingIndicator={typingIndicator()}>
-            {
-              chatData && chatData.map((obj, index) => {
-                if (obj.sender === "system") {
-                  return (<MessageSeparator>{obj.message}</MessageSeparator>)
-                } else {
-                  return (<Message model={obj} key={index} />)
+    <Layout>
+      <motion.div
+          variants={{    
+            hidden: { opacity: 0, x: -200, y: 0 },
+            enter: { opacity: 1, x: 0, y: 0 },
+            exit: { opacity: 0, x: 0, y: -100 }
+          }}
+          initial="hidden"
+          animate="enter"
+          exit="exit"
+          transition={{
+            type: "linear"
+          }}
+          style={{ height: "100%" }}
+        >
+        <div style={{ position: "relative", height: "100%" }}>
+          <input
+            onChange={(ev) => { handleUpload(ev) }}
+            accept="text/*,application/csv,application/pdf,image/*,.mp3,audio/mp3"
+            type='file'
+            id='file'
+            ref={inputFile}
+            style={{ display: 'none' }}
+          />
+          <DropdownMenu anchor={anchorEl} open={menuOpen} handleMenuClose={handleMenuClose}/>
+          <MainContainer>
+            <ChatContainer>
+              <ConversationHeader >
+                <Avatar src={"/glpyh-avatar.png"} name={"Glyph"} />
+                <ConversationHeader.Content userName={botName} info="Active Now" />
+                <ConversationHeader.Actions>
+                  <EllipsisButton orientation="vertical" onClick={() => {router.push("/settings")}} style={{
+                  fontSize: "1.2em",
+                  paddingLeft: "0.2em",
+                  paddingRight: "0.2em"
+                }} />
+                </ConversationHeader.Actions>
+              </ConversationHeader>
+              <MessageList typingIndicator={typingIndicator()}>
+                {
+                  chatData && chatData.map((obj, index) => {
+                    if (obj.sender === "system") {
+                      return (<MessageSeparator>{obj.message}</MessageSeparator>)
+                    } else {
+                      return (<Message model={obj} key={index} style={{fontSize: "16px"}} />)
+                    }
+                  })
                 }
-              })
-            }
-          </MessageList>
-          <div as={MessageInput} style={{
-            display: "flex",
-            flexDirection: "row",
-            borderTop: "1px solid #d1dbe4"
-          }}>
-            <AttachmentButton style={{
-              fontSize: "1.2em",
-              paddingLeft: "0.2em",
-              paddingRight: "0.2em"
-            }}
-              onClick={handleUploadClick}
-            />
-            <MessageInput 
-              ref={inputRef} 
-              onChange={(val) => { setNewMessage(val) }} 
-              value={newMessage} 
-              sendButton={false} 
-              attachButton={false} 
-              onSend={handleNewMessage} style={{
-                flexGrow: 1,
-                borderTop: 0,
-                flexShrink: "initial"
-              }} 
-              />
-            <SendButton onClick={() => handleNewMessage(newMessage)} disabled={newMessage.length === 0} style={{
-              fontSize: "1.2em",
-              marginLeft: 0,
-              paddingLeft: "0.2em",
-              paddingRight: "0.2em"
-            }} />
-            {/* <EllipsisButton orientation="vertical" onClick={() => alert("Important message!")} style={{
-              fontSize: "1.2em",
-              paddingLeft: "0.2em",
-              paddingRight: "0.2em"
-            }} /> */}
-          </div>
-        </ChatContainer>
-      </MainContainer>
-    </div >
+              </MessageList>
+              <div as={MessageInput} style={{
+                display: "flex",
+                flexDirection: "row",
+                borderTop: "1px solid #d1dbe4"
+              }}>
+                <AttachmentButton style={{
+                  fontSize: "1.2em",
+                  paddingLeft: "0.2em",
+                  paddingRight: "0.2em"
+                }}
+                  onClick={handleUploadClick}
+                />
+                <MessageInput 
+                  ref={inputRef} 
+                  onChange={(val) => { setNewMessage(val) }} 
+                  value={newMessage} 
+                  sendButton={false} 
+                  attachButton={false} 
+                  onSend={handleNewMessage} style={{
+                    flexGrow: 1,
+                    borderTop: 0,
+                    flexShrink: "initial"
+                  }} 
+                  />
+                <SendButton onClick={() => handleNewMessage(newMessage)} disabled={newMessage.length === 0} style={{
+                  fontSize: "1.2em",
+                  marginLeft: 0,
+                  paddingLeft: "0.2em",
+                  paddingRight: "0.2em"
+                }} />
+                {/* <EllipsisButton orientation="vertical" onClick={() => alert("Important message!")} style={{
+                  fontSize: "1.2em",
+                  paddingLeft: "0.2em",
+                  paddingRight: "0.2em"
+                }} /> */}
+              </div>
+            </ChatContainer>
+          </MainContainer>
+        </div >
+      </motion.div>
+    </Layout>
   )
 }

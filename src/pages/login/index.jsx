@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { genericRequest } from '@/components/utility/request_helper'
 import { useRouter } from 'next/router';
 import { gLogin } from '@/components/utility/gLogin';
+import Layout from '@/components/utility/layout';
 
 export default function Login() {
     const router = useRouter()
@@ -37,11 +38,28 @@ export default function Login() {
         }
     }, [handleGoogle])
     return (
-        <div style={{ backgroundColor: "#00094a", display: "flex", alignItems: "center", justifyContent: "center", height: "100%" }}>
-            <div style={{ width: "50%" }}>
-                <div style={{ textAlign: "center", fontSize: 40, marginBottom: "8px" }}>GlyphAI</div>
-                <div style={{ width: "100%" }} id="gLogin" />
-            </div>
-        </div>
+        <Layout>
+            <motion.div
+                variants={{    
+                    hidden: { opacity: 0, x: -200, y: 0 },
+                    enter: { opacity: 1, x: 0, y: 0 },
+                    exit: { opacity: 0, x: 0, y: -100 }
+                }}
+                initial="hidden"
+                animate="enter"
+                exit="exit"
+                transition={{
+                    type: "linear"
+                }}
+                style={{ height: "100%" }}
+                >
+                <div style={{display: "flex", alignItems: "center", justifyContent: "center", height: "100%" }}>
+                    <div style={{ width: "50%" }}>
+                        <div style={{ textAlign: "center", fontSize: 40, marginBottom: "8px" }}>GlyphAI</div>
+                        <div style={{ width: "100%" }} id="gLogin" />
+                    </div>
+                </div>
+            </motion.div>
+        </Layout>
     )
 }
