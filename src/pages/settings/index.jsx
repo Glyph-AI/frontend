@@ -20,6 +20,7 @@ export default function Profile() {
     const [filesOpen, setFilesOpen] = useState(false)
     const [integrationsOpen, setIntegrationsOpen] = useState(false)
     const [anchorEl, setAnchorEl] = useState(null)
+    const [ stripeUrl, setStripeUrl ] = useState("")
     const menuOpen = Boolean(anchorEl);
     const router = useRouter()
 
@@ -28,15 +29,11 @@ export default function Profile() {
             console.log(data)
             setUserUploads(data);
         })
+
+        getRequest("/subscriptions/customer-portal-session", (data) => {
+            setStripeUrl(data.url)
+        })
     }, [])
-
-    const handleMenuOpen = (ev) => {
-        setAnchorEl(ev.currentTarget)
-    }
-
-    const handleMenuClose = () => {
-        setAnchorEl(null)
-    }
 
     const handleUploadDelete = (id) => {
         genericRequest(`/user_uploads/${id}`, "DELETE", null, (data) => {
@@ -71,6 +68,7 @@ export default function Profile() {
                                     <ChevronRightIcon />
                                 </IconButton>
                             }
+                            onClick={() => {window.location.href = stripeUrl}}
                         >
                             <ListItemAvatar>
                                 <Avatar>
