@@ -266,7 +266,7 @@ export default function Home() {
                 <Avatar src={"/glpyh-avatar.png"} name={"Glyph"} />
                 <ConversationHeader.Content userName={botName} info="Active Now" />
                 <ConversationHeader.Actions>
-                  <EllipsisButton orientation="vertical" onClick={() => {router.push("/settings")}} style={{
+                  <EllipsisButton orientation="vertical" onClick={handleMenuOpen} style={{
                   fontSize: "1.2em",
                   paddingLeft: "0.2em",
                   paddingRight: "0.2em"

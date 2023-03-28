@@ -3,6 +3,7 @@ import { genericRequest } from '@/components/utility/request_helper'
 import { useRouter } from 'next/router';
 import { gLogin } from '@/components/utility/gLogin';
 import Layout from '@/components/utility/layout';
+import { motion } from "framer-motion";
 
 export default function Login() {
     const router = useRouter()
