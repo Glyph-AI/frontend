@@ -20,6 +20,7 @@ export default function Profile() {
     const [filesOpen, setFilesOpen] = useState(false)
     const [integrationsOpen, setIntegrationsOpen] = useState(false)
     const [anchorEl, setAnchorEl] = useState(null)
+    const [stripeUrl, setStripeUrl] = useState("")
     const menuOpen = Boolean(anchorEl);
     const router = useRouter()
 
@@ -28,15 +29,11 @@ export default function Profile() {
             console.log(data)
             setUserUploads(data);
         })
+
+        getRequest("/subscriptions/customer-portal-session", (data) => {
+            setStripeUrl(data.url)
+        })
     }, [])
-
-    const handleMenuOpen = (ev) => {
-        setAnchorEl(ev.currentTarget)
-    }
-
-    const handleMenuClose = () => {
-        setAnchorEl(null)
-    }
 
     const handleUploadDelete = (id) => {
         genericRequest(`/user_uploads/${id}`, "DELETE", null, (data) => {
@@ -66,11 +63,13 @@ export default function Profile() {
                     </ConversationHeader>
                     <List sx={{ width: '100%', height: "100%" }}>
                         <ListItem
+                            key="subscription"
                             secondaryAction={
                                 <IconButton edge="end">
                                     <ChevronRightIcon />
                                 </IconButton>
                             }
+                            onClick={() => { window.location.href = stripeUrl }}
                         >
                             <ListItemAvatar>
                                 <Avatar>
@@ -81,6 +80,7 @@ export default function Profile() {
                         </ListItem>
                         <Divider />
                         <ListItem
+                            key="uploaded-files"
                             secondaryAction={
                                 <IconButton edge="end">
                                     {filesOpen ? <ExpandLessIcon /> : <ExpandMoreIcon />}
@@ -101,7 +101,7 @@ export default function Profile() {
                                     userUploads && userUploads.map((item, idx) => {
                                         return (
                                             <>
-                                                <ListItem sx={{ pl: 4 }} secondaryAction={
+                                                <ListItem key={idx} sx={{ pl: 4 }} secondaryAction={
                                                     <IconButton edge="end" onClick={() => { handleUploadDelete(item.id) }}>
                                                         <DeleteIcon />
                                                     </IconButton>
