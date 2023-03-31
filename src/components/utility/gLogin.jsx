@@ -1,0 +1,1 @@
+export const gLogin = "520170255321-a0i4dvb074idd0q7dcrh4g0mb5gqvaut.apps.googleusercontent.com"
