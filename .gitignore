@@ -31,6 +31,6 @@ yarn-error.log*
 # vercel
 .vercel
 
-src/components/utility/gLogin.jsx
-src/components/utility/apiConfig.jsx
-Dockerfile
+public/workbox*
+public/sw.js
+public/sw.js.map
