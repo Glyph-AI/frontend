@@ -41,7 +41,7 @@ export default function Login() {
     return (
         <Layout>
             <motion.div
-                variants={{    
+                variants={{
                     hidden: { opacity: 0, x: -200, y: 0 },
                     enter: { opacity: 1, x: 0, y: 0 },
                     exit: { opacity: 0, x: 0, y: -100 }
@@ -53,11 +53,11 @@ export default function Login() {
                     type: "linear"
                 }}
                 style={{ height: "100%" }}
-                >
-                <div style={{display: "flex", alignItems: "center", justifyContent: "center", height: "100%" }}>
+            >
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "center", height: "100%" }}>
                     <div style={{ width: "50%" }}>
                         <div style={{ textAlign: "center", fontSize: 40, marginBottom: "8px" }}>GlyphAI</div>
-                        <div style={{ width: "100%" }} id="gLogin" />
+                        <div style={{ width: "100%", display: "flex", justifyContent: "center" }} id="gLogin" />
                     </div>
                 </div>
             </motion.div>
