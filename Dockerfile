@@ -37,6 +37,7 @@ FROM base AS runner
 WORKDIR /app
 
 ENV NODE_ENV gcloud_development
+ENV BACKEND_HOST https://dev-api.glyphassistant.com
 # Uncomment the following line in case you want to disable telemetry during runtime.
 # ENV NEXT_TELEMETRY_DISABLED 1
 

@@ -32,4 +32,5 @@ yarn-error.log*
 .vercel
 
 src/components/utility/gLogin.jsx
+src/components/utility/apiConfig.jsx
 Dockerfile
