@@ -16,7 +16,7 @@ export const API_ROOT = `${backendHost}`;
 if (env === 'development') {
     backendHost = "ws://localhost:8000";
 } else if (env === 'gcloud_development') {
-    backendHost = 'wss://dev.api.glyphassistant.com';
+    backendHost = 'wss://dev-api.glyphassistant.com';
 } else {
     backendHost = process.env.REACT_APP_BACKEND_HOST || 'ws://localhost:8080';
 }
