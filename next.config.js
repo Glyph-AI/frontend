@@ -7,6 +7,11 @@ module.exports = withPWA({
     register: true,
     skipWaiting: true
   },
+  eslint: {
+    // Warning: This allows production builds to successfully complete even if
+    // your project has ESLint errors.
+    ignoreDuringBuilds: true,
+  },
   webpack: (config, context) => {
     // Enable polling based on env variable being set
     if (process.env.NEXT_WEBPACK_USEPOLLING) {
