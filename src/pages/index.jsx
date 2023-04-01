@@ -30,19 +30,6 @@ import { WS_ROOT } from '@/components/utility/apiConfig';
 import DropdownMenu from '@/components/common/dropdownMenu.jsx';
 import { motion } from "framer-motion";
 
-const messages = [
-  {
-    message: "Hello my friend",
-    sentTime: "just now",
-    sender: "Joe"
-  },
-  {
-    message: "Hello my friend",
-    sentTime: "just now",
-    sender: "Joe"
-  }
-]
-
 export default function Home() {
   const [newMessage, setNewMessage] = useState("")
   const [sidebarVisible, setSidebarVisible] = useState(false);
@@ -215,7 +202,7 @@ export default function Home() {
 
     console.log(file)
 
-    genericRequest(`/bots/${botId}/chats/${chatId}/user_upload/`, "POST", formData, (data, status) => {
+    genericRequest(`/bots/${botId}/chats/${chatId}/user_upload`, "POST", formData, (data, status) => {
       if (status === 200) {
         console.log("Upload Successful")
         getChatById(chatId, botId, (data) => {
@@ -237,19 +224,19 @@ export default function Home() {
   return (
     <Layout>
       <motion.div
-          variants={{    
-            hidden: { opacity: 0, x: -200, y: 0 },
-            enter: { opacity: 1, x: 0, y: 0 },
-            exit: { opacity: 0, x: 0, y: -100 }
-          }}
-          initial="hidden"
-          animate="enter"
-          exit="exit"
-          transition={{
-            type: "linear"
-          }}
-          style={{ height: "100%" }}
-        >
+        variants={{
+          hidden: { opacity: 0, x: -200, y: 0 },
+          enter: { opacity: 1, x: 0, y: 0 },
+          exit: { opacity: 0, x: 0, y: -100 }
+        }}
+        initial="hidden"
+        animate="enter"
+        exit="exit"
+        transition={{
+          type: "linear"
+        }}
+        style={{ height: "100%" }}
+      >
         <div style={{ position: "relative", height: "100%" }}>
           <input
             onChange={(ev) => { handleUpload(ev) }}
@@ -259,7 +246,7 @@ export default function Home() {
             ref={inputFile}
             style={{ display: 'none' }}
           />
-          <DropdownMenu anchor={anchorEl} open={menuOpen} handleMenuClose={handleMenuClose}/>
+          <DropdownMenu anchor={anchorEl} open={menuOpen} handleMenuClose={handleMenuClose} />
           <MainContainer>
             <ChatContainer>
               <ConversationHeader >
@@ -267,10 +254,10 @@ export default function Home() {
                 <ConversationHeader.Content userName={botName} info="Active Now" />
                 <ConversationHeader.Actions>
                   <EllipsisButton orientation="vertical" onClick={handleMenuOpen} style={{
-                  fontSize: "1.2em",
-                  paddingLeft: "0.2em",
-                  paddingRight: "0.2em"
-                }} />
+                    fontSize: "1.2em",
+                    paddingLeft: "0.2em",
+                    paddingRight: "0.2em"
+                  }} />
                 </ConversationHeader.Actions>
               </ConversationHeader>
               <MessageList typingIndicator={typingIndicator()}>
@@ -279,7 +266,7 @@ export default function Home() {
                     if (obj.sender === "system") {
                       return (<MessageSeparator>{obj.message}</MessageSeparator>)
                     } else {
-                      return (<Message model={obj} key={index} style={{fontSize: "16px"}} />)
+                      return (<Message model={obj} key={index} style={{ fontSize: "16px" }} />)
                     }
                   })
                 }
@@ -296,18 +283,18 @@ export default function Home() {
                 }}
                   onClick={handleUploadClick}
                 />
-                <MessageInput 
-                  ref={inputRef} 
-                  onChange={(val) => { setNewMessage(val) }} 
-                  value={newMessage} 
-                  sendButton={false} 
-                  attachButton={false} 
+                <MessageInput
+                  ref={inputRef}
+                  onChange={(val) => { setNewMessage(val) }}
+                  value={newMessage}
+                  sendButton={false}
+                  attachButton={false}
                   onSend={handleNewMessage} style={{
                     flexGrow: 1,
                     borderTop: 0,
                     flexShrink: "initial"
-                  }} 
-                  />
+                  }}
+                />
                 <SendButton onClick={() => handleNewMessage(newMessage)} disabled={newMessage.length === 0} style={{
                   fontSize: "1.2em",
                   marginLeft: 0,
