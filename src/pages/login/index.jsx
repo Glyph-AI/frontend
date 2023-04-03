@@ -22,6 +22,8 @@ export default function Login() {
     }
 
     useEffect(() => {
+        const relatedApps = navigator.getInstalledRelatedApps();
+        const PWAisInstalled = relatedApps.length > 0;
         if (window.google) {
             /* global google */
             google.accounts.id.initialize({
@@ -35,7 +37,10 @@ export default function Login() {
                 size: "large",
                 shape: "circle",
             });
-            google.accounts.id.prompt()
+            // don't show the prompt because it interferes with installing the pwa
+            if (PWAisInstalled) {
+                google.accounts.id.prompt()
+            }
         }
     }, [handleGoogle])
     return (

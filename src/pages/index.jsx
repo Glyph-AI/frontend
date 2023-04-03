@@ -24,6 +24,7 @@ import {
   genericRequest,
   getRequest
 } from '@/components/utility/request_helper';
+import { Snackbar } from '@mui/material'
 import { useRouter } from 'next/router';
 import Layout from '../components/utility/layout.jsx'
 import { WS_ROOT } from '@/components/utility/apiConfig';
@@ -40,6 +41,8 @@ export default function Home() {
   const [websckt, setWebsckt] = useState();
   const [glyphTyping, setGlyphTyping] = useState(false)
   const [anchorEl, setAnchorEl] = useState(null)
+  const [snackbarOpen, setSnackbarOpen] = useState(false)
+  const [snackbarMessage, setSnackbarMessage] = useState("")
   const inputFile = useRef(null)
   const inputRef = useRef();
   const menuOpen = Boolean(anchorEl);
@@ -118,6 +121,10 @@ export default function Home() {
     ws.onopen = (event) => {
       ws.send("Connect")
     };
+
+    ws.onclose = (e) => {
+      openSocket(bot_id, chat_id, chatToken)
+    }
 
     ws.onmessage = (e) => {
       const message = JSON.parse(e.data)
@@ -207,6 +214,8 @@ export default function Home() {
         console.log("Upload Successful")
         getChatById(chatId, botId, (data) => {
           const formattedChatData = formatChatData(data.chat_messages)
+          setSnackbarMessage(`${file.name} Uploaded`)
+          setSnackbarOpen(true)
           setChatData(formattedChatData)
         })
       }
@@ -237,7 +246,15 @@ export default function Home() {
         }}
         style={{ height: "100%" }}
       >
-        <div style={{ position: "relative", height: "100%" }}>
+        <div style={{ height: "100%" }}>
+          <Snackbar
+            anchorOrigin={{ vertical: "top", horizontal: "right" }}
+            open={snackbarOpen}
+            audoHideDuration={6000}
+            onClick={() => { setSnackbarOpen(false) }}
+            onClose={() => { setSnackbarOpen(false) }}
+            message={snackbarMessage}
+          />
           <input
             onChange={(ev) => { handleUpload(ev) }}
             accept="text/*,application/csv,application/pdf,image/*,.mp3,audio/mp3"

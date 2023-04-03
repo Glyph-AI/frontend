@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import Layout from "../../components/utility/layout.jsx"
 import { MainContainer, ChatContainer, ConversationHeader } from '@chatscope/chat-ui-kit-react'
-import { List, ListItemText, ListItem, Divider, ListItemAvatar, ListItemIcon, Collapse, Avatar, IconButton, ListItemButton } from '@mui/material'
+import { List, ListItemText, Checkbox, ListItem, Divider, ListItemAvatar, ListItemIcon, Collapse, Avatar, IconButton, ListItemButton } from '@mui/material'
 import FolderIcon from '@mui/icons-material/Folder';
 import HubIcon from '@mui/icons-material/Hub';
 import CreditCardIcon from '@mui/icons-material/CreditCard';
@@ -24,10 +24,16 @@ export default function Profile() {
     const menuOpen = Boolean(anchorEl);
     const router = useRouter()
 
+    const sortUserUploads = (data) => {
+        const sorted = data.sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
+
+        return sorted
+    }
+
     useEffect(() => {
         getRequest("/user_uploads", (data) => {
             console.log(data)
-            setUserUploads(data);
+            setUserUploads(sortUserUploads(data));
         })
 
         getRequest("/subscriptions/customer-portal-session", (data) => {
@@ -37,9 +43,17 @@ export default function Profile() {
 
     const handleUploadDelete = (id) => {
         genericRequest(`/user_uploads/${id}`, "DELETE", null, (data) => {
-            setUserUploads(data)
+            setUserUploads(sortUserUploads(data))
         })
     }
+
+    const handleFileHiding = (idx) => {
+        const targetFile = userUploads[idx]
+        genericRequest(`/user_uploads/${targetFile.id}`, "PATCH", null, (data) => {
+            setUserUploads(sortUserUploads(data))
+        })
+    }
+
     return (
         <Layout style={{ height: "100%" }}>
             <motion.div
@@ -107,9 +121,15 @@ export default function Profile() {
                                                     </IconButton>
                                                 }>
                                                     <ListItemIcon>
-                                                        <FolderIcon />
+                                                        <Checkbox
+                                                            edge="start"
+                                                            checked={item.include_in_context}
+                                                            tabIndex={-1}
+                                                            disableRipple
+                                                            onClick={(ev) => { handleFileHiding(idx) }}
+                                                        />
                                                     </ListItemIcon>
-                                                    <ListItemText primary={item.filename || item.id || "No Filename Given"} secondary={item.created_at} />
+                                                    <ListItemText primary={item.filename || item.id || "No Filename Given"} secondary={item.processed ? "Processing Complete" : "Processing In Progress"} />
                                                 </ListItem>
                                                 <Divider />
                                             </>
