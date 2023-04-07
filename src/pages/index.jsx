@@ -191,7 +191,7 @@ export default function Home() {
 
   const typingIndicator = () => {
     if (glyphTyping) {
-      return <TypingIndicator content="Glpyh is typing" />
+      return <TypingIndicator content="Glyph is typing" />
     } else {
       return null
     }
