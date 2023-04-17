@@ -114,35 +114,6 @@ export default function Home() {
     return formattedChats
   }
 
-  const openSocket = (bot_id, chat_id, chatToken) => {
-    const url = `${WS_ROOT}/bots/${bot_id}/chats/${chat_id}/${chatToken}`
-    const ws = new WebSocket(url)
-
-    ws.onopen = (event) => {
-      ws.send("Connect")
-    };
-
-    ws.onclose = (e) => {
-      openSocket(bot_id, chat_id, chatToken)
-    }
-
-    ws.onmessage = (e) => {
-      const message = JSON.parse(e.data)
-      const formattedMessages = formatChatData(message.chat_messages)
-      console.log(formattedMessages.at(-1))
-      if (formattedMessages.at(-1).sender === "Glyph") {
-        setGlyphTyping(false)
-      }
-      setChatData(formattedMessages)
-
-    }
-
-    setWebsckt(ws)
-
-
-    return () => ws.close()
-  }
-
   useEffect(() => {
     // REST pre-work for chats
     getBotsForUser((data) => {
@@ -154,7 +125,6 @@ export default function Home() {
             setBotId(newBotData.id)
             setChatId(newChatData.id)
             setChatToken(data[0].chats[0].chat_token)
-            openSocket(newBotData.id, newChatData.id, data[0].chats[0].chat_token)
           })
         })
       } else {
@@ -166,7 +136,6 @@ export default function Home() {
           setBotId(bot_id)
           setChatId(chat_id)
           setChatToken(data[0].chats[0].chat_token)
-          openSocket(bot_id, chat_id, data[0].chats[0].chat_token)
         })
       }
     })
@@ -179,13 +148,17 @@ export default function Home() {
       content: newMessage,
       chat_id: chatId
     }
-
-    websckt.send(JSON.stringify(newMessageJson))
-
+    setGlyphTyping(true)
     const newChatData = [...chatData, { message: newMessage, sender: "You", sentTime: "Just now", direction: "outgoing" }]
     setChatData(newChatData)
     setNewMessage("")
-    setGlyphTyping(true)
+
+    genericRequest(`/bots/${botId}/chats/${chatId}/message`, "POST", JSON.stringify(newMessageJson), (data) => {
+      const newChatData = formatChatData(data.chat_messages)
+      setChatData(newChatData)
+      setGlyphTyping(false)
+    })
+
     inputRef.current.focus();
   }
 
