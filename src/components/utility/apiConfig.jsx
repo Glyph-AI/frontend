@@ -1,6 +1,6 @@
 let backendHost;
 const apiVersion = 'v1';
-const env = process.env.ENVIRONMENT
+const env = process.env.NEXT_PUBLIC_ENVIRONMENT
 if (env === 'local') {
     backendHost = "http://localhost:8000";
 } else if (env === 'development') {
