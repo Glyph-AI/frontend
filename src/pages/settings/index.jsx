@@ -75,7 +75,7 @@ export default function Profile() {
                         <ConversationHeader.Back onClick={() => { router.push("/") }} />
                         <ConversationHeader.Content style={{ fontSize: "1.2em" }} userName="Settings" />
                     </ConversationHeader>
-                    <List sx={{ width: '100%', height: "100%" }}>
+                    <List sx={{ width: '100%', height: "100%", backgroundColor: "#fff" }}>
                         <ListItem
                             key="subscription"
                             secondaryAction={
