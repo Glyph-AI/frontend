@@ -240,7 +240,7 @@ export default function Home() {
           <MainContainer>
             <ChatContainer>
               <ConversationHeader >
-                <Avatar src={"/glpyh-avatar.png"} name={"Glyph"} />
+                <Avatar src={"/glyph-avatar.png"} name={"Glyph"} />
                 <ConversationHeader.Content userName={botName} info="Active Now" />
                 <ConversationHeader.Actions>
                   <EllipsisButton orientation="vertical" onClick={handleMenuOpen} style={{

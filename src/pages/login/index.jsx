@@ -61,8 +61,11 @@ export default function Login() {
             >
                 <div style={{ display: "flex", alignItems: "center", justifyContent: "center", height: "100%" }}>
                     <div style={{ width: "50%" }}>
-                        <div style={{ textAlign: "center", fontSize: 40, marginBottom: "8px" }}>GlyphAI</div>
-                        <div style={{ width: "100%", display: "flex", justifyContent: "center" }} id="gLogin" />
+                        <div>
+                            <img className="logo" alt="Glyph Logo" src={"/dark_vertical.png"} style={{ width: "100%", marginBottom: "8px" }} />
+                            {/* <div style={{ textAlign: "center", fontSize: 40, marginBottom: "8px" }}>GlyphAI</div> */}
+                            <div style={{ width: "100%", display: "flex", justifyContent: "center" }} id="gLogin" />
+                        </div>
                     </div>
                 </div>
             </motion.div>
