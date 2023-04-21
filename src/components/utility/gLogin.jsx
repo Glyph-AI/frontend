@@ -11,4 +11,4 @@ if (env === 'local') {
     gLogin = "dummy";
 }
 
-export default gLogin
+export const GOOGLE_LOGIN_KEY = gLogin;

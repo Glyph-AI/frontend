@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { genericRequest } from '@/components/utility/request_helper'
 import { useRouter } from 'next/router';
-import { gLogin } from '@/components/utility/gLogin';
+import { GOOGLE_LOGIN_KEY } from '@/components/utility/gLogin';
 import Layout from '@/components/utility/layout';
 import { motion } from "framer-motion";
 
@@ -27,7 +27,7 @@ export default function Login() {
         if (window.google) {
             /* global google */
             google.accounts.id.initialize({
-                client_id: gLogin,
+                client_id: GOOGLE_LOGIN_KEY,
                 callback: handleGoogle,
             });
 
