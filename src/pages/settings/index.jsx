@@ -72,7 +72,7 @@ export default function Profile() {
             >
                 <div style={{ height: "100%" }}>
                     <ConversationHeader >
-                        <ConversationHeader.Back onClick={() => { router.push("/") }} />
+                        <ConversationHeader.Back onClick={() => { router.push("/conversations") }} />
                         <ConversationHeader.Content style={{ fontSize: "1.2em" }} userName="Settings" />
                     </ConversationHeader>
                     <List sx={{ width: '100%', height: "100%", backgroundColor: "#fff" }}>
