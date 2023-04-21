@@ -1,6 +1,6 @@
 let gLogin;
 const apiVersion = 'v1';
-const env = process.env.ENVIRONMENT
+const env = process.env.NEXT_PUBLIC_ENVIRONMENT
 if (env === 'local') {
     gLogin = "991199193983-h5pq059ivvtim8q0hp86d7asigjbbjcc.apps.googleusercontent.com";
 } else if (env === 'development') {
