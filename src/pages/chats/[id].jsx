@@ -20,13 +20,12 @@ import {
 } from '@/components/utility/request_helper';
 import { Snackbar } from '@mui/material'
 import { useRouter } from 'next/router';
-import Layout from '../components/utility/layout.jsx'
+import Layout from '@/components/utility/layout';
 import DropdownMenu from '@/components/common/dropdownMenu.jsx';
 import { motion } from "framer-motion";
 
 export default function Home() {
   const [newMessage, setNewMessage] = useState("")
-  const [sidebarVisible, setSidebarVisible] = useState(false);
   const [botId, setBotId] = useState()
   const [chatId, setChatId] = useState()
   const [chatData, setChatData] = useState([])
@@ -37,12 +36,9 @@ export default function Home() {
   const inputFile = useRef(null)
   const inputRef = useRef();
   const menuOpen = Boolean(anchorEl);
+  const router = useRouter()
 
   const { id } = router.query
-
-  if (id === undefined) {
-    router.push("/conversations")
-  }
 
   const botName = "Glyph"
 
@@ -59,13 +55,13 @@ export default function Home() {
   }
 
   const createChatForBot = (bot_id, callback = () => { }) => {
-    genericRequest(`/bots/${bot_id}/chats/`, "POST", JSON.stringify({ "name": "test chat" }), (data) => {
+    genericRequest(`/chats/`, "POST", JSON.stringify({ "name": "test chat" }), (data) => {
       callback(data)
     })
   }
 
   const getChatById = (chat_id, bot_id, callback = () => { }) => {
-    getRequest(`/bots/${bot_id}/chats/${chat_id}/`, (data) => {
+    getRequest(`/chats/${chat_id}/`, (data) => {
       callback(data)
     })
   }
@@ -111,6 +107,9 @@ export default function Home() {
   }
 
   useEffect(() => {
+    if (id === undefined) {
+      router.push("/conversations")
+    }
     // REST pre-work for chats
     getBotsForUser((data) => {
       if (data.length === 0) {
@@ -120,7 +119,6 @@ export default function Home() {
             setChatData(formattedChatData)
             setBotId(newBotData.id)
             setChatId(newChatData.id)
-            setChatToken(data[0].chats[0].chat_token)
           })
         })
       } else {
@@ -131,7 +129,6 @@ export default function Home() {
           setChatData(formattedChatData)
           setBotId(bot_id)
           setChatId(chat_id)
-          setChatToken(data[0].chats[0].chat_token)
         })
       }
     })
@@ -236,6 +233,7 @@ export default function Home() {
           <MainContainer>
             <ChatContainer>
               <ConversationHeader >
+                <ConversationHeader.Back onClick={() => { router.push("/conversations") }} />
                 <Avatar src={"/glyph-avatar.png"} name={"Glyph"} />
                 <ConversationHeader.Content userName={botName} info="Active Now" />
                 <ConversationHeader.Actions>

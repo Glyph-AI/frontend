@@ -16,25 +16,14 @@ import ExpandLess from '@mui/icons-material/ExpandLess';
 import { useRouter } from 'next/router';
 
 
-export default function ConversationItem({name, info, id}) {
-    const [ chatsVisible, setChatsVisible] = useState(false)
+export default function ConversationItem({ name, info, id }) {
+    const [chatsVisible, setChatsVisible] = useState(false)
     const router = useRouter()
     return (
         <>
-        <Conversation name={name} info={info} onClick={() => {router.push(`/chats/${id}`)}}>
-            <Avatar src={"/glpyh-avatar.png"} name={"Glyph"} />
-            {/* <Conversation.Operations>
-                {chatsVisible ? <ExpandLess /> : <ExpandMore />}
-            </Conversation.Operations> */}
-        </Conversation>
-        {/* <Collapse in={chatsVisible}>
-            <List>
-                <ListItem>
-                    <ListItemText>TESTTEST</ListItemText>
-                </ListItem>
-            </List>
-        </Collapse> */}
-        
+            <Conversation name={name} info={info} onClick={() => { router.push(`/chats/${id}`) }}>
+                <Avatar src={"/glyph-avatar.png"} name={"Glyph"} />
+            </Conversation>
         </>
     )
 }

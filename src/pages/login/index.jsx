@@ -14,7 +14,7 @@ export default function Login() {
 
         genericRequest("/auth/google", "POST", JSON.stringify(auth_data), (data, status) => {
             if (status === 200) {
-                router.push("/")
+                router.push("/conversations")
             } else if (status === 401) {
                 console.log("Failed")
             }

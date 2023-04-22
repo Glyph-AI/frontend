@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import Layout from "../../components/utility/layout.jsx"
+import Layout from '@/components/utility/layout';
 import { MainContainer, ChatContainer, ConversationHeader } from '@chatscope/chat-ui-kit-react'
 import { List, ListItemText, Checkbox, ListItem, Divider, ListItemAvatar, ListItemIcon, Collapse, Avatar, IconButton, ListItemButton } from '@mui/material'
 import FolderIcon from '@mui/icons-material/Folder';
