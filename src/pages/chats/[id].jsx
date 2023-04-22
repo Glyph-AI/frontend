@@ -33,6 +33,8 @@ export default function Home() {
   const [anchorEl, setAnchorEl] = useState(null)
   const [snackbarOpen, setSnackbarOpen] = useState(false)
   const [snackbarMessage, setSnackbarMessage] = useState("")
+  const [chat, setChat] = useState("")
+  const [bot, setBot] = useState("")
   const inputFile = useRef(null)
   const inputRef = useRef();
   const menuOpen = Boolean(anchorEl);
@@ -42,26 +44,14 @@ export default function Home() {
 
   const botName = "Glyph"
 
-  const getBotsForUser = (callback = () => { }) => {
-    getRequest("/bots/", (data) => {
-      callback(data)
-    })
-  }
-
-  const createBotForUser = (callback = () => { }) => {
-    genericRequest("/bots/", "POST", JSON.stringify({ "name": "test bot" }), (data) => {
-      callback(data)
-    })
-  }
-
-  const createChatForBot = (bot_id, callback = () => { }) => {
-    genericRequest(`/chats/`, "POST", JSON.stringify({ "name": "test chat" }), (data) => {
-      callback(data)
-    })
-  }
-
-  const getChatById = (chat_id, bot_id, callback = () => { }) => {
+  const getChatById = (chat_id, callback = () => { }) => {
     getRequest(`/chats/${chat_id}/`, (data) => {
+      callback(data)
+    })
+  }
+
+  const getBotById = (bot_id, callback = () => { }) => {
+    getRequest(`/bots/${bot_id}`, (data) => {
       callback(data)
     })
   }
@@ -111,26 +101,14 @@ export default function Home() {
       router.push("/conversations")
     }
     // REST pre-work for chats
-    getBotsForUser((data) => {
-      if (data.length === 0) {
-        createBotForUser((newBotData) => {
-          createChatForBot(newBotData.id, (newChatData) => {
-            const formattedChatData = formatChatData(newChatData.chat_messages)
-            setChatData(formattedChatData)
-            setBotId(newBotData.id)
-            setChatId(newChatData.id)
-          })
-        })
-      } else {
-        var bot_id = data[0].id
-        var chat_id = data[0].chats[0].id
-        getChatById(chat_id, bot_id, (chatData) => {
-          const formattedChatData = formatChatData(chatData.chat_messages)
-          setChatData(formattedChatData)
-          setBotId(bot_id)
-          setChatId(chat_id)
-        })
-      }
+    getChatById(id, (chatData) => {
+      const formattedChatData = formatChatData(chatData.chat_messages)
+      setChatData(formattedChatData)
+      setChatId(id)
+      setChat(chatData)
+      getBotById(chatData.bot_id, (botData) => {
+        setBot(botData)
+      })
     })
 
   }, [])
@@ -229,13 +207,13 @@ export default function Home() {
             ref={inputFile}
             style={{ display: 'none' }}
           />
-          <DropdownMenu anchor={anchorEl} open={menuOpen} handleMenuClose={handleMenuClose} />
+          <DropdownMenu anchor={anchorEl} open={menuOpen} handleMenuClose={handleMenuClose} chatId={chatId} />
           <MainContainer>
             <ChatContainer>
               <ConversationHeader >
                 <ConversationHeader.Back onClick={() => { router.push("/conversations") }} />
-                <Avatar src={"/glyph-avatar.png"} name={"Glyph"} />
-                <ConversationHeader.Content userName={botName} info="Active Now" />
+                <Avatar src={"/glyph-avatar.png"} name={bot.name} />
+                <ConversationHeader.Content userName={bot.name} info={chat.name} />
                 <ConversationHeader.Actions>
                   <EllipsisButton orientation="vertical" onClick={handleMenuOpen} style={{
                     fontSize: "1.2em",

@@ -23,6 +23,7 @@ export default function Profile() {
     const [stripeUrl, setStripeUrl] = useState("")
     const menuOpen = Boolean(anchorEl);
     const router = useRouter()
+    const { chatId } = router.query
 
     const sortUserUploads = (data) => {
         const sorted = data.sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
@@ -54,6 +55,14 @@ export default function Profile() {
         })
     }
 
+    const backUrl = () => {
+        if (chatId !== null) {
+            return `/chats/${chatId}`
+        } else {
+            return "/conversations"
+        }
+    }
+
     return (
         <Layout style={{ height: "100%" }}>
             <motion.div
@@ -72,11 +81,11 @@ export default function Profile() {
             >
                 <div style={{ height: "100%" }}>
                     <ConversationHeader >
-                        <ConversationHeader.Back onClick={() => { router.push("/conversations") }} />
+                        <ConversationHeader.Back onClick={() => { router.push(backUrl()) }} />
                         <ConversationHeader.Content style={{ fontSize: "1.2em" }} userName="Settings" />
                     </ConversationHeader>
                     <List sx={{ width: '100%', height: "100%", backgroundColor: "#fff" }}>
-                        <ListItem
+                        {/* <ListItem
                             key="subscription"
                             secondaryAction={
                                 <IconButton edge="end">
@@ -92,7 +101,7 @@ export default function Profile() {
                             </ListItemAvatar>
                             <ListItemText primary="Subscription" />
                         </ListItem>
-                        <Divider />
+                        <Divider /> */}
                         <ListItem
                             key="uploaded-files"
                             secondaryAction={

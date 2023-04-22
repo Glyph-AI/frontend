@@ -3,11 +3,12 @@ import {
     ConversationList,
     Conversation,
     Search,
-    Avatar
+    Avatar,
 } from '@chatscope/chat-ui-kit-react';
 import {
     Box,
-    Fab
+    Fab,
+    Divider
 } from '@mui/material'
 
 import ConversationItem from '@/components/conversations/conversationItem';
@@ -32,6 +33,9 @@ export default function Conversations() {
     }, [])
 
     const formatLastMessage = (message) => {
+        if (message === undefined) {
+            return <i>Start Chatting...</i>
+        }
         const sender = message.role == "user" ? "You" : "Glyph"
         const formatted_message = `${sender}: ${message.content}`
         if (sender === "You") {
@@ -42,7 +46,8 @@ export default function Conversations() {
     }
 
     const handleModalClose = () => {
-        setModalVisible(false)
+        setModalVisible(false);
+        getChats()
     }
     return (
         <Layout>
@@ -71,11 +76,14 @@ export default function Conversations() {
                                 console.log(record.chat_messages[-1])
                                 const last_message = record.chat_messages[record.chat_messages.length - 1]
                                 return (
-                                    <ConversationItem
-                                        name={record.name}
-                                        info={formatLastMessage(last_message)}
-                                        id={record.id}
-                                    />
+                                    <>
+                                        <ConversationItem
+                                            name={record.name}
+                                            info={formatLastMessage(last_message)}
+                                            id={record.id}
+                                        />
+                                        <Divider component="li" />
+                                    </>
                                 )
                             })
                         }

@@ -1,8 +1,8 @@
-import {Menu, MenuItem, Divider} from '@mui/material';
+import { Menu, MenuItem, Divider } from '@mui/material';
 import { useRouter } from 'next/router';
 import { genericRequest } from '../utility/request_helper';
 
-export default function DropdownMenu({anchor, handleMenuClose, open = false}) {
+export default function DropdownMenu({ anchor, handleMenuClose, open = false, chatId = null }) {
     const router = useRouter()
 
     const handleLogout = () => {
@@ -17,13 +17,13 @@ export default function DropdownMenu({anchor, handleMenuClose, open = false}) {
             open={open}
             onClose={handleMenuClose}
             MenuListProps={{
-            'aria-labelledby': 'basic-button',
+                'aria-labelledby': 'basic-button',
             }}
-            sx={{width: "200px"}}
+            sx={{ width: "200px" }}
         >
-            <MenuItem onClick={() => {router.push("/settings")}}>Settings</MenuItem>
-            <Divider/>
+            <MenuItem onClick={() => { router.push({ pathname: "/settings", query: { chatId: chatId } }) }}>Settings</MenuItem>
+            <Divider />
             <MenuItem onClick={handleLogout}>Logout</MenuItem>
-      </Menu>
+        </Menu>
     )
 }

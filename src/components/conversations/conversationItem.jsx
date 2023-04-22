@@ -21,7 +21,7 @@ export default function ConversationItem({ name, info, id }) {
     const router = useRouter()
     return (
         <>
-            <Conversation name={name} info={info} onClick={() => { router.push(`/chats/${id}`) }}>
+            <Conversation name={name} style={{ marginTop: "2px" }} info={info} onClick={() => { router.push(`/chats/${id}`) }}>
                 <Avatar src={"/glyph-avatar.png"} name={"Glyph"} />
             </Conversation>
         </>
