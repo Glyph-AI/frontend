@@ -3,12 +3,12 @@ import {
     ConversationList,
     Conversation,
     Search,
-    Avatar,
 } from '@chatscope/chat-ui-kit-react';
 import {
     Box,
     Fab,
-    Divider
+    Divider,
+    Avatar
 } from '@mui/material'
 import { getCookie } from '@/components/utility/cookie_helper';
 
@@ -18,12 +18,14 @@ import { Add } from '@mui/icons-material';
 import NewConversationModal from '@/components/conversations/newConversationModal';
 import { getRequest } from '@/components/utility/request_helper';
 import { motion } from "framer-motion";
+import { useRouter } from 'next/router';
 
 export default function Conversations() {
     const [modalVisible, setModalVisible] = useState(false)
     const [userChats, setUserChats] = useState([])
     const [displayChats, setDisplayChats] = useState([])
     const [searchValue, setSearchValue] = useState([])
+    const router = useRouter()
 
     const getChats = () => {
         getRequest("/chats", (data) => {
@@ -84,8 +86,14 @@ export default function Conversations() {
                 style={{ height: "100%" }}
             >
                 <Box sx={{ height: "100%", padding: "8px", overflow: "hidden" }}>
-                    <Box sx={{ height: "5%" }}>
-                        <Search placeholder="Search..." style={{ width: "100%" }} value={searchValue} onChange={(val) => { handleSearchValueChange(val) }} />
+                    <Box sx={{ height: "5%", display: "flex", marginBottom: "16px", alignContent: "center" }}>
+                        <Search placeholder="Search..." style={{ flex: 1 }} value={searchValue} onChange={(val) => { handleSearchValueChange(val) }} />
+                        <Avatar
+                            onMouseEnter={(e) => { e.target.style.cursor = "pointer" }}
+                            sx={{ marginLeft: "16px", width: 40, height: 40 }}
+                            alt="User"
+                            onClick={() => { router.push("/profile") }}
+                        />
                     </Box>
 
                     <ConversationList style={{ height: "95%", overflowY: "scroll", paddingRight: "25px", boxSizing: "content-box", width: "100%" }}>
