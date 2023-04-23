@@ -23,6 +23,7 @@ import { useRouter } from 'next/router';
 import Layout from '@/components/utility/layout';
 import DropdownMenu from '@/components/common/dropdownMenu.jsx';
 import { motion } from "framer-motion";
+import { getCookie } from '@/components/utility/cookie_helper';
 
 export default function Home() {
   const [newMessage, setNewMessage] = useState("")
@@ -97,14 +98,22 @@ export default function Home() {
   }
 
   useEffect(() => {
+    const activeSession = getCookie("active_session")
+    if (activeSession !== "true") {
+      router.push("/login")
+    }
+
     if (id === undefined) {
       router.push("/conversations")
     }
+
+    setChatId(id)
+
+
     // REST pre-work for chats
     getChatById(id, (chatData) => {
       const formattedChatData = formatChatData(chatData.chat_messages)
       setChatData(formattedChatData)
-      setChatId(id)
       setChat(chatData)
       getBotById(chatData.bot_id, (botData) => {
         setBot(botData)

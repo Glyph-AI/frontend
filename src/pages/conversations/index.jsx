@@ -10,6 +10,7 @@ import {
     Fab,
     Divider
 } from '@mui/material'
+import { getCookie } from '@/components/utility/cookie_helper';
 
 import ConversationItem from '@/components/conversations/conversationItem';
 import Layout from '@/components/utility/layout';
@@ -29,6 +30,10 @@ export default function Conversations() {
     }
 
     useEffect(() => {
+        const activeSession = getCookie("active_session")
+        if (activeSession !== "true") {
+            router.push("/login")
+        }
         getChats()
     }, [])
 

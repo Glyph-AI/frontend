@@ -14,6 +14,7 @@ import { motion } from "framer-motion";
 import DropdownMenu from "@/components/common/dropdownMenu";
 import { useRouter } from 'next/router';
 import { genericRequest, getRequest } from '@/components/utility/request_helper.jsx';
+import { getCookie } from '@/components/utility/cookie_helper';
 
 export default function Profile() {
     const [userUploads, setUserUploads] = useState([])
@@ -32,6 +33,10 @@ export default function Profile() {
     }
 
     useEffect(() => {
+        const activeSession = getCookie("active_session")
+        if (activeSession !== "true") {
+            router.push("/login")
+        }
         getRequest("/user_uploads", (data) => {
             console.log(data)
             setUserUploads(sortUserUploads(data));
