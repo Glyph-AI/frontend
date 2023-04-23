@@ -22,10 +22,13 @@ import { motion } from "framer-motion";
 export default function Conversations() {
     const [modalVisible, setModalVisible] = useState(false)
     const [userChats, setUserChats] = useState([])
+    const [displayChats, setDisplayChats] = useState([])
+    const [searchValue, setSearchValue] = useState([])
 
     const getChats = () => {
         getRequest("/chats", (data) => {
             setUserChats(data)
+            setDisplayChats(data)
         })
     }
 
@@ -50,6 +53,16 @@ export default function Conversations() {
         return formatted_message
     }
 
+    const searchFunction = (searchTerm, array) => {
+        return array.filter(chat => (chat.name.includes(searchTerm) || chat.chat_messages.filter(m => m.content.includes(searchTerm)).length > 0))
+    }
+
+    const handleSearchValueChange = (newValue) => {
+        setSearchValue(newValue)
+        const newDisplayChats = searchFunction(newValue, userChats)
+        setDisplayChats(newDisplayChats)
+    }
+
     const handleModalClose = () => {
         setModalVisible(false);
         getChats()
@@ -72,13 +85,12 @@ export default function Conversations() {
             >
                 <Box sx={{ height: "100%", padding: "8px", overflow: "hidden" }}>
                     <Box sx={{ height: "5%" }}>
-                        <Search placeholder="Search..." style={{ width: "100%" }} />
+                        <Search placeholder="Search..." style={{ width: "100%" }} value={searchValue} onChange={(val) => { handleSearchValueChange(val) }} />
                     </Box>
 
                     <ConversationList style={{ height: "95%", overflowY: "scroll", paddingRight: "25px", boxSizing: "content-box", width: "100%" }}>
                         {
-                            userChats && userChats.map((record, idx) => {
-                                console.log(record.chat_messages[-1])
+                            displayChats && displayChats.map((record, idx) => {
                                 const last_message = record.chat_messages[record.chat_messages.length - 1]
                                 return (
                                     <>
