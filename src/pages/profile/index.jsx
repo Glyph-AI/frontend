@@ -4,10 +4,13 @@ import {
     ConversationHeader
 } from '@chatscope/chat-ui-kit-react'
 import { useRouter } from "next/router";
-import { Avatar, Badge, Box } from "@mui/material";
+import { Avatar, Badge, Box, ListItem, ListItemText, List, ListItemAvatar, Divider, IconButton, Typography } from "@mui/material";
 import { styled } from '@mui/material/styles';
 import { theme } from "@/components/utility/theme";
 import FileUploadIcon from '@mui/icons-material/FileUpload';
+import { ChevronRight, EmailOutlined, MonetizationOnOutlined, Person, SmartToyOutlined } from "@mui/icons-material";
+import { useEffect, useState } from "react";
+import { getRequest } from "@/components/utility/request_helper";
 
 const SmallAvatar = styled(Avatar)(({ theme }) => ({
     width: 32,
@@ -19,7 +22,14 @@ const SmallAvatar = styled(Avatar)(({ theme }) => ({
 }));
 
 export default function Profile() {
+    const [stripeUrl, setStripeUrl] = useState("")
     const router = useRouter()
+
+    useEffect(() => {
+        getRequest("/subscriptions/customer-portal-session", (data) => {
+            setStripeUrl(data.url)
+        })
+    }, [])
     return (
         <Layout>
             <motion.div
@@ -40,7 +50,7 @@ export default function Profile() {
                     <ConversationHeader.Back onClick={() => { router.push("/conversations") }} />
                     <ConversationHeader.Content userName="Profile" />
                 </ConversationHeader>
-                <Box sx={{ display: "flex", alignContent: "center", justifyContent: "center", padding: "8px" }}>
+                <Box sx={{ display: "flex", flexWrap: "wrap", alignContent: "center", justifyContent: "center", padding: "8px" }}>
                     <Badge
                         overlap="circular"
                         anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
@@ -61,6 +71,44 @@ export default function Profile() {
 
                         </Avatar>
                     </Badge>
+                    <Box sx={{ marginTop: "8px", display: "flex", justifyContent: "center", alignItems: "center", width: "100%" }}>
+                        <Typography >{"email@test.com"}</Typography>
+                    </Box>
+                </Box>
+                <Box>
+                    <List>
+                        <ListItem
+                            secondaryAction={
+                                <IconButton edge="end" aria-label="subscription">
+                                    <ChevronRight />
+                                </IconButton>
+                            }
+                            onClick={() => { window.location.href = stripeUrl }}
+                        >
+                            <ListItemAvatar>
+                                <Avatar>
+                                    <MonetizationOnOutlined />
+                                </Avatar>
+                            </ListItemAvatar>
+                            <ListItemText primary={"Subscription"} />
+                        </ListItem>
+                        <Divider />
+                        <ListItem
+                            secondaryAction={
+                                <IconButton edge="end" aria-label="subscription">
+                                    <ChevronRight />
+                                </IconButton>
+                            }
+                        >
+                            <ListItemAvatar>
+                                <Avatar>
+                                    <SmartToyOutlined />
+                                </Avatar>
+                            </ListItemAvatar>
+                            <ListItemText primary={"Bots"} />
+                        </ListItem>
+                        <Divider />
+                    </List>
                 </Box>
 
             </motion.div>
