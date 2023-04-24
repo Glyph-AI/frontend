@@ -4,13 +4,16 @@ import { motion } from "framer-motion";
 import {
     ConversationHeader
 } from '@chatscope/chat-ui-kit-react'
-import { Divider, List } from "@mui/material";
+import { Divider, List, Fab, Box, Select, TextField } from "@mui/material";
 import BotListItem from "@/components/bots/botListItem";
 import { getRequest } from "@/components/utility/request_helper";
 import { useEffect, useState } from "react";
+import { Add } from "@mui/icons-material";
+import NewBotModal from "@/components/bots/newBotModal";
 
 export default function Bots() {
     const [userBots, setUserBots] = useState([])
+    const [modalVisible, setModalVisible] = useState(false)
     const router = useRouter()
 
     const getUserBots = () => {
@@ -22,6 +25,11 @@ export default function Bots() {
     useEffect(() => {
         getUserBots()
     }, [])
+
+    const handleModalClose = () => {
+        setModalVisible(false);
+        getUserBots()
+    }
 
     console.log(userBots)
 
@@ -55,7 +63,11 @@ export default function Bots() {
                         ))
                     }
                 </List>
-
+                <Fab onClick={() => { setModalVisible(true) }} variant="extended" sx={{ position: 'absolute', bottom: 32, right: 16 }} >
+                    <Add sx={{ mr: 1 }} />
+                    Add Bot
+                </Fab>
+                <NewBotModal open={modalVisible} handleClose={handleModalClose} />
             </motion.div>
         </Layout>
     )
