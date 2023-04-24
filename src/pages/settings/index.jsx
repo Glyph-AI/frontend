@@ -42,9 +42,7 @@ export default function Profile() {
             setUserUploads(sortUserUploads(data));
         })
 
-        getRequest("/subscriptions/customer-portal-session", (data) => {
-            setStripeUrl(data.url)
-        })
+
     }, [])
 
     const handleUploadDelete = (id) => {
@@ -90,23 +88,6 @@ export default function Profile() {
                         <ConversationHeader.Content style={{ fontSize: "1.2em" }} userName="Settings" />
                     </ConversationHeader>
                     <List sx={{ width: '100%', height: "100%", backgroundColor: "#fff" }}>
-                        {/* <ListItem
-                            key="subscription"
-                            secondaryAction={
-                                <IconButton edge="end">
-                                    <ChevronRightIcon />
-                                </IconButton>
-                            }
-                            onClick={() => { window.location.href = stripeUrl }}
-                        >
-                            <ListItemAvatar>
-                                <Avatar>
-                                    <CreditCardIcon />
-                                </Avatar>
-                            </ListItemAvatar>
-                            <ListItemText primary="Subscription" />
-                        </ListItem>
-                        <Divider /> */}
                         <ListItem
                             key="uploaded-files"
                             secondaryAction={

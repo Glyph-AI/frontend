@@ -99,6 +99,7 @@ export default function Profile() {
                                     <ChevronRight />
                                 </IconButton>
                             }
+                            onClick={() => { router.push("/bots") }}
                         >
                             <ListItemAvatar>
                                 <Avatar>
