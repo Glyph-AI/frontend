@@ -27,7 +27,7 @@ export default function NewConversationModal({ open, handleClose }) {
             name: obj.inputValue
         }
 
-        genericRequest("/bots/", "POST", JSON.stringify(data), (data) => {
+        genericRequest("/bots", "POST", JSON.stringify(data), (data) => {
             setUserBots([...userBots, data])
             setBot(data)
         }, { "Content-Type": "application/json" })
@@ -39,7 +39,7 @@ export default function NewConversationModal({ open, handleClose }) {
             bot_id: botId
         }
 
-        genericRequest("/chats/", "POST", JSON.stringify(data), () => { }, { "Content-Type": "application/json" })
+        genericRequest("/chats", "POST", JSON.stringify(data), () => { }, { "Content-Type": "application/json" })
     }
 
     const getUserBots = () => {

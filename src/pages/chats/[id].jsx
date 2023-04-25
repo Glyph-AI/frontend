@@ -44,7 +44,7 @@ export default function Home() {
   const { id } = router.query
 
   const getChatById = (chat_id, callback = () => { }) => {
-    getRequest(`/chats/${chat_id}/`, (data) => {
+    getRequest(`/chats/${chat_id}`, (data) => {
       callback(data)
     })
   }
