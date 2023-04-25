@@ -100,7 +100,8 @@ export default function Conversations() {
                     <ConversationList style={{ height: "95%", overflowY: "scroll", paddingRight: "25px", boxSizing: "content-box", width: "100%" }}>
                         {
                             displayChats && displayChats.map((record, idx) => {
-                                const last_message = record.chat_messages[record.chat_messages.length - 1]
+                                const last_message = record.chat_messages.sort((a, b) => new Date(a.created_at) - new Date(b.created_at))[record.chat_messages.length - 1]
+                                console.log(last_message)
                                 return (
                                     <>
                                         <ConversationItem

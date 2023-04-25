@@ -21,7 +21,6 @@ import {
 import { Snackbar } from '@mui/material'
 import { useRouter } from 'next/router';
 import Layout from '@/components/utility/layout';
-import DropdownMenu from '@/components/common/dropdownMenu.jsx';
 import { motion } from "framer-motion";
 import { getCookie } from '@/components/utility/cookie_helper';
 
@@ -223,7 +222,6 @@ export default function Home() {
             ref={inputFile}
             style={{ display: 'none' }}
           />
-          <DropdownMenu anchor={anchorEl} open={menuOpen} handleMenuClose={handleMenuClose} chatId={chatId} />
           <MainContainer>
             <ChatContainer>
               <ConversationHeader >
