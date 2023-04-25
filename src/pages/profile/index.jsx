@@ -4,13 +4,13 @@ import {
     ConversationHeader
 } from '@chatscope/chat-ui-kit-react'
 import { useRouter } from "next/router";
-import { Avatar, Badge, Box, ListItem, ListItemText, List, ListItemAvatar, Divider, IconButton, Typography } from "@mui/material";
+import { Avatar, Badge, Box, ListItem, ListItemText, List, ListItemAvatar, Divider, IconButton, Typography, Button } from "@mui/material";
 import { styled } from '@mui/material/styles';
 import { theme } from "@/components/utility/theme";
 import FileUploadIcon from '@mui/icons-material/FileUpload';
-import { ChevronRight, EmailOutlined, MonetizationOnOutlined, Person, SmartToyOutlined } from "@mui/icons-material";
+import { ChevronRight, EmailOutlined, Logout, MonetizationOnOutlined, Person, SmartToyOutlined } from "@mui/icons-material";
 import { useEffect, useState } from "react";
-import { getRequest } from "@/components/utility/request_helper";
+import { genericRequest, getRequest } from "@/components/utility/request_helper";
 
 const SmallAvatar = styled(Avatar)(({ theme }) => ({
     width: 32,
@@ -38,6 +38,12 @@ export default function Profile() {
         })
         getProfile()
     }, [])
+
+    const handleLogout = () => {
+        genericRequest("/logout", "POST", null, () => {
+            router.push("/login")
+        })
+    }
     return (
         <Layout>
             <motion.div
@@ -118,6 +124,11 @@ export default function Profile() {
                         </ListItem>
                         <Divider />
                     </List>
+                </Box>
+                <Box sx={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
+                    <Button onClick={handleLogout} startIcon={<Logout />} variant="contained" sx={{ width: "80%" }}>
+                        Logout
+                    </Button>
                 </Box>
 
             </motion.div>

@@ -69,6 +69,7 @@ export default function Conversations() {
         setModalVisible(false);
         getChats()
     }
+
     return (
         <Layout>
             <motion.div

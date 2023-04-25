@@ -36,14 +36,13 @@ export default function Home() {
   const [snackbarMessage, setSnackbarMessage] = useState("")
   const [chat, setChat] = useState("")
   const [bot, setBot] = useState("")
+  const [currentUser, setCurrentUser] = useState({})
   const inputFile = useRef(null)
   const inputRef = useRef();
   const menuOpen = Boolean(anchorEl);
   const router = useRouter()
 
   const { id } = router.query
-
-  const botName = "Glyph"
 
   const getChatById = (chat_id, callback = () => { }) => {
     getRequest(`/chats/${chat_id}/`, (data) => {
@@ -54,6 +53,12 @@ export default function Home() {
   const getBotById = (bot_id, callback = () => { }) => {
     getRequest(`/bots/${bot_id}`, (data) => {
       callback(data)
+    })
+  }
+
+  const getUser = () => {
+    getRequest("/profile", (data) => {
+      setCurrentUser(data)
     })
   }
 
@@ -120,6 +125,8 @@ export default function Home() {
       })
     })
 
+    getUser()
+
   }, [])
 
   const handleNewMessage = () => {
@@ -162,7 +169,7 @@ export default function Home() {
 
     console.log(file)
 
-    genericRequest(`/bots/${botId}/chats/${chatId}/user_upload`, "POST", formData, (data, status) => {
+    genericRequest(`/bots/${botId}/user_upload?=chat_id${chatId}`, "POST", formData, (data, status) => {
       if (status === 200) {
         console.log("Upload Successful")
         getChatById(chatId, botId, (data) => {
@@ -223,13 +230,6 @@ export default function Home() {
                 <ConversationHeader.Back onClick={() => { router.push("/conversations") }} />
                 <Avatar src={"/glyph-avatar.png"} name={bot.name} />
                 <ConversationHeader.Content userName={bot.name} info={chat.name} />
-                <ConversationHeader.Actions>
-                  <EllipsisButton orientation="vertical" onClick={handleMenuOpen} style={{
-                    fontSize: "1.2em",
-                    paddingLeft: "0.2em",
-                    paddingRight: "0.2em"
-                  }} />
-                </ConversationHeader.Actions>
               </ConversationHeader>
               <MessageList typingIndicator={typingIndicator()}>
                 {
@@ -247,13 +247,16 @@ export default function Home() {
                 flexDirection: "row",
                 borderTop: "1px solid #d1dbe4"
               }}>
-                <AttachmentButton style={{
-                  fontSize: "1.2em",
-                  paddingLeft: "0.2em",
-                  paddingRight: "0.2em"
-                }}
-                  onClick={handleUploadClick}
-                />
+                {
+                  currentUser.id === bot.creator_id && <AttachmentButton
+                    style={{
+                      fontSize: "1.2em",
+                      paddingLeft: "0.2em",
+                      paddingRight: "0.2em"
+                    }}
+                    onClick={handleUploadClick}
+                  />
+                }
                 <MessageInput
                   ref={inputRef}
                   onChange={(val) => { setNewMessage(val) }}
@@ -272,11 +275,6 @@ export default function Home() {
                   paddingLeft: "0.2em",
                   paddingRight: "0.2em"
                 }} />
-                {/* <EllipsisButton orientation="vertical" onClick={() => alert("Important message!")} style={{
-                  fontSize: "1.2em",
-                  paddingLeft: "0.2em",
-                  paddingRight: "0.2em"
-                }} /> */}
               </div>
             </ChatContainer>
           </MainContainer>
