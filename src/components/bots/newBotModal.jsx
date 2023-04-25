@@ -1,8 +1,8 @@
 import { Dialog, DialogContent, DialogTitle, TextField, Box, Divider, Typography, DialogActions, Button } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { genericRequest } from "../utility/request_helper";
 
-export default function NewBotModal({ open, handleClose }) {
+export default function NewBotModal({ open, handleClose, urlBotCode }) {
     const [name, setName] = useState("")
     const [botCode, setBotCode] = useState("")
 
@@ -26,6 +26,13 @@ export default function NewBotModal({ open, handleClose }) {
             }, { "Content-Type": "application/json" })
         }
     }
+
+    useEffect(() => {
+        console.log(urlBotCode)
+        if (urlBotCode !== undefined) {
+            setBotCode(urlBotCode)
+        }
+    })
 
     return (
         <Dialog

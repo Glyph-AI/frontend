@@ -16,6 +16,7 @@ export default function Bots() {
     const [userBots, setUserBots] = useState([])
     const [user, setUser] = useState({})
     const [modalVisible, setModalVisible] = useState(false)
+    const [urlBotCode, setUrlBotCode] = useState(null)
     const router = useRouter()
 
     const getUserBots = () => {
@@ -33,7 +34,19 @@ export default function Bots() {
         if (activeSession !== "true") {
             router.push("/login")
         }
+
         getUserBots()
+
+        const params = new Proxy(new URLSearchParams(window.location.search), {
+            get: (searchParams, prop) => searchParams.get(prop),
+        });
+
+        let bot_code = params.bot_code
+
+        if (bot_code !== null) {
+            setUrlBotCode(bot_code)
+            setModalVisible(true)
+        }
     }, [])
 
     const handleModalClose = () => {
@@ -77,7 +90,7 @@ export default function Bots() {
                     <Add sx={{ mr: 1 }} />
                     Add Bot
                 </Fab>
-                <NewBotModal open={modalVisible} handleClose={handleModalClose} />
+                <NewBotModal urlBotCode={urlBotCode} open={modalVisible} handleClose={handleModalClose} />
             </motion.div>
         </Layout>
     )
