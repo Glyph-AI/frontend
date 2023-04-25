@@ -122,6 +122,7 @@ export default function Home() {
       getBotById(chatData.bot_id, (botData) => {
         setBot(botData)
       })
+      setBotId(chatData.bot_id)
     })
 
     getUser()
@@ -139,7 +140,7 @@ export default function Home() {
     setChatData(newChatData)
     setNewMessage("")
 
-    genericRequest(`/bots/${botId}/chats/${chatId}/message`, "POST", JSON.stringify(newMessageJson), (data) => {
+    genericRequest(`/chats/${chatId}/message`, "POST", JSON.stringify(newMessageJson), (data) => {
       const newChatData = formatChatData(data.chat_messages)
       setChatData(newChatData)
       setGlyphTyping(false)

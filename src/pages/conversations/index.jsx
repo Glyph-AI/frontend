@@ -64,7 +64,7 @@ export default function Conversations() {
     }
 
     const searchFunction = (searchTerm, array) => {
-        return array.filter(chat => (chat.name.includes(searchTerm) || chat.chat_messages.filter(m => m.content.includes(searchTerm)).length > 0))
+        return array.filter(chat => (chat.name.toLowerCase().includes(searchTerm) || chat.chat_messages.filter(m => m.content.toLowerCase().includes(searchTerm)).length > 0))
     }
 
     const handleSearchValueChange = (newValue) => {
