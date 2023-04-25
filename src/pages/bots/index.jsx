@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import {
     ConversationHeader
 } from '@chatscope/chat-ui-kit-react'
-import { Divider, List, Fab, Box, Select, TextField } from "@mui/material";
+import { Divider, List, Fab, Box, Select, TextField, Typography } from "@mui/material";
 import BotListItem from "@/components/bots/botListItem";
 import { getRequest } from "@/components/utility/request_helper";
 import { useEffect, useState } from "react";
@@ -56,7 +56,7 @@ export default function Bots() {
             >
                 <ConversationHeader >
                     <ConversationHeader.Back onClick={() => { router.push("/profile") }} />
-                    <ConversationHeader.Content userName="Bots" />
+                    <ConversationHeader.Content userName={<Typography variant="h6">Bots</Typography>} />
                 </ConversationHeader>
                 <List>
                     {

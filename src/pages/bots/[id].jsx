@@ -4,7 +4,7 @@ import BotToolList from "@/components/bots/botToolList";
 import Layout from "@/components/utility/layout"
 import { genericRequest, getRequest } from "@/components/utility/request_helper";
 import { ConversationHeader } from "@chatscope/chat-ui-kit-react";
-import { Divider, List, ListItem, ListItemText, Table, TableBody, TableRow } from "@mui/material";
+import { Divider, List, ListItem, ListItemText, Table, TableBody, TableRow, Typography } from "@mui/material";
 import { motion } from "framer-motion";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
@@ -64,7 +64,7 @@ export default function BotInfo() {
             >
                 <ConversationHeader>
                     <ConversationHeader.Back onClick={() => { router.push("/bots") }} />
-                    <ConversationHeader.Content userName={bot.name} />
+                    <ConversationHeader.Content userName={<Typography variant="h6">{bot.name}</Typography>} />
                 </ConversationHeader>
                 <Table>
                     <TableBody>

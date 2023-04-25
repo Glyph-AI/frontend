@@ -62,7 +62,7 @@ export default function Profile() {
             >
                 <ConversationHeader >
                     <ConversationHeader.Back onClick={() => { router.push("/conversations") }} />
-                    <ConversationHeader.Content userName="Profile" />
+                    <ConversationHeader.Content userName={<Typography variant="h6">Profile</Typography>} />
                 </ConversationHeader>
                 <Box sx={{ display: "flex", flexWrap: "wrap", alignContent: "center", justifyContent: "center", padding: "8px" }}>
                     <Avatar
@@ -74,8 +74,9 @@ export default function Profile() {
                     >
 
                     </Avatar>
-                    <Box sx={{ marginTop: "8px", display: "flex", justifyContent: "center", alignItems: "center", width: "100%" }}>
-                        <Typography >{profile.email}</Typography>
+                    <Box sx={{ marginTop: "8px", display: "flex", justifyContent: "center", flexWrap: "wrap", alignItems: "center", width: "100%" }}>
+                        <Typography variant="h5" sx={{ fontWeight: 600, width: "100%", textAlign: "center" }}>{profile.first_name} {profile.last_name}</Typography>
+                        <Typography variant="subtitle1">{profile.email}</Typography>
                     </Box>
                 </Box>
                 <Box>

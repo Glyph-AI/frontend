@@ -18,7 +18,7 @@ import {
   genericRequest,
   getRequest
 } from '@/components/utility/request_helper';
-import { Snackbar } from '@mui/material'
+import { Snackbar, Typography } from '@mui/material'
 import { useRouter } from 'next/router';
 import Layout from '@/components/utility/layout';
 import { motion } from "framer-motion";
@@ -227,7 +227,7 @@ export default function Home() {
               <ConversationHeader >
                 <ConversationHeader.Back onClick={() => { router.push("/conversations") }} />
                 <Avatar src={"/glyph-avatar.png"} name={bot.name} />
-                <ConversationHeader.Content userName={bot.name} info={chat.name} />
+                <ConversationHeader.Content userName={<Typography variant="h6">{bot.name}</Typography>} info={chat.name} />
               </ConversationHeader>
               <MessageList typingIndicator={typingIndicator()}>
                 {
