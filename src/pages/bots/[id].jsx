@@ -1,6 +1,7 @@
 import BotAttribute from "@/components/bots/botAttribute";
 import BotFileList from "@/components/bots/botFileList";
 import BotToolList from "@/components/bots/botToolList";
+import { getCookie } from "@/components/utility/cookie_helper";
 import Layout from "@/components/utility/layout"
 import { genericRequest, getRequest } from "@/components/utility/request_helper";
 import { ConversationHeader } from "@chatscope/chat-ui-kit-react";
@@ -43,6 +44,10 @@ export default function BotInfo() {
     }
 
     useEffect(() => {
+        const activeSession = getCookie("active_session")
+        if (activeSession !== "true") {
+            router.push("/login")
+        }
         getBotById()
     }, [])
 

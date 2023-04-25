@@ -21,7 +21,7 @@ export default function NewBotModal({ open, handleClose }) {
                 sharing_enabled: false
             }
 
-            genericRequest("/bots/", "POST", JSON.stringify(data), () => {
+            genericRequest("/bots", "POST", JSON.stringify(data), () => {
                 handleClose()
             }, { "Content-Type": "application/json" })
         }

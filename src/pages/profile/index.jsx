@@ -11,6 +11,7 @@ import FileUploadIcon from '@mui/icons-material/FileUpload';
 import { ChevronRight, EmailOutlined, Logout, MonetizationOnOutlined, Person, SmartToyOutlined } from "@mui/icons-material";
 import { useEffect, useState } from "react";
 import { genericRequest, getRequest } from "@/components/utility/request_helper";
+import { getCookie } from "@/components/utility/cookie_helper";
 
 const SmallAvatar = styled(Avatar)(({ theme }) => ({
     width: 32,
@@ -33,6 +34,10 @@ export default function Profile() {
     }
 
     useEffect(() => {
+        const activeSession = getCookie("active_session")
+        if (activeSession !== "true") {
+            router.push("/login")
+        }
         getRequest("/subscriptions/customer-portal-session", (data) => {
             setStripeUrl(data.url)
         })

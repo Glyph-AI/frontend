@@ -10,6 +10,7 @@ import { getRequest } from "@/components/utility/request_helper";
 import { useEffect, useState } from "react";
 import { Add } from "@mui/icons-material";
 import NewBotModal from "@/components/bots/newBotModal";
+import { getCookie } from "@/components/utility/cookie_helper";
 
 export default function Bots() {
     const [userBots, setUserBots] = useState([])
@@ -28,6 +29,10 @@ export default function Bots() {
     }
 
     useEffect(() => {
+        const activeSession = getCookie("active_session")
+        if (activeSession !== "true") {
+            router.push("/login")
+        }
         getUserBots()
     }, [])
 
