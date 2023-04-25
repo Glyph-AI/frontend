@@ -25,6 +25,7 @@ export default function Conversations() {
     const [userChats, setUserChats] = useState([])
     const [displayChats, setDisplayChats] = useState([])
     const [searchValue, setSearchValue] = useState([])
+    const [user, setUser] = useState({})
     const router = useRouter()
 
     const getChats = () => {
@@ -34,12 +35,19 @@ export default function Conversations() {
         })
     }
 
+    const getUser = () => {
+        getRequest("/profile", (data) => {
+            setUser(data)
+        })
+    }
+
     useEffect(() => {
         const activeSession = getCookie("active_session")
         if (activeSession !== "true") {
             router.push("/login")
         }
         getChats()
+        getUser()
     }, [])
 
     const formatLastMessage = (message) => {
@@ -70,6 +78,8 @@ export default function Conversations() {
         getChats()
     }
 
+    console.log(user)
+
     return (
         <Layout>
             <motion.div
@@ -87,12 +97,13 @@ export default function Conversations() {
                 style={{ height: "100%" }}
             >
                 <Box sx={{ height: "100%", padding: "8px", overflow: "hidden" }}>
-                    <Box sx={{ height: "5%", display: "flex", marginBottom: "16px", alignContent: "center" }}>
-                        <Search placeholder="Search..." style={{ flex: 1 }} value={searchValue} onChange={(val) => { handleSearchValueChange(val) }} />
+                    <Box sx={{ height: 40, display: "flex", marginBottom: "16px", alignContent: "center" }}>
+                        <Search placeholder="Search..." style={{ flex: 1, fontSize: 16 }} value={searchValue} onChange={(val) => { handleSearchValueChange(val) }} />
                         <Avatar
                             onMouseEnter={(e) => { e.target.style.cursor = "pointer" }}
                             sx={{ marginLeft: "16px", width: 40, height: 40 }}
                             alt="User"
+                            src={user.profile_picture_location}
                             onClick={() => { router.push("/profile") }}
                         />
                     </Box>

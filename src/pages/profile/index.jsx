@@ -65,26 +65,15 @@ export default function Profile() {
                     <ConversationHeader.Content userName="Profile" />
                 </ConversationHeader>
                 <Box sx={{ display: "flex", flexWrap: "wrap", alignContent: "center", justifyContent: "center", padding: "8px" }}>
-                    <Badge
-                        overlap="circular"
-                        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-                        onClick={() => { setProfileDialogOpen(true) }}
-                        badgeContent={
-                            <SmallAvatar>
-                                <FileUploadIcon />
-                            </SmallAvatar>
+                    <Avatar
+                        src={
+                            profile.profile_picture_location
                         }
+                        sx={{ height: 128, width: 128, fontSize: 90, backgroundColor: "#fff" }}
+                        alt={"Avatar"}
                     >
-                        <Avatar
-                            // src={
-                            //     email && `http://localhost:8000/users/${email}/profile-picture`
-                            // }
-                            sx={{ height: 128, width: 128, fontSize: 90, backgroundColor: "#fff" }}
-                            alt={"Avatar"}
-                        >
 
-                        </Avatar>
-                    </Badge>
+                    </Avatar>
                     <Box sx={{ marginTop: "8px", display: "flex", justifyContent: "center", alignItems: "center", width: "100%" }}>
                         <Typography >{profile.email}</Typography>
                     </Box>
