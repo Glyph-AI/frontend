@@ -23,12 +23,20 @@ const SmallAvatar = styled(Avatar)(({ theme }) => ({
 
 export default function Profile() {
     const [stripeUrl, setStripeUrl] = useState("")
+    const [profile, setProfile] = useState({})
     const router = useRouter()
+
+    const getProfile = () => {
+        getRequest("/profile", (data) => {
+            setProfile(data)
+        })
+    }
 
     useEffect(() => {
         getRequest("/subscriptions/customer-portal-session", (data) => {
             setStripeUrl(data.url)
         })
+        getProfile()
     }, [])
     return (
         <Layout>
@@ -72,7 +80,7 @@ export default function Profile() {
                         </Avatar>
                     </Badge>
                     <Box sx={{ marginTop: "8px", display: "flex", justifyContent: "center", alignItems: "center", width: "100%" }}>
-                        <Typography >{"email@test.com"}</Typography>
+                        <Typography >{profile.email}</Typography>
                     </Box>
                 </Box>
                 <Box>

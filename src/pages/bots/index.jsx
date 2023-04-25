@@ -13,12 +13,17 @@ import NewBotModal from "@/components/bots/newBotModal";
 
 export default function Bots() {
     const [userBots, setUserBots] = useState([])
+    const [user, setUser] = useState({})
     const [modalVisible, setModalVisible] = useState(false)
     const router = useRouter()
 
     const getUserBots = () => {
         getRequest("/bots", (data) => {
             setUserBots(data)
+        })
+
+        getRequest("/profile", (data) => {
+            setUser(data)
         })
     }
 
@@ -57,7 +62,7 @@ export default function Bots() {
                     {
                         userBots && userBots.map((item) => (
                             <>
-                                <BotListItem bot={item} />
+                                <BotListItem bot={item} displayLink={item.creator_id == user.id} />
                                 <Divider />
                             </>
                         ))

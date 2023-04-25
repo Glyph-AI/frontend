@@ -78,7 +78,6 @@ export default function NewConversationModal({ open, handleClose }) {
                                 // Create a new value from the user input
                                 createNewBot(newValue)
                             } else {
-                                console.log(newValue)
                                 setBot(newValue);
                             }
                         }}

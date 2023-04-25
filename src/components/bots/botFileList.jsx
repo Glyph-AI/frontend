@@ -13,8 +13,6 @@ export default function BotFileList({ name, bot_id }) {
         return sorted
     }
 
-    console.log(bot_id)
-
     useEffect(() => {
         if (bot_id !== undefined) {
             getRequest(`/user_uploads?bot_id=${bot_id}`, (data) => {

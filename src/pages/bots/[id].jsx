@@ -2,7 +2,7 @@ import BotAttribute from "@/components/bots/botAttribute";
 import BotFileList from "@/components/bots/botFileList";
 import BotToolList from "@/components/bots/botToolList";
 import Layout from "@/components/utility/layout"
-import { getRequest } from "@/components/utility/request_helper";
+import { genericRequest, getRequest } from "@/components/utility/request_helper";
 import { ConversationHeader } from "@chatscope/chat-ui-kit-react";
 import { Divider, List, ListItem, ListItemText, Table, TableBody, TableRow } from "@mui/material";
 import { motion } from "framer-motion";
@@ -10,15 +10,36 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 
 export default function BotInfo() {
-    const [bot, setBot] = useState({})
-
     const router = useRouter()
     const { id } = router.query
+
+    const [bot, setBot] = useState({})
+    const [botId, setBotId] = useState(null)
+
+
 
     const getBotById = () => {
         getRequest(`/bots/${id}`, (data) => {
             setBot(data)
+            setBotId(id)
         })
+    }
+
+    const handleSharingChange = (e) => {
+        const data = {
+            sharing_enabled: !bot.sharing_enabled
+        }
+        genericRequest(`/bots/${botId}`, "PATCH", JSON.stringify(data), (data) => {
+            setBot(data)
+        }, { "Content-Type": "application/json" })
+    }
+
+    const renderSharingCode = () => {
+        if (!bot.sharing_enabled) {
+            return ""
+        }
+
+        return bot.sharing_code
     }
 
     useEffect(() => {
@@ -48,6 +69,8 @@ export default function BotInfo() {
                 <Table>
                     <TableBody>
                         <BotAttribute name={"Chats"} value={bot.chats && bot.chats.length} />
+                        <BotAttribute name={"Sharing Enabled"} value={bot.sharing_enabled || false} onChange={handleSharingChange} />
+                        <BotAttribute name={"Sharing Code"} value={renderSharingCode()} />
                     </TableBody>
                 </Table>
                 <Divider />

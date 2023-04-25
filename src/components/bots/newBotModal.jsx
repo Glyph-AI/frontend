@@ -1,9 +1,31 @@
 import { Dialog, DialogContent, DialogTitle, TextField, Box, Divider, Typography, DialogActions, Button } from "@mui/material";
 import { useState } from "react";
+import { genericRequest } from "../utility/request_helper";
 
 export default function NewBotModal({ open, handleClose }) {
     const [name, setName] = useState("")
     const [botCode, setBotCode] = useState("")
+
+    const onAdd = () => {
+        if (botCode !== "") {
+            // we're adding a shared bot
+            const data = {
+                sharing_code: botCode
+            }
+            genericRequest("/bots/add-shared", "POST", JSON.stringify(data), () => {
+                handleClose()
+            }, { "Content-Type": "application/json" })
+        } else {
+            const data = {
+                name: name,
+                sharing_enabled: false
+            }
+
+            genericRequest("/bots/", "POST", JSON.stringify(data), () => {
+                handleClose()
+            }, { "Content-Type": "application/json" })
+        }
+    }
 
     return (
         <Dialog
@@ -19,7 +41,7 @@ export default function NewBotModal({ open, handleClose }) {
                     </Box>
                     <Divider flexItem >or</Divider>
                     <Box sx={{ display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "center" }}>
-                        <Typography sx={{ width: "100%", textAlign: "center", fontSize: 20, marginBottom: "8px" }}>Input Sharing Code</Typography>
+                        <Typography sx={{ width: "100%", textAlign: "center", fontSize: 20, marginBottom: "8px" }}>Sharing Code</Typography>
                         <TextField disabled={name !== ""} fullWidth label="Code" value={botCode} onChange={(e) => { setBotCode(e.target.value) }} />
                     </Box>
 
@@ -27,7 +49,7 @@ export default function NewBotModal({ open, handleClose }) {
             </DialogContent>
             <DialogActions>
                 <Button onClick={() => { handleClose() }}>Cancel</Button>
-                <Button onClick={() => { handleClose() }}>Create</Button>
+                <Button onClick={() => { onAdd() }}>Add</Button>
             </DialogActions>
 
         </Dialog>

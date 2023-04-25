@@ -2,18 +2,24 @@ import { ChevronRight, SmartToy } from "@mui/icons-material";
 import { Avatar, IconButton, ListItem, ListItemAvatar, ListItemText } from "@mui/material";
 import { useRouter } from "next/router";
 
-export default function BotListItem({ bot }) {
+export default function BotListItem({ bot, displayLink }) {
     const router = useRouter()
-    console.log("HERE")
+
+    const handleClick = () => {
+        if (displayLink) {
+            router.push(`/bots/${bot.id}`)
+        }
+    }
+
     return (
         <ListItem
             secondaryAction={
-                <IconButton>
+                displayLink && <IconButton>
                     <ChevronRight />
                 </IconButton>
             }
 
-            onClick={() => { router.push(`/bots/${bot.id}`) }}
+            onClick={handleClick}
         >
             <ListItemAvatar>
                 <Avatar>
