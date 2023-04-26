@@ -13,6 +13,7 @@ export default function NewBotModal({ open, handleClose, urlBotCode }) {
                 sharing_code: botCode
             }
             genericRequest("/bots/add-shared", "POST", JSON.stringify(data), () => {
+                setBotCode("")
                 handleClose()
             }, { "Content-Type": "application/json" })
         } else {
@@ -22,16 +23,17 @@ export default function NewBotModal({ open, handleClose, urlBotCode }) {
             }
 
             genericRequest("/bots", "POST", JSON.stringify(data), () => {
+                setName("")
                 handleClose()
             }, { "Content-Type": "application/json" })
         }
     }
 
     useEffect(() => {
-        if (urlBotCode !== undefined) {
+        if (urlBotCode !== undefined || urlBotCode !== null) {
             setBotCode(urlBotCode || "")
         }
-    })
+    }, [])
 
     return (
         <Dialog
