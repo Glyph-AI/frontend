@@ -42,7 +42,8 @@ export default function Bots() {
         });
 
         let bot_code = params.bot_code
-
+        console.log("HELLO")
+        console.log(bot_code)
         if (bot_code !== null) {
             setUrlBotCode(bot_code)
             setModalVisible(true)

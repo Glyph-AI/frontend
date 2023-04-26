@@ -30,8 +30,13 @@ export default function NewBotModal({ open, handleClose, urlBotCode }) {
     }
 
     useEffect(() => {
-        if (urlBotCode !== undefined || urlBotCode !== null) {
-            setBotCode(urlBotCode || "")
+        const params = new Proxy(new URLSearchParams(window.location.search), {
+            get: (searchParams, prop) => searchParams.get(prop),
+        });
+
+        let bot_code = params.bot_code
+        if (bot_code !== undefined || bot_code !== null) {
+            setBotCode(bot_code || "")
         }
     }, [])
 
