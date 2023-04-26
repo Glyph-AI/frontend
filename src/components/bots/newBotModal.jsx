@@ -28,13 +28,10 @@ export default function NewBotModal({ open, handleClose, urlBotCode }) {
     }
 
     useEffect(() => {
-        console.log(urlBotCode)
         if (urlBotCode !== undefined) {
-            setBotCode(urlBotCode)
+            setBotCode(urlBotCode || "")
         }
     })
-
-    console.log(botCode, name)
 
     return (
         <Dialog

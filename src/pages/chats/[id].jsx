@@ -167,8 +167,6 @@ export default function Home() {
     const formData = new FormData()
     formData.append('file', file)
 
-    console.log(file)
-
     genericRequest(`/bots/${botId}/user_upload?=chat_id${chatId}`, "POST", formData, (data, status) => {
       if (status === 200) {
         console.log("Upload Successful")

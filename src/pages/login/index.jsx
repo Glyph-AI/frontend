@@ -49,11 +49,9 @@ export default function Login() {
         });
 
         let bot_code = params.bot_code
-        console.log(bot_code)
         if (bot_code !== null) {
             setRedirectUrl(`/bots?bot_code=${bot_code}`)
         }
-        console.log(redirectUrl)
     }, [handleGoogle])
     return (
         <Layout>

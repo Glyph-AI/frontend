@@ -78,8 +78,6 @@ export default function Conversations() {
         getChats()
     }
 
-    console.log(user)
-
     return (
         <Layout>
             <motion.div
@@ -112,7 +110,6 @@ export default function Conversations() {
                         {
                             displayChats && displayChats.map((record, idx) => {
                                 const last_message = record.chat_messages.sort((a, b) => new Date(a.created_at) - new Date(b.created_at))[record.chat_messages.length - 1]
-                                console.log(last_message)
                                 return (
                                     <>
                                         <ConversationItem

@@ -54,8 +54,6 @@ export default function Bots() {
         getUserBots()
     }
 
-    console.log(userBots)
-
     return (
         <Layout>
             <motion.div
