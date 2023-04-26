@@ -87,6 +87,7 @@ export default function Profile() {
                 <Box>
                     <List>
                         <ListItem
+                            sx={{ cursor: "pointer" }}
                             secondaryAction={
                                 <IconButton edge="end" aria-label="subscription">
                                     <ChevronRight />
@@ -103,6 +104,7 @@ export default function Profile() {
                         </ListItem>
                         <Divider />
                         <ListItem
+                            sx={{ cursor: "pointer" }}
                             secondaryAction={
                                 <IconButton edge="end" aria-label="subscription">
                                     <ChevronRight />

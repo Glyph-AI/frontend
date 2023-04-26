@@ -13,6 +13,7 @@ export default function BotListItem({ bot, displayLink }) {
 
     return (
         <ListItem
+            sx={{ cursor: "pointer" }}
             secondaryAction={
                 displayLink && <IconButton>
                     <ChevronRight />
