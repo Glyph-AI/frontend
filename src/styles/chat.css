@@ -1,0 +1,6 @@
+.scrollbar-container {
+    align-self: flex-end !important;
+    width: 100% !important;
+    max-height: 100% !important;
+    height: auto
+}

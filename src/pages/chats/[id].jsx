@@ -228,7 +228,7 @@ export default function Home() {
                 <Avatar src={"/glyph-avatar.png"} name={bot.name} />
                 <ConversationHeader.Content userName={<Typography variant="h6">{bot.name}</Typography>} info={chat.name} />
               </ConversationHeader>
-              <MessageList typingIndicator={typingIndicator()}>
+              <MessageList style={{ display: "flex" }} typingIndicator={typingIndicator()}>
                 {
                   chatData && chatData.map((obj, index) => {
                     if (obj.sender === "system") {
