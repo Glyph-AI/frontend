@@ -34,6 +34,8 @@ export default function NewBotModal({ open, handleClose, urlBotCode }) {
         }
     })
 
+    console.log(botCode, name)
+
     return (
         <Dialog
             open={open}
@@ -44,12 +46,12 @@ export default function NewBotModal({ open, handleClose, urlBotCode }) {
                 <Box sx={{}}>
                     <Box sx={{ display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "center" }}>
                         <Typography sx={{ width: "100%", textAlign: "center", fontSize: 20, marginBottom: "8px" }}>Create New Bot</Typography>
-                        <TextField disabled={botCode !== ""} fullWidth label="Name" value={name} onChange={(e) => { setName(e.target.value) }} />
+                        <TextField disabled={botCode !== "" && botCode !== null} fullWidth label="Name" value={name} onChange={(e) => { setName(e.target.value) }} />
                     </Box>
                     <Divider flexItem >or</Divider>
                     <Box sx={{ display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "center" }}>
                         <Typography sx={{ width: "100%", textAlign: "center", fontSize: 20, marginBottom: "8px" }}>Sharing Code</Typography>
-                        <TextField disabled={name !== ""} fullWidth label="Code" value={botCode} onChange={(e) => { setBotCode(e.target.value) }} />
+                        <TextField disabled={name !== "" && name !== null} fullWidth label="Code" value={botCode} onChange={(e) => { setBotCode(e.target.value) }} />
                     </Box>
 
                 </Box>
