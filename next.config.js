@@ -3,6 +3,15 @@ const withPWA = require('next-pwa')({
 })
 
 module.exports = withPWA({
+  async redirects() {
+    return [
+      {
+        source: '/',
+        destination: '/conversations',
+        permanent: true,
+      },
+    ]
+  },
   pwa: {
     register: true,
     skipWaiting: true

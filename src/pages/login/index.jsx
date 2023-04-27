@@ -6,6 +6,7 @@ import Layout from '@/components/utility/layout';
 import { motion } from "framer-motion";
 
 export default function Login() {
+    const [redirectUrl, setRedirectUrl] = useState("/conversations")
     const router = useRouter()
     const handleGoogle = (resp) => {
         var auth_data = {
@@ -14,7 +15,7 @@ export default function Login() {
 
         genericRequest("/auth/google", "POST", JSON.stringify(auth_data), (data, status) => {
             if (status === 200) {
-                router.push("/")
+                router.push(redirectUrl)
             } else if (status === 401) {
                 console.log("Failed")
             }
@@ -22,8 +23,6 @@ export default function Login() {
     }
 
     useEffect(() => {
-        const relatedApps = navigator.getInstalledRelatedApps();
-        const PWAisInstalled = relatedApps.length > 0;
         if (window.google) {
             /* global google */
             google.accounts.id.initialize({
@@ -37,10 +36,15 @@ export default function Login() {
                 size: "large",
                 shape: "circle",
             });
-            // don't show the prompt because it interferes with installing the pwa
-            if (PWAisInstalled) {
-                google.accounts.id.prompt()
-            }
+        }
+
+        const params = new Proxy(new URLSearchParams(window.location.search), {
+            get: (searchParams, prop) => searchParams.get(prop),
+        });
+
+        let bot_code = params.bot_code
+        if (bot_code !== null) {
+            setRedirectUrl(`/bots?bot_code=${bot_code}`)
         }
     }, [handleGoogle])
     return (

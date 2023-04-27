@@ -10,7 +10,7 @@ export const getRequest = async (endpoint, callback = () => { }) => {
 
     const data = await request.json();
     const status = await request.status;
-    if (status != 200) {
+    if (status == 401) {
         Router.push("/login")
     }
     callback(data)
@@ -26,7 +26,7 @@ export const genericRequest = async (endpoint, method = 'POST', input_data = {},
 
     const data = await request.json();
     const status = await request.status;
-    if (status != 200) {
+    if (status == 401) {
         Router.push("/login")
     }
     callback(data, status);
