@@ -28,10 +28,29 @@ export default function Conversations() {
     const [user, setUser] = useState({})
     const router = useRouter()
 
+    const getChatDateSafe = (chat) => {
+        if (chat.chat_messages.length === 0) {
+            return chat.created_at
+        } else {
+            return chat.chat_messages[chat.chat_messages.length - 1].created_at
+        }
+    }
+
+    const sortChats = (chats) => {
+        var chatsWithMessagesSorted = chats.map((item) => {
+            item.chat_messages = item.chat_messages.sort((a, b) => new Date(a.created_at) - new Date(b.created_at))
+            return item
+        })
+
+        var sortedChats = chatsWithMessagesSorted.sort((a, b) => new Date(getChatDateSafe(b)) - new Date(getChatDateSafe(a)))
+        return sortedChats
+
+    }
+
     const getChats = () => {
         getRequest("/chats", (data) => {
-            setUserChats(data)
-            setDisplayChats(data)
+            setUserChats(sortChats(data))
+            setDisplayChats(sortChats(data))
         })
     }
 
