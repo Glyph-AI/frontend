@@ -74,8 +74,8 @@ export default function Conversations() {
     }
 
     const handleModalClose = () => {
-        setModalVisible(false);
         getChats()
+        setModalVisible(false);
     }
 
     return (

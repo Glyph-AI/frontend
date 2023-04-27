@@ -24,6 +24,7 @@ export default function BotInfo() {
 
     const getBotById = () => {
         getRequest(`/bots/${id}`, (data) => {
+            console.log(data)
             setBot(data)
             setBotId(id)
         })
@@ -73,6 +74,14 @@ export default function BotInfo() {
         getBotById()
     }, [])
 
+    const personaData = () => {
+        if (bot.persona !== undefined) {
+            return bot.persona.name
+        }
+
+        return ""
+    }
+
     return (
         <Layout>
             <motion.div
@@ -106,6 +115,7 @@ export default function BotInfo() {
                     <TableBody>
                         <BotAttribute name={"Chats"} value={bot.chats && bot.chats.length} />
                         <BotAttribute name={"Sharing Enabled"} value={bot.sharing_enabled || false} onChange={handleSharingChange} />
+                        <BotAttribute name={"Persona"} value={personaData()} />
                         <BotAttribute name={"Sharing Code"} value={renderSharingCode()} />
                         <BotAttribute name={"Sharing URL"} value={renderSharingUrl()} />
                     </TableBody>
