@@ -18,11 +18,12 @@ import {
   genericRequest,
   getRequest
 } from '@/components/utility/request_helper';
-import { Snackbar, Typography } from '@mui/material'
+import { Box, Snackbar, Typography } from '@mui/material'
 import { useRouter } from 'next/router';
 import Layout from '@/components/utility/layout';
 import { motion } from "framer-motion";
 import { getCookie } from '@/components/utility/cookie_helper';
+import { theme } from '@/components/utility/theme.jsx';
 
 export default function Home() {
   const [newMessage, setNewMessage] = useState("")
@@ -90,9 +91,33 @@ export default function Home() {
     }
   }
 
+  const customMessageContent = (message) => {
+    return (
+      <Message.CustomContent className="TestClass">
+        <Box sx={{ color: theme.palette.text.primary }}>
+          {message.content}
+        </Box>
+      </Message.CustomContent>
+    )
+  }
+
+  const customMessage = (message, index) => {
+    if (message.sender === "system") {
+      return (<MessageSeparator>{message.content}</MessageSeparator>)
+    } else if (message.sender == "You") {
+      return (<Message model={message} key={index} style={{ fontSize: "16px" }} >
+        {customMessageContent(message)}
+      </Message>)
+    } else {
+      return (<Message className="TestClass2" model={message} key={index} style={{ fontSize: "16px" }}>
+        {customMessageContent(message)}
+      </Message>)
+    }
+  }
+
   const formatChatData = (dbChats) => {
     const formattedChats = dbChats.filter((dbMessage) => (!dbMessage.hidden)).map((dbMessage, index) => ({
-      message: dbMessage.content,
+      content: dbMessage.content,
       sender: roleFormatter(dbMessage.role),
       sentTime: formatSentTime(dbMessage.created_at),
       direction: directionFormatter(dbMessage.role)
@@ -228,14 +253,10 @@ export default function Home() {
                 <Avatar src={"/glyph-avatar.png"} name={bot.name} />
                 <ConversationHeader.Content userName={<Typography variant="h6">{bot.name}</Typography>} info={chat.name} />
               </ConversationHeader>
-              <MessageList style={{ display: "flex" }} typingIndicator={typingIndicator()}>
+              <MessageList style={{ display: "flex", backgroundColor: theme.palette.background.default }} typingIndicator={typingIndicator()}>
                 {
                   chatData && chatData.map((obj, index) => {
-                    if (obj.sender === "system") {
-                      return (<MessageSeparator>{obj.message}</MessageSeparator>)
-                    } else {
-                      return (<Message model={obj} key={index} style={{ fontSize: "16px" }} />)
-                    }
+                    return customMessage(obj, index)
                   })
                 }
               </MessageList>

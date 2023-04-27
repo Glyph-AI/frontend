@@ -1,11 +1,11 @@
-import { theme } from './theme.jsx'
+import { theme, darkTheme } from './theme.jsx'
 import { ThemeProvider, CssBaseline } from '@mui/material';
 
 export default function Layout({ children }) {
   return (
     <ThemeProvider theme={theme}>
-        <CssBaseline/>
-        {children}
+      <CssBaseline />
+      {children}
     </ThemeProvider>
   )
 }
