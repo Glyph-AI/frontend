@@ -93,8 +93,11 @@ export default function Conversations() {
     }
 
     const handleModalClose = () => {
-        getChats()
-        setModalVisible(false);
+        getRequest("/chats", (data) => {
+            setUserChats(sortChats(data));
+            setDisplayChats(sortChats(data));
+            setModalVisible(false);
+        })
     }
 
     return (
