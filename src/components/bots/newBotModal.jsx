@@ -1,4 +1,4 @@
-import { Dialog, DialogContent, DialogTitle, TextField, Box, Divider, Typography, DialogActions, Button, Select, MenuItem, InputLabel } from "@mui/material";
+import { Dialog, DialogContent, DialogTitle, TextField, Box, Divider, Typography, DialogActions, Button, Select, MenuItem, InputLabel, Alert, AlertTitle } from "@mui/material";
 import { useEffect, useState } from "react";
 import { genericRequest, getRequest } from "../utility/request_helper";
 
@@ -84,6 +84,19 @@ export default function NewBotModal({ open, handleClose }) {
                             }
                         </TextField>
                     </Box>
+
+                </>
+            )
+        } else {
+            return (
+                <>
+                    <Box sx={{ display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "center" }}>
+                        <Typography sx={{ width: "100%", textAlign: "center", fontSize: 20, marginBottom: "8px" }}>Create New Bot</Typography>
+                    </Box>
+                    <Alert severity="info">
+                        <AlertTitle>User Not Subscribed</AlertTitle>
+                        You cannot create new bots unless you are subscribed!
+                    </Alert>
                     <Divider flexItem >or</Divider>
                 </>
             )
