@@ -19,6 +19,10 @@ import {
   getRequest
 } from '@/components/utility/request_helper';
 import { Box, Snackbar, Typography } from '@mui/material'
+import ReactMarkdown from 'react-markdown'
+import remarkGfm from 'remark-gfm'
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'
+import { atomDark } from 'react-syntax-highlighter/dist/esm/styles/prism'
 import { useRouter } from 'next/router';
 import Layout from '@/components/utility/layout';
 import { motion } from "framer-motion";
@@ -93,9 +97,30 @@ export default function Home() {
 
   const customMessageContent = (message) => {
     return (
-      <Message.CustomContent className="TestClass">
-        <Box sx={{ color: theme.palette.text.primary }}>
-          {message.content}
+      <Message.CustomContent>
+        <Box className="messageContent" sx={{ color: theme.palette.text.primary }}>
+          <ReactMarkdown
+            children={message.content}
+            remarkPlugins={[remarkGfm]}
+            components={{
+              code({ node, inline, className, children, ...props }) {
+                const match = /language-(\w+)/.exec(className || '')
+                return !inline && match ? (
+                  <SyntaxHighlighter
+                    {...props}
+                    children={String(children).replace(/\n$/, '')}
+                    style={atomDark}
+                    language={match[1]}
+                    PreTag="div"
+                  />
+                ) : (
+                  <code {...props} className={className}>
+                    {children}
+                  </code>
+                )
+              }
+            }}
+          />
         </Box>
       </Message.CustomContent>
     )

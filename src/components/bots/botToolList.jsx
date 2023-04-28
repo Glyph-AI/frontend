@@ -15,12 +15,16 @@ export default function BotToolList({ bot, setBot }) {
     }, [])
 
     const isEnabledForBot = (id) => {
-        var bot_tool = bot.enabled_tools.find(item => item.id === id)
-        if (bot_tool === undefined) {
-            return false
-        } else {
-            return true
+        if (bot.enabled_tools !== undefined) {
+            var bot_tool = bot.enabled_tools.find(item => item.id === id)
+            if (bot_tool === undefined) {
+                return false
+            } else {
+                return true
+            }
         }
+        return false
+
     }
 
     const handleToolDisable = (id) => {
