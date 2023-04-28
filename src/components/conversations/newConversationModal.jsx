@@ -40,7 +40,9 @@ export default function NewConversationModal({ open, handleClose }) {
             bot_id: botId
         }
 
-        genericRequest("/chats", "POST", JSON.stringify(data), () => { }, { "Content-Type": "application/json" })
+        genericRequest("/chats", "POST", JSON.stringify(data), () => {
+            handleClose();
+        }, { "Content-Type": "application/json" })
     }
 
     const getUserBots = () => {
@@ -51,7 +53,6 @@ export default function NewConversationModal({ open, handleClose }) {
 
     const handleCreate = () => {
         createNewChat(conversationName, bot.id);
-        handleClose();
     }
 
     useEffect(() => {
