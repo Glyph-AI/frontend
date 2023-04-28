@@ -22,7 +22,7 @@ import { Box, Snackbar, Typography } from '@mui/material'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import SyntaxHighlighter from 'react-syntax-highlighter';
-import { atomOneDark } from 'react-syntax-highlighter/dist/esm/styles/hljs';
+import { atomOneDark } from 'react-syntax-highlighter/dist/cjs/styles/hljs';
 import { useRouter } from 'next/router';
 import Layout from '@/components/utility/layout';
 import { motion } from "framer-motion";
