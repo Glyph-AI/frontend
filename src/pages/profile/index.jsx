@@ -49,6 +49,15 @@ export default function Profile() {
             router.push("/login")
         })
     }
+
+    const renderUserSubscription = () => {
+        if (profile.subscribed) {
+            return <i>Subscribed</i>
+        } else {
+            return <i>Not Subscribed</i>
+        }
+    }
+
     return (
         <Layout>
             <motion.div
@@ -100,7 +109,7 @@ export default function Profile() {
                                     <MonetizationOnOutlined />
                                 </Avatar>
                             </ListItemAvatar>
-                            <ListItemText primary={"Subscription"} />
+                            <ListItemText primary={"Subscription"} secondary={renderUserSubscription()} />
                         </ListItem>
                         <Divider />
                         <ListItem
