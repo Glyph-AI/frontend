@@ -41,7 +41,7 @@ export default function BotToolList({ bot, setBot }) {
                     setListOpen(!listOpen)
                 }}
             >
-                <ListItemText primary="Tools" />
+                <ListItemText primary="Tools" primaryTypographyProps={{ sx: { fontSize: 18 } }} />
             </ListItem>
             <Collapse in={listOpen} unmountOnExit>
                 <List component="div" disablePadding>
