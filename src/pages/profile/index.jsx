@@ -75,7 +75,7 @@ export default function Profile() {
                             profile.profile_picture_location
                         }
                         sx={{ height: 128, width: 128, fontSize: 90, backgroundColor: "#fff" }}
-                        alt={"Avatar"}
+                        alt={profile.first_name}
                     >
 
                     </Avatar>

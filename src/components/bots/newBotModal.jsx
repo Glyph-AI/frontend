@@ -2,11 +2,12 @@ import { Dialog, DialogContent, DialogTitle, TextField, Box, Divider, Typography
 import { useEffect, useState } from "react";
 import { genericRequest, getRequest } from "../utility/request_helper";
 
-export default function NewBotModal({ open, handleClose, urlBotCode }) {
+export default function NewBotModal({ open, handleClose }) {
     const [name, setName] = useState("")
     const [personas, setPersonas] = useState([])
     const [botPersona, setBotPersona] = useState(null)
     const [botCode, setBotCode] = useState("")
+    const [showCreation, setShowCreation] = useState(false)
 
     const onAdd = () => {
         if (botCode !== "") {
@@ -46,6 +47,10 @@ export default function NewBotModal({ open, handleClose, urlBotCode }) {
         getRequest("/personas", (data) => {
             setPersonas(data)
         })
+
+        getRequest("/profile", (data) => {
+            setShowCreation(data.subscribed)
+        })
     }, [])
 
     const addDisabled = () => {
@@ -59,14 +64,11 @@ export default function NewBotModal({ open, handleClose, urlBotCode }) {
         return true
     }
 
-    return (
-        <Dialog
-            open={open}
-            onClose={handleClose}
-        >
-            <DialogTitle>Add Bot</DialogTitle>
-            <DialogContent>
-                <Box sx={{}}>
+    const renderBotCreation = () => {
+        console.log(showCreation)
+        if (showCreation) {
+            return (
+                <>
                     <Box sx={{ display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "center" }}>
                         <Typography sx={{ width: "100%", textAlign: "center", fontSize: 20, marginBottom: "8px" }}>Create New Bot</Typography>
                         <TextField disabled={botCode !== "" && botCode !== null} fullWidth label="Name" value={name} onChange={(e) => { setName(e.target.value) }} />
@@ -83,6 +85,24 @@ export default function NewBotModal({ open, handleClose, urlBotCode }) {
                         </TextField>
                     </Box>
                     <Divider flexItem >or</Divider>
+                </>
+            )
+        }
+
+        return null
+    }
+
+    return (
+        <Dialog
+            open={open}
+            onClose={handleClose}
+        >
+            <DialogTitle>Add Bot</DialogTitle>
+            <DialogContent>
+                <Box sx={{}}>
+                    {
+                        renderBotCreation()
+                    }
                     <Box sx={{ display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "center" }}>
                         <Typography sx={{ width: "100%", textAlign: "center", fontSize: 20, marginBottom: "8px" }}>Sharing Code</Typography>
                         <TextField disabled={name !== "" && name !== null} fullWidth label="Code" value={botCode} onChange={(e) => { setBotCode(e.target.value) }} />
