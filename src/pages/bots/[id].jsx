@@ -124,7 +124,7 @@ export default function BotInfo() {
                 <>
                     <BotFileList name="Files" bot_id={id} />
                     <Divider />
-                    <BotToolList bot_id={id} />
+                    <BotToolList bot={bot} setBot={setBot} />
                 </>
 
             </motion.div>
