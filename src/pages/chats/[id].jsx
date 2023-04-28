@@ -21,8 +21,8 @@ import {
 import { Box, Snackbar, Typography } from '@mui/material'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
-import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'
-import { atomDark } from 'react-syntax-highlighter/dist/esm/styles/prism'
+import SyntaxHighlighter from 'react-syntax-highlighter';
+import { atomOneDark } from 'react-syntax-highlighter/dist/esm/styles/hljs';
 import { useRouter } from 'next/router';
 import Layout from '@/components/utility/layout';
 import { motion } from "framer-motion";
@@ -109,7 +109,7 @@ export default function Home() {
                   <SyntaxHighlighter
                     {...props}
                     children={String(children).replace(/\n$/, '')}
-                    style={atomDark}
+                    style={atomOneDark}
                     language={match[1]}
                     PreTag="div"
                   />
