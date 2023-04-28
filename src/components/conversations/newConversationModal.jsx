@@ -21,6 +21,7 @@ export default function NewConversationModal({ open, handleClose }) {
     const [bot, setBot] = useState(null)
     const [userBots, setUserBots] = useState([])
     const [conversationName, setConversationName] = useState("")
+    const [showCreation, setShowCreation] = useState(false)
 
     const createNewBot = (obj) => {
         const data = {
@@ -55,6 +56,9 @@ export default function NewConversationModal({ open, handleClose }) {
 
     useEffect(() => {
         getUserBots()
+        getRequest("/profile", (data) => {
+            setShowCreation(data.subscribed)
+        })
     }, [])
 
     return (
@@ -87,7 +91,7 @@ export default function NewConversationModal({ open, handleClose }) {
                             const { inputValue } = params;
                             // Suggest the creation of a new value
                             const isExisting = options.some((option) => inputValue === option.name);
-                            if (inputValue !== '' && !isExisting) {
+                            if (inputValue !== '' && !isExisting && showCreation) {
                                 filtered.push({
                                     inputValue,
                                     name: `Add "${inputValue}"`,

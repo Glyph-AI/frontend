@@ -119,7 +119,7 @@ export default function Conversations() {
                         <Avatar
                             onMouseEnter={(e) => { e.target.style.cursor = "pointer" }}
                             sx={{ marginLeft: "16px", width: 40, height: 40 }}
-                            alt="User"
+                            alt={user.first_name}
                             src={user.profile_picture_location}
                             onClick={() => { router.push("/profile") }}
                         />
