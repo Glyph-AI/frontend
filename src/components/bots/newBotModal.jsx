@@ -1,9 +1,11 @@
-import { Dialog, DialogContent, DialogTitle, TextField, Box, Divider, Typography, DialogActions, Button } from "@mui/material";
+import { Dialog, DialogContent, DialogTitle, TextField, Box, Divider, Typography, DialogActions, Button, Select, MenuItem, InputLabel } from "@mui/material";
 import { useEffect, useState } from "react";
-import { genericRequest } from "../utility/request_helper";
+import { genericRequest, getRequest } from "../utility/request_helper";
 
 export default function NewBotModal({ open, handleClose, urlBotCode }) {
     const [name, setName] = useState("")
+    const [personas, setPersonas] = useState([])
+    const [botPersona, setBotPersona] = useState(null)
     const [botCode, setBotCode] = useState("")
 
     const onAdd = () => {
@@ -19,12 +21,14 @@ export default function NewBotModal({ open, handleClose, urlBotCode }) {
         } else {
             const data = {
                 name: name,
-                sharing_enabled: false
+                sharing_enabled: false,
+                persona_id: botPersona
             }
 
             genericRequest("/bots", "POST", JSON.stringify(data), () => {
                 setName("")
                 handleClose()
+                setBotPersona(null)
             }, { "Content-Type": "application/json" })
         }
     }
@@ -38,7 +42,22 @@ export default function NewBotModal({ open, handleClose, urlBotCode }) {
         if (bot_code !== undefined || bot_code !== null) {
             setBotCode(bot_code || "")
         }
+
+        getRequest("/personas", (data) => {
+            setPersonas(data)
+        })
     }, [])
+
+    const addDisabled = () => {
+        console.log(botPersona)
+        if (botCode !== "") {
+            return false
+        } else if (name !== "" && botPersona !== null) {
+            return false
+        }
+
+        return true
+    }
 
     return (
         <Dialog
@@ -52,6 +71,17 @@ export default function NewBotModal({ open, handleClose, urlBotCode }) {
                         <Typography sx={{ width: "100%", textAlign: "center", fontSize: 20, marginBottom: "8px" }}>Create New Bot</Typography>
                         <TextField disabled={botCode !== "" && botCode !== null} fullWidth label="Name" value={name} onChange={(e) => { setName(e.target.value) }} />
                     </Box>
+                    <Box sx={{ marginTop: "8px", display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "center" }}>
+                        <TextField select onChange={(e) => { setBotPersona(e.target.value) }} fullWidth label="Persona">
+                            {
+                                personas && personas.map((p, idx) => {
+                                    return (
+                                        <MenuItem key={idx} value={p.id}>{p.name}</MenuItem>
+                                    )
+                                })
+                            }
+                        </TextField>
+                    </Box>
                     <Divider flexItem >or</Divider>
                     <Box sx={{ display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "center" }}>
                         <Typography sx={{ width: "100%", textAlign: "center", fontSize: 20, marginBottom: "8px" }}>Sharing Code</Typography>
@@ -62,7 +92,7 @@ export default function NewBotModal({ open, handleClose, urlBotCode }) {
             </DialogContent>
             <DialogActions>
                 <Button onClick={() => { handleClose() }}>Cancel</Button>
-                <Button onClick={() => { onAdd() }}>Add</Button>
+                <Button disabled={addDisabled()} onClick={() => { onAdd() }}>Add</Button>
             </DialogActions>
 
         </Dialog>

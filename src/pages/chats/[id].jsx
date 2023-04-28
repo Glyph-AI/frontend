@@ -161,7 +161,7 @@ export default function Home() {
       chat_id: chatId
     }
     setGlyphTyping(true)
-    const newChatData = [...chatData, { message: newMessage, sender: "You", sentTime: "Just now", direction: "outgoing" }]
+    const newChatData = [...chatData, { content: newMessage, sender: "You", sentTime: "Just now", direction: "outgoing" }]
     setChatData(newChatData)
     setNewMessage("")
 
@@ -176,7 +176,7 @@ export default function Home() {
 
   const typingIndicator = () => {
     if (glyphTyping) {
-      return <TypingIndicator content="Glyph is typing" />
+      return <TypingIndicator style={{ backgroundColor: theme.palette.background.default }} content="Glyph is typing" />
     } else {
       return null
     }
