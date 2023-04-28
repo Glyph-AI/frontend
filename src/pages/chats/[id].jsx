@@ -108,6 +108,7 @@ export default function Home() {
                 return !inline && match ? (
                   <SyntaxHighlighter
                     {...props}
+                    wrapLongLines
                     children={String(children).replace(/\n$/, '')}
                     style={atomOneDark}
                     language={match[1]}
