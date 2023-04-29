@@ -18,7 +18,7 @@ import {
   genericRequest,
   getRequest
 } from '@/components/utility/request_helper';
-import { Box, Snackbar, Typography } from '@mui/material'
+import { Alert, AlertTitle, Box, Snackbar, Typography } from '@mui/material'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import SyntaxHighlighter from 'react-syntax-highlighter';
@@ -239,6 +239,19 @@ export default function Home() {
     setAnchorEl(null)
   }
 
+  const displayToolSnackbar = () => {
+    if (bot && bot.enabled_tools && bot.enabled_tools.length <= 1 && bot.creator_id === currentUser.id) {
+      return (
+        <Snackbar anchorOrigin={{ vertical: "top", horizontal: "right" }} open={true} autoHideDuration={6000}  onClick={() => {router.push(`/bots/${botId}`)}}>
+          <Alert severity="info">
+            <AlertTitle>No Tools Enabled</AlertTitle>
+            This bot has no tools enabled. This may cause some undesirable responses. Click Here to go to tool settings.
+          </Alert>
+        </Snackbar>
+      )
+    }
+  }
+
   return (
     <Layout>
       <motion.div
@@ -272,6 +285,7 @@ export default function Home() {
             ref={inputFile}
             style={{ display: 'none' }}
           />
+          {displayToolSnackbar()}
           <MainContainer>
             <ChatContainer>
               <ConversationHeader >
