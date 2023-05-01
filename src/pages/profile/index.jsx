@@ -76,7 +76,6 @@ export default function Profile() {
                 style={{ height: "100%" }}
             >
                 <ConversationHeader >
-                    <ConversationHeader.Back onClick={() => { router.push("/conversations") }} />
                     <ConversationHeader.Content userName={<Typography variant="h6">Profile</Typography>} />
                 </ConversationHeader>
                 <Box sx={{ display: "flex", flexWrap: "wrap", alignContent: "center", justifyContent: "center", padding: "8px" }}>

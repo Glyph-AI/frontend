@@ -73,7 +73,6 @@ export default function Bots() {
                 style={{ height: "100%" }}
             >
                 <ConversationHeader >
-                    <ConversationHeader.Back onClick={() => { router.push("/profile") }} />
                     <ConversationHeader.Content userName={<Typography variant="h6">Bots</Typography>} />
                 </ConversationHeader>
                 <List>
