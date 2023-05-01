@@ -1,7 +1,8 @@
 import { ExpandLess, ExpandMore } from "@mui/icons-material"
-import { Checkbox, Collapse, IconButton, List, ListItem, ListItemIcon, ListItemText } from "@mui/material"
+import { Button, Checkbox, Collapse, IconButton, List, ListItem, ListItemIcon, ListItemText } from "@mui/material"
 import { useEffect, useState } from "react"
 import { genericRequest, getRequest } from "../utility/request_helper"
+import { googleOauth } from "../utility/google_oauth"
 
 export default function BotToolList({ bot, setBot }) {
     const [listOpen, setListOpen] = useState(false)
@@ -48,7 +49,7 @@ export default function BotToolList({ bot, setBot }) {
                 <ListItemText primary="Tools" primaryTypographyProps={{ sx: { fontSize: 18 } }} />
             </ListItem>
             <Collapse in={listOpen} unmountOnExit>
-                <List component="div" disablePadding>
+                <List sx={{ overflowY: "scroll", maxHeight: "100%", backgroundColor: "white" }} component="div" disablePadding>
                     {
                         availableTools && availableTools.map((item, idx) => {
                             if (item.name !== "Respond to User") {
@@ -64,13 +65,44 @@ export default function BotToolList({ bot, setBot }) {
                                                     onClick={(ev) => { handleToolDisable(item.id) }}
                                                 />
                                             </ListItemIcon>
-                                            <ListItemText primary={item.name} secondary={item.description} />
+                                            <ListItemText
+                                                sx={{ maxWidth: "65%" }}
+                                                primary={item.name}
+                                                secondary={item.description}
+                                            />
                                         </ListItem>
                                     </>
                                 )
                             }
                         })
                     }
+                    <>
+                        <ListItem
+                            key={10}
+                            sx={{ pl: 4 }}
+                            secondaryAction={
+                                <Button edge="end" aria-label="delete" onClick={(ev) => { googleOauth(bot.id) }}>
+                                    Sign-In
+                                </Button>
+                            }
+                        >
+                            <ListItemIcon>
+                                <Checkbox
+                                    disabled
+                                    edge="start"
+                                    // checked={isEnabledForBot(item.id)}
+                                    tabIndex={-1}
+                                    disableRipple
+                                // onClick={(ev) => { handleToolDisable(item.id) }}
+                                />
+                            </ListItemIcon>
+                            <ListItemText
+                                sx={{ maxWidth: "65%" }}
+                                primary={"Google Calendar"}
+                                secondary={"Allows access to read and create events on your Google Calendar"}
+                            />
+                        </ListItem>
+                    </>
                 </List>
             </Collapse>
         </List>
