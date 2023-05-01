@@ -58,39 +58,24 @@ export default function Bots() {
 
     return (
         <LayoutWithNav>
-            <motion.div
-                variants={{
-                    hidden: { opacity: 0, x: 200, y: 0 },
-                    enter: { opacity: 1, x: 0, y: 0 },
-                    exit: { opacity: 0, x: 0, y: 100 }
-                }}
-                initial="hidden"
-                animate="enter"
-                exit="exit"
-                transition={{
-                    type: "linear"
-                }}
-                style={{ height: "100%" }}
-            >
-                <ConversationHeader >
-                    <ConversationHeader.Content userName={<Typography variant="h6">Bots</Typography>} />
-                </ConversationHeader>
-                <List>
-                    {
-                        userBots && userBots.map((item) => (
-                            <>
-                                <BotListItem bot={item} displayLink={item.creator_id == user.id} />
-                                <Divider />
-                            </>
-                        ))
-                    }
-                </List>
-                <Fab onClick={() => { setModalVisible(true) }} variant="extended" sx={{ position: 'absolute', bottom: 64, right: 16 }} >
-                    <Add sx={{ mr: 1 }} />
-                    Add Bot
-                </Fab>
-                <NewBotModal urlBotCode={urlBotCode} open={modalVisible} handleClose={handleModalClose} />
-            </motion.div>
+            <ConversationHeader >
+                <ConversationHeader.Content userName={<Typography variant="h6">Bots</Typography>} />
+            </ConversationHeader>
+            <List>
+                {
+                    userBots && userBots.map((item) => (
+                        <>
+                            <BotListItem bot={item} displayLink={item.creator_id == user.id} />
+                            <Divider />
+                        </>
+                    ))
+                }
+            </List>
+            <Fab onClick={() => { setModalVisible(true) }} variant="extended" sx={{ position: 'absolute', bottom: 64, right: 16 }} >
+                <Add sx={{ mr: 1 }} />
+                Add Bot
+            </Fab>
+            <NewBotModal urlBotCode={urlBotCode} open={modalVisible} handleClose={handleModalClose} />
         </LayoutWithNav>
     )
 }

@@ -61,83 +61,67 @@ export default function Profile() {
 
     return (
         <LayoutWithNav>
-            <motion.div
-                variants={{
-                    hidden: { opacity: 0, x: 200, y: 0 },
-                    enter: { opacity: 1, x: 0, y: 0 },
-                    exit: { opacity: 0, x: 0, y: 100 }
-                }}
-                initial="hidden"
-                animate="enter"
-                exit="exit"
-                transition={{
-                    type: "linear"
-                }}
-                style={{ height: "100%" }}
-            >
-                <ConversationHeader >
-                    <ConversationHeader.Content userName={<Typography variant="h6">Profile</Typography>} />
-                </ConversationHeader>
-                <Box sx={{ display: "flex", flexWrap: "wrap", alignContent: "center", justifyContent: "center", padding: "8px" }}>
-                    <Avatar
-                        src={
-                            profile.profile_picture_location
+            <ConversationHeader >
+                <ConversationHeader.Content userName={<Typography variant="h6">Profile</Typography>} />
+            </ConversationHeader>
+            <Box sx={{ display: "flex", flexWrap: "wrap", alignContent: "center", justifyContent: "center", padding: "8px" }}>
+                <Avatar
+                    src={
+                        profile.profile_picture_location
+                    }
+                    sx={{ height: 128, width: 128, fontSize: 90, backgroundColor: "#fff" }}
+                    alt={profile.first_name}
+                >
+
+                </Avatar>
+                <Box sx={{ marginTop: "8px", display: "flex", justifyContent: "center", flexWrap: "wrap", alignItems: "center", width: "100%" }}>
+                    <Typography variant="h5" sx={{ fontWeight: 600, width: "100%", textAlign: "center" }}>{profile.first_name} {profile.last_name}</Typography>
+                    <Typography variant="subtitle1">{profile.email}</Typography>
+                </Box>
+            </Box>
+            <Box>
+                <List>
+                    <ListItem
+                        sx={{ cursor: "pointer", backgroundColor: "white" }}
+                        secondaryAction={
+                            <IconButton edge="end" aria-label="subscription">
+                                <ChevronRight />
+                            </IconButton>
                         }
-                        sx={{ height: 128, width: 128, fontSize: 90, backgroundColor: "#fff" }}
-                        alt={profile.first_name}
+                        onClick={() => { window.location.href = stripeUrl }}
                     >
-
-                    </Avatar>
-                    <Box sx={{ marginTop: "8px", display: "flex", justifyContent: "center", flexWrap: "wrap", alignItems: "center", width: "100%" }}>
-                        <Typography variant="h5" sx={{ fontWeight: 600, width: "100%", textAlign: "center" }}>{profile.first_name} {profile.last_name}</Typography>
-                        <Typography variant="subtitle1">{profile.email}</Typography>
-                    </Box>
-                </Box>
-                <Box>
-                    <List>
-                        <ListItem
-                            sx={{ cursor: "pointer", backgroundColor: "white" }}
-                            secondaryAction={
-                                <IconButton edge="end" aria-label="subscription">
-                                    <ChevronRight />
-                                </IconButton>
-                            }
-                            onClick={() => { window.location.href = stripeUrl }}
-                        >
-                            <ListItemAvatar>
-                                <Avatar>
-                                    <MonetizationOnOutlined />
-                                </Avatar>
-                            </ListItemAvatar>
-                            <ListItemText primary={"Subscription"} secondary={renderUserSubscription()} />
-                        </ListItem>
-                        <Divider />
-                        <ListItem
-                            sx={{ cursor: "pointer", backgroundColor: "white" }}
-                            secondaryAction={
-                                <IconButton edge="end" aria-label="subscription">
-                                    <ChevronRight />
-                                </IconButton>
-                            }
-                            onClick={() => { router.push("/bots") }}
-                        >
-                            <ListItemAvatar>
-                                <Avatar>
-                                    <SmartToyOutlined />
-                                </Avatar>
-                            </ListItemAvatar>
-                            <ListItemText primary={"Bots"} />
-                        </ListItem>
-                        <Divider />
-                    </List>
-                </Box>
-                <Box sx={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
-                    <Button onClick={handleLogout} startIcon={<Logout />} variant="contained" sx={{ width: "80%" }}>
-                        Logout
-                    </Button>
-                </Box>
-
-            </motion.div>
+                        <ListItemAvatar>
+                            <Avatar>
+                                <MonetizationOnOutlined />
+                            </Avatar>
+                        </ListItemAvatar>
+                        <ListItemText primary={"Subscription"} secondary={renderUserSubscription()} />
+                    </ListItem>
+                    <Divider />
+                    <ListItem
+                        sx={{ cursor: "pointer", backgroundColor: "white" }}
+                        secondaryAction={
+                            <IconButton edge="end" aria-label="subscription">
+                                <ChevronRight />
+                            </IconButton>
+                        }
+                        onClick={() => { router.push("/bots") }}
+                    >
+                        <ListItemAvatar>
+                            <Avatar>
+                                <SmartToyOutlined />
+                            </Avatar>
+                        </ListItemAvatar>
+                        <ListItemText primary={"Bots"} />
+                    </ListItem>
+                    <Divider />
+                </List>
+            </Box>
+            <Box sx={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
+                <Button onClick={handleLogout} startIcon={<Logout />} variant="contained" sx={{ width: "80%" }}>
+                    Logout
+                </Button>
+            </Box>
         </LayoutWithNav>
     )
 }

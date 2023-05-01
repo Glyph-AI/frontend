@@ -5,6 +5,13 @@ import { useState } from 'react';
 import { Message, Person, SmartToy } from '@mui/icons-material';
 import { useEffect } from 'react';
 import { useRouter } from 'next/router'
+import { motion } from "framer-motion";
+
+const variants = {
+    hidden: { opacity: 0, x: -400, y: 0 },
+    enter: { opacity: 1, x: 0, y: 0 },
+    exit: { opacity: 0, x: 0, y: -100 },
+}
 
 export default function LayoutWithNav({ children }) {
     const [ navValue, setNavValue ] = useState(0)
@@ -25,7 +32,16 @@ export default function LayoutWithNav({ children }) {
     return (
         <ThemeProvider theme={theme}>
             <CssBaseline />
-            {children}
+            <motion.div 
+                variants={variants}
+                initial="hidden" 
+                animate="enter"
+                exit="exit"
+                transition={{ type: 'linear' }}
+                className=""
+            >
+                {children}
+            </motion.div>
             <Paper sx={{ position: 'fixed', bottom: 0, left: 0, right: 0 }} elevation={3}>
                 <BottomNavigation
                     showLabels

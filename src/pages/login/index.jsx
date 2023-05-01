@@ -49,30 +49,15 @@ export default function Login() {
     }, [handleGoogle])
     return (
         <Layout>
-            <motion.div
-                variants={{
-                    hidden: { opacity: 0, x: -200, y: 0 },
-                    enter: { opacity: 1, x: 0, y: 0 },
-                    exit: { opacity: 0, x: 0, y: -100 }
-                }}
-                initial="hidden"
-                animate="enter"
-                exit="exit"
-                transition={{
-                    type: "linear"
-                }}
-                style={{ height: "100%" }}
-            >
-                <div style={{ display: "flex", alignItems: "center", justifyContent: "center", height: "100%" }}>
-                    <div style={{ width: "50%" }}>
-                        <div>
-                            <img className="logo" alt="Glyph Logo" src={"/dark_vertical.png"} style={{ width: "100%", marginBottom: "8px" }} />
-                            {/* <div style={{ textAlign: "center", fontSize: 40, marginBottom: "8px" }}>GlyphAI</div> */}
-                            <div style={{ width: "100%", display: "flex", justifyContent: "center" }} id="gLogin" />
-                        </div>
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "center", height: "100%" }}>
+                <div style={{ width: "50%" }}>
+                    <div>
+                        <img className="logo" alt="Glyph Logo" src={"/dark_vertical.png"} style={{ width: "100%", marginBottom: "8px" }} />
+                        {/* <div style={{ textAlign: "center", fontSize: 40, marginBottom: "8px" }}>GlyphAI</div> */}
+                        <div style={{ width: "100%", display: "flex", justifyContent: "center" }} id="gLogin" />
                     </div>
                 </div>
-            </motion.div>
+            </div>
         </Layout>
     )
 }
