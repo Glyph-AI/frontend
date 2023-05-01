@@ -6,7 +6,7 @@ if (env === 'local') {
 } else if (env === 'development') {
     backendHost = 'https://dev-api.glyphassistant.com';
 } else {
-    backendHost = process.env.REACT_APP_BACKEND_HOST || 'http://localhost:8080';
+    backendHost = process.env.REACT_APP_BACKEND_HOST || 'http://localhost:8000';
 }
 
 export const API_ROOT = backendHost

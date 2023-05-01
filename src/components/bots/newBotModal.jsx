@@ -67,7 +67,6 @@ export default function NewBotModal({ open, handleClose }) {
     }
 
     const renderBotCreation = () => {
-        console.log(showCreation)
         if (showCreation) {
             return (
                 <>
