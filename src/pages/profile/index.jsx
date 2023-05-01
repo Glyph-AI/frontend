@@ -12,6 +12,7 @@ import { ChevronRight, EmailOutlined, Logout, MonetizationOnOutlined, Person, Sm
 import { useEffect, useState } from "react";
 import { genericRequest, getRequest } from "@/components/utility/request_helper";
 import { getCookie } from "@/components/utility/cookie_helper";
+import LayoutWithNav from "@/components/utility/layout_with_nav";
 
 const SmallAvatar = styled(Avatar)(({ theme }) => ({
     width: 32,
@@ -59,7 +60,7 @@ export default function Profile() {
     }
 
     return (
-        <Layout>
+        <LayoutWithNav>
             <motion.div
                 variants={{
                     hidden: { opacity: 0, x: 200, y: 0 },
@@ -138,6 +139,6 @@ export default function Profile() {
                 </Box>
 
             </motion.div>
-        </Layout>
+        </LayoutWithNav>
     )
 }

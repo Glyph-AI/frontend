@@ -3,6 +3,7 @@ import BotFileList from "@/components/bots/botFileList";
 import BotToolList from "@/components/bots/botToolList";
 import { getCookie } from "@/components/utility/cookie_helper";
 import Layout from "@/components/utility/layout"
+import LayoutWithNav from "@/components/utility/layout_with_nav";
 import { genericRequest, getRequest } from "@/components/utility/request_helper";
 import { ConversationHeader } from "@chatscope/chat-ui-kit-react";
 import { Share } from "@mui/icons-material";
@@ -83,7 +84,7 @@ export default function BotInfo() {
     }
 
     return (
-        <Layout>
+        <LayoutWithNav>
             <motion.div
                 variants={{
                     hidden: { opacity: 0, x: 200, y: 0 },
@@ -128,6 +129,6 @@ export default function BotInfo() {
                 </>
 
             </motion.div>
-        </Layout>
+        </LayoutWithNav>
     )
 }

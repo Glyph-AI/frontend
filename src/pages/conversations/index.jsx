@@ -19,6 +19,7 @@ import NewConversationModal from '@/components/conversations/newConversationModa
 import { getRequest } from '@/components/utility/request_helper';
 import { motion } from "framer-motion";
 import { useRouter } from 'next/router';
+import LayoutWithNav from '@/components/utility/layout_with_nav';
 
 export default function Conversations() {
     const [modalVisible, setModalVisible] = useState(false)
@@ -101,7 +102,7 @@ export default function Conversations() {
     }
 
     return (
-        <Layout>
+        <LayoutWithNav>
             <motion.div
                 variants={{
                     hidden: { opacity: 0, x: 200, y: 0 },
@@ -145,13 +146,13 @@ export default function Conversations() {
                             })
                         }
                     </ConversationList>
-                    <Fab onClick={() => { setModalVisible(true) }} variant="extended" sx={{ position: 'absolute', bottom: 32, right: 16 }} >
+                    <Fab onClick={() => { setModalVisible(true) }} variant="extended" sx={{ position: 'absolute', bottom: 64, right: 16 }} >
                         <Add sx={{ mr: 1 }} />
                         New Chat
                     </Fab>
                     <NewConversationModal open={modalVisible} handleClose={handleModalClose} />
                 </Box>
             </motion.div>
-        </Layout>
+        </LayoutWithNav>
     )
 }

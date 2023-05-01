@@ -11,6 +11,7 @@ import { useEffect, useState } from "react";
 import { Add } from "@mui/icons-material";
 import NewBotModal from "@/components/bots/newBotModal";
 import { getCookie } from "@/components/utility/cookie_helper";
+import LayoutWithNav from "@/components/utility/layout_with_nav";
 
 export default function Bots() {
     const [userBots, setUserBots] = useState([])
@@ -56,7 +57,7 @@ export default function Bots() {
     }
 
     return (
-        <Layout>
+        <LayoutWithNav>
             <motion.div
                 variants={{
                     hidden: { opacity: 0, x: 200, y: 0 },
@@ -85,12 +86,12 @@ export default function Bots() {
                         ))
                     }
                 </List>
-                <Fab onClick={() => { setModalVisible(true) }} variant="extended" sx={{ position: 'absolute', bottom: 32, right: 16 }} >
+                <Fab onClick={() => { setModalVisible(true) }} variant="extended" sx={{ position: 'absolute', bottom: 64, right: 16 }} >
                     <Add sx={{ mr: 1 }} />
                     Add Bot
                 </Fab>
                 <NewBotModal urlBotCode={urlBotCode} open={modalVisible} handleClose={handleModalClose} />
             </motion.div>
-        </Layout>
+        </LayoutWithNav>
     )
 }
