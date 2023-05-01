@@ -19,6 +19,7 @@ import NewConversationModal from '@/components/conversations/newConversationModa
 import { getRequest } from '@/components/utility/request_helper';
 import { motion } from "framer-motion";
 import { useRouter } from 'next/router';
+import LayoutWithNav from '@/components/utility/layout_with_nav';
 
 export default function Conversations() {
     const [modalVisible, setModalVisible] = useState(false)
@@ -101,57 +102,42 @@ export default function Conversations() {
     }
 
     return (
-        <Layout>
-            <motion.div
-                variants={{
-                    hidden: { opacity: 0, x: 200, y: 0 },
-                    enter: { opacity: 1, x: 0, y: 0 },
-                    exit: { opacity: 0, x: 0, y: 100 }
-                }}
-                initial="hidden"
-                animate="enter"
-                exit="exit"
-                transition={{
-                    type: "linear"
-                }}
-                style={{ height: "100%" }}
-            >
-                <Box sx={{ height: "100%", padding: "8px", overflow: "hidden" }}>
-                    <Box sx={{ height: 40, display: "flex", marginBottom: "16px", alignContent: "center" }}>
-                        <Search placeholder="Search..." style={{ flex: 1, fontSize: 16 }} value={searchValue} onChange={(val) => { handleSearchValueChange(val) }} />
-                        <Avatar
-                            onMouseEnter={(e) => { e.target.style.cursor = "pointer" }}
-                            sx={{ marginLeft: "16px", width: 40, height: 40 }}
-                            alt={user.first_name}
-                            src={user.profile_picture_location}
-                            onClick={() => { router.push("/profile") }}
-                        />
-                    </Box>
-
-                    <ConversationList style={{ height: "95%", overflowY: "scroll", paddingRight: "25px", boxSizing: "content-box", width: "100%" }}>
-                        {
-                            displayChats && displayChats.map((record, idx) => {
-                                const last_message = record.chat_messages.sort((a, b) => new Date(a.created_at) - new Date(b.created_at))[record.chat_messages.length - 1]
-                                return (
-                                    <>
-                                        <ConversationItem
-                                            name={record.name}
-                                            info={formatLastMessage(last_message)}
-                                            id={record.id}
-                                        />
-                                        <Divider component="li" />
-                                    </>
-                                )
-                            })
-                        }
-                    </ConversationList>
-                    <Fab onClick={() => { setModalVisible(true) }} variant="extended" sx={{ position: 'absolute', bottom: 32, right: 16 }} >
-                        <Add sx={{ mr: 1 }} />
-                        New Chat
-                    </Fab>
-                    <NewConversationModal open={modalVisible} handleClose={handleModalClose} />
+        <LayoutWithNav>
+            <Box sx={{ height: "100%", padding: "8px", overflow: "hidden" }}>
+                <Box sx={{ height: 40, display: "flex", marginBottom: "16px", alignContent: "center" }}>
+                    <Search placeholder="Search..." style={{ flex: 1, fontSize: 16 }} value={searchValue} onChange={(val) => { handleSearchValueChange(val) }} />
+                    <Avatar
+                        onMouseEnter={(e) => { e.target.style.cursor = "pointer" }}
+                        sx={{ marginLeft: "16px", width: 40, height: 40 }}
+                        alt={user.first_name}
+                        src={user.profile_picture_location}
+                        onClick={() => { router.push("/profile") }}
+                    />
                 </Box>
-            </motion.div>
-        </Layout>
+
+                <ConversationList style={{ height: "95%", overflowY: "scroll", paddingRight: "25px", boxSizing: "content-box", width: "100%" }}>
+                    {
+                        displayChats && displayChats.map((record, idx) => {
+                            const last_message = record.chat_messages.sort((a, b) => new Date(a.created_at) - new Date(b.created_at))[record.chat_messages.length - 1]
+                            return (
+                                <>
+                                    <ConversationItem
+                                        name={record.name}
+                                        info={formatLastMessage(last_message)}
+                                        id={record.id}
+                                    />
+                                    <Divider component="li" />
+                                </>
+                            )
+                        })
+                    }
+                </ConversationList>
+                <Fab onClick={() => { setModalVisible(true) }} variant="extended" sx={{ position: 'absolute', bottom: 64, right: 16 }} >
+                    <Add sx={{ mr: 1 }} />
+                    New Chat
+                </Fab>
+                <NewConversationModal open={modalVisible} handleClose={handleModalClose} />
+            </Box>
+        </LayoutWithNav>
     )
 }
