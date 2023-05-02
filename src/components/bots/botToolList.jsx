@@ -34,6 +34,28 @@ export default function BotToolList({ bot, setBot }) {
         })
     }
 
+    const renderAuth = (tool) => {
+        if (tool.auth_provider === 'google' && tool.is_authorized === false) {
+            return (
+                <Button edge="end" aria-label="delete" onClick={(ev) => { googleOauth(bot.id, 5) }}>
+                    Sign-In
+                </Button>
+            )
+        }
+    }
+
+    const toolDisabled = (tool) => {
+        if (tool.auth_provider === null) {
+            return false
+        }
+
+        if (tool.is_authorized) {
+            return false
+        }
+
+        return true
+    }
+
     return (
         <List>
             <ListItem
@@ -55,9 +77,16 @@ export default function BotToolList({ bot, setBot }) {
                             if (item.name !== "Respond to User") {
                                 return (
                                     <>
-                                        <ListItem key={idx} sx={{ pl: 4 }}>
+                                        <ListItem
+                                            key={idx}
+                                            sx={{ pl: 4 }}
+                                            secondaryAction={
+                                                renderAuth(item)
+                                            }
+                                        >
                                             <ListItemIcon>
                                                 <Checkbox
+                                                    disabled={toolDisabled(item)}
                                                     edge="start"
                                                     checked={isEnabledForBot(item.id)}
                                                     tabIndex={-1}
@@ -76,33 +105,6 @@ export default function BotToolList({ bot, setBot }) {
                             }
                         })
                     }
-                    <>
-                        <ListItem
-                            key={10}
-                            sx={{ pl: 4 }}
-                            secondaryAction={
-                                <Button edge="end" aria-label="delete" onClick={(ev) => { googleOauth(bot.id) }}>
-                                    Sign-In
-                                </Button>
-                            }
-                        >
-                            <ListItemIcon>
-                                <Checkbox
-                                    disabled
-                                    edge="start"
-                                    // checked={isEnabledForBot(item.id)}
-                                    tabIndex={-1}
-                                    disableRipple
-                                // onClick={(ev) => { handleToolDisable(item.id) }}
-                                />
-                            </ListItemIcon>
-                            <ListItemText
-                                sx={{ maxWidth: "65%" }}
-                                primary={"Google Calendar"}
-                                secondary={"Allows access to read and create events on your Google Calendar"}
-                            />
-                        </ListItem>
-                    </>
                 </List>
             </Collapse>
         </List>

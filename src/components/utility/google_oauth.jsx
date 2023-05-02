@@ -6,7 +6,7 @@ if (env == 'development') {
 
 let CLIENT_ID = '520170255321-uve0rbqvotf5v8163d8b5k8b3bfegk88.apps.googleusercontent.com'
 
-export const googleOauth = (id) => {
+export const googleOauth = (botId, toolId) => {
     var endpoint = "https://accounts.google.com/o/oauth2/v2/auth"
     var form = document.createElement('form')
     form.setAttribute('method', 'GET')
@@ -18,7 +18,7 @@ export const googleOauth = (id) => {
         'response_type': 'code',
         'scope': 'https://www.googleapis.com/auth/calendar.events',
         'include_granted_scopes': 'true',
-        'state': id,
+        'state': JSON.stringify({ bot_id: botId, tool_id: toolId }),
         'access_type': "offline"
     }
 
