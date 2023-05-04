@@ -241,74 +241,75 @@ export default function Home() {
 
   return (
     <Layout>
-        <div style={{ height: "100%" }}>
-          <Snackbar
-            anchorOrigin={{ vertical: "top", horizontal: "right" }}
-            open={snackbarOpen}
-            audoHideDuration={6000}
-            onClick={() => { setSnackbarOpen(false) }}
-            onClose={() => { setSnackbarOpen(false) }}
-            message={snackbarMessage}
-          />
-          <input
-            onChange={(ev) => { handleUpload(ev) }}
-            accept="text/*,application/csv,application/pdf,image/*,.mp3,audio/mp3"
-            type='file'
-            id='file'
-            ref={inputFile}
-            style={{ display: 'none' }}
-          />
-          <MainContainer>
-            <ChatContainer>
-              <ConversationHeader >
-                <ConversationHeader.Back onClick={() => { router.push("/conversations") }} />
-                <Avatar src={"/glyph-avatar.png"} name={bot.name} />
-                <ConversationHeader.Content userName={<Typography variant="h6">{bot.name}</Typography>} info={chat.name} />
-              </ConversationHeader>
-              <MessageList style={{ display: "flex", backgroundColor: theme.palette.background.default }} typingIndicator={typingIndicator()}>
-                {
-                  chatData && chatData.map((obj, index) => {
-                    return customMessage(obj, index)
-                  })
-                }
-              </MessageList>
-              <div as={MessageInput} style={{
-                display: "flex",
-                flexDirection: "row",
-                borderTop: "1px solid #d1dbe4"
-              }}>
-                {
-                  currentUser.id === bot.creator_id && <AttachmentButton
-                    style={{
-                      fontSize: "1.2em",
-                      paddingLeft: "0.2em",
-                      paddingRight: "0.2em"
-                    }}
-                    onClick={handleUploadClick}
-                  />
-                }
-                <MessageInput
-                  ref={inputRef}
-                  onChange={(val) => { setNewMessage(val) }}
-                  value={newMessage}
-                  sendButton={false}
-                  attachButton={false}
-                  onSend={handleNewMessage} style={{
-                    flexGrow: 1,
-                    borderTop: 0,
-                    flexShrink: "initial"
+      <div style={{ height: "100%" }}>
+        <Snackbar
+          anchorOrigin={{ vertical: "top", horizontal: "right" }}
+          open={snackbarOpen}
+          audoHideDuration={6000}
+          onClick={() => { setSnackbarOpen(false) }}
+          onClose={() => { setSnackbarOpen(false) }}
+          message={snackbarMessage}
+        />
+        <input
+          onChange={(ev) => { handleUpload(ev) }}
+          accept="text/*,application/csv,application/pdf,image/*,.mp3,audio/mp3"
+          type='file'
+          id='file'
+          ref={inputFile}
+          style={{ display: 'none' }}
+        />
+        <MainContainer>
+          <ChatContainer>
+            <ConversationHeader >
+              <ConversationHeader.Back onClick={() => { router.push("/conversations") }} />
+              <Avatar src={"/glyph-avatar.png"} name={bot.name} />
+              <ConversationHeader.Content userName={<Typography variant="h6">{bot.name}</Typography>} info={chat.name} />
+            </ConversationHeader>
+            <MessageList style={{ display: "flex", backgroundColor: theme.palette.background.default }} typingIndicator={typingIndicator()}>
+              {
+                chatData && chatData.map((obj, index) => {
+                  return customMessage(obj, index)
+                })
+              }
+            </MessageList>
+            <div as={MessageInput} style={{
+              display: "flex",
+              flexDirection: "row",
+              borderTop: "1px solid #d1dbe4"
+            }}>
+              {
+                (currentUser.id === bot.creator_id && Math.abs(currentUser.files_left) > 0) && <AttachmentButton
+                  style={{
+                    fontSize: "1.2em",
+                    paddingLeft: "0.2em",
+                    paddingRight: "0.2em"
                   }}
+                  onClick={handleUploadClick}
                 />
-                <SendButton onClick={() => handleNewMessage(newMessage)} disabled={newMessage.length === 0} style={{
-                  fontSize: "1.2em",
-                  marginLeft: 0,
-                  paddingLeft: "0.2em",
-                  paddingRight: "0.2em"
-                }} />
-              </div>
-            </ChatContainer>
-          </MainContainer>
-        </div >
+              }
+              <MessageInput
+                ref={inputRef}
+                onChange={(val) => { setNewMessage(val) }}
+                value={newMessage}
+                sendButton={false}
+                disabled={(currentUser.messages_left === 0)}
+                attachButton={false}
+                onSend={handleNewMessage} style={{
+                  flexGrow: 1,
+                  borderTop: 0,
+                  flexShrink: "initial"
+                }}
+              />
+              <SendButton onClick={() => handleNewMessage(newMessage)} disabled={newMessage.length === 0} style={{
+                fontSize: "1.2em",
+                marginLeft: 0,
+                paddingLeft: "0.2em",
+                paddingRight: "0.2em"
+              }} />
+            </div>
+          </ChatContainer>
+        </MainContainer>
+      </div >
     </Layout>
   )
 }

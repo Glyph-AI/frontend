@@ -91,13 +91,6 @@ export default function NewConversationModal({ open, handleClose }) {
 
                             const { inputValue } = params;
                             // Suggest the creation of a new value
-                            const isExisting = options.some((option) => inputValue === option.name);
-                            if (inputValue !== '' && !isExisting && showCreation) {
-                                filtered.push({
-                                    inputValue,
-                                    name: `Add "${inputValue}"`,
-                                });
-                            }
 
                             return filtered;
                         }}

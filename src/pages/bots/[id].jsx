@@ -19,13 +19,13 @@ export default function BotInfo() {
 
     const [bot, setBot] = useState({})
     const [botId, setBotId] = useState(null)
+    const [currentUser, setCurrentUser] = useState({})
     const [snackbarOpen, setSnackbarOpen] = useState(false)
 
 
 
     const getBotById = () => {
         getRequest(`/bots/${id}`, (data) => {
-            console.log(data)
             setBot(data)
             setBotId(id)
         })
@@ -67,12 +67,19 @@ export default function BotInfo() {
         )
     }
 
+    const getCurrentUser = () => {
+        getRequest("/profile", (data) => {
+            setCurrentUser(data)
+        })
+    }
+
     useEffect(() => {
         const activeSession = getCookie("active_session")
         if (activeSession !== "true") {
             router.push("/login")
         }
         getBotById()
+        getCurrentUser()
     }, [])
 
     const personaData = () => {
@@ -109,7 +116,7 @@ export default function BotInfo() {
             </Table>
             <Divider />
             <>
-                <BotFileList name="Files" bot_id={id} />
+                <BotFileList name="Files" bot_id={id} user={currentUser} />
                 <Divider />
                 <BotToolList bot={bot} setBot={setBot} />
             </>

@@ -4,7 +4,7 @@ import {
     ConversationHeader
 } from '@chatscope/chat-ui-kit-react'
 import { useRouter } from "next/router";
-import { Avatar, Badge, Box, ListItem, ListItemText, List, ListItemAvatar, Divider, IconButton, Typography, Button } from "@mui/material";
+import { Avatar, Badge, Box, ListItem, ListItemText, List, ListItemAvatar, Divider, IconButton, Typography, Button, LinearProgress, useMediaQuery } from "@mui/material";
 import { styled } from '@mui/material/styles';
 import { theme } from "@/components/utility/theme";
 import FileUploadIcon from '@mui/icons-material/FileUpload';
@@ -23,10 +23,24 @@ const SmallAvatar = styled(Avatar)(({ theme }) => ({
     }
 }));
 
+function LinearProgressWithLabel(props) {
+    return (
+        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            <Box sx={{ width: '100%', mr: 1 }}>
+                <LinearProgress variant="determinate" {...props} />
+            </Box>
+            <Box sx={{ minWidth: 35 }}>
+                <Typography variant="body2" color="text.secondary">{props.labelValue}/{props.maxValue === -1 ? "INF" : props.maxValue}</Typography>
+            </Box>
+        </Box>
+    );
+}
+
 export default function Profile() {
     const [stripeUrl, setStripeUrl] = useState("")
     const [profile, setProfile] = useState({})
     const router = useRouter()
+    const smallScreen = useMediaQuery(theme.breakpoints.down("md"))
 
     const getProfile = () => {
         getRequest("/profile", (data) => {
@@ -59,6 +73,32 @@ export default function Profile() {
         }
     }
 
+    const calculateBotValue = () => {
+        if (profile.allowed_bots === -1) {
+            return 0
+        }
+
+        console.log(profile.allowed_bots, profile.bots_left)
+
+        console.log(((profile.allowed_bots - profile.bots_left) / (profile.allowed_bots)) * 100)
+
+        return ((profile.allowed_bots - profile.bots_left) / (profile.allowed_bots)) * 100
+    }
+
+    const calculateMessageValue = () => {
+        return ((profile.allowed_messages - profile.messages_left) / (profile.allowed_messages)) * 100
+    }
+
+    const calculateFileValue = () => {
+        if (profile.allowed_files === -1) {
+            return 0
+        }
+
+        return ((profile.allowed_files - profile.files_left) / (profile.allowed_files)) * 100
+    }
+
+    const progressBarWidth = smallScreen ? "90%" : "30%"
+
     return (
         <LayoutWithNav>
             <ConversationHeader >
@@ -77,6 +117,45 @@ export default function Profile() {
                 <Box sx={{ marginTop: "8px", display: "flex", justifyContent: "center", flexWrap: "wrap", alignItems: "center", width: "100%" }}>
                     <Typography variant="h5" sx={{ fontWeight: 600, width: "100%", textAlign: "center" }}>{profile.first_name} {profile.last_name}</Typography>
                     <Typography variant="subtitle1">{profile.email}</Typography>
+                </Box>
+            </Box>
+            <Box sx={{ flexWrap: "wrap", display: "flex", gap: "3%", alignContent: "center", justifyContent: "center", padding: "8px" }}>
+                <Box sx={{ width: progressBarWidth }}>
+                    <Box sx={{ alignContent: "center", jusfityContent: "center", textAlign: "center" }}>
+                        <Typography variant="h6">Bots</Typography>
+                    </Box>
+                    <LinearProgressWithLabel
+                        variant="determinate"
+                        color="secondary"
+                        sx={{ width: "100%" }}
+                        value={calculateBotValue()}
+                        labelValue={profile.allowed_bots - profile.bots_left}
+                        maxValue={profile.allowed_bots}
+                    />
+                </Box>
+                <Box sx={{ width: progressBarWidth }}>
+                    <Box sx={{ alignContent: "center", jusfityContent: "center", textAlign: "center" }}>
+                        <Typography variant="h6">Messages</Typography>
+                    </Box>
+                    <LinearProgressWithLabel
+                        variant="determinate"
+                        color="secondary"
+                        value={calculateMessageValue()}
+                        labelValue={profile.allowed_messages - profile.messages_left}
+                        maxValue={profile.allowed_messages}
+                    />
+                </Box>
+                <Box sx={{ width: progressBarWidth }}>
+                    <Box sx={{ alignContent: "center", jusfityContent: "center", textAlign: "center" }}>
+                        <Typography variant="h6">Files</Typography>
+                    </Box>
+                    <LinearProgressWithLabel
+                        variant="determinate"
+                        color="secondary"
+                        value={calculateFileValue()}
+                        labelValue={profile.allowed_files - profile.files_left}
+                        maxValue={profile.allowed_files}
+                    />
                 </Box>
             </Box>
             <Box>
@@ -122,6 +201,6 @@ export default function Profile() {
                     Logout
                 </Button>
             </Box>
-        </LayoutWithNav>
+        </LayoutWithNav >
     )
 }
