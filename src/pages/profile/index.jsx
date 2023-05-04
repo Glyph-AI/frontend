@@ -4,7 +4,7 @@ import {
     ConversationHeader
 } from '@chatscope/chat-ui-kit-react'
 import { useRouter } from "next/router";
-import { Avatar, Badge, Box, ListItem, ListItemText, List, ListItemAvatar, Divider, IconButton, Typography, Button, LinearProgress, useMediaQuery } from "@mui/material";
+import { Avatar, Badge, Box, ListItem, ListItemText, List, ListItemAvatar, Divider, IconButton, Typography, Button, LinearProgress, useMediaQuery, Link } from "@mui/material";
 import { styled } from '@mui/material/styles';
 import { theme } from "@/components/utility/theme";
 import FileUploadIcon from '@mui/icons-material/FileUpload';
@@ -13,6 +13,7 @@ import { useEffect, useState } from "react";
 import { genericRequest, getRequest } from "@/components/utility/request_helper";
 import { getCookie } from "@/components/utility/cookie_helper";
 import LayoutWithNav from "@/components/utility/layout_with_nav";
+import { SocialIcon } from "react-social-icons";
 
 const SmallAvatar = styled(Avatar)(({ theme }) => ({
     width: 32,
@@ -200,6 +201,13 @@ export default function Profile() {
                 <Button onClick={handleLogout} startIcon={<Logout />} variant="contained" sx={{ width: "80%" }}>
                     Logout
                 </Button>
+            </Box>
+            <Divider sx={{ marginTop: "16px" }} />
+            <Box sx={{ display: "flex", alignContent: "center", justifyContent: "center", gap: "8px", paddingTop: "16px" }}>
+                <Link href="https://discord.gg/DKmvWgAx">
+                    <Typography variant="h6">Join our Discord!</Typography>
+                </Link>
+                <SocialIcon url="https://discord.gg/DKmvWgAx" style={{ marginTop: "2px", height: 25, width: 25 }} />
             </Box>
         </LayoutWithNav >
     )
