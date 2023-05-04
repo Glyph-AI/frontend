@@ -11,7 +11,6 @@ export default function BotToolList({ bot, setBot }) {
         getRequest("/tools", (data) => {
             setAvailableTools(data)
         })
-        console.log(bot)
     }, [])
 
     const isEnabledForBot = (id) => {

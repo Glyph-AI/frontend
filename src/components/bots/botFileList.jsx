@@ -3,7 +3,7 @@ import { Collapse, List, TableRow, ListItem, IconButton, ListItemIcon, ListItemA
 import { useEffect, useRef, useState } from "react";
 import { genericRequest, getRequest } from "../utility/request_helper";
 
-export default function BotFileList({ name, bot_id }) {
+export default function BotFileList({ name, bot_id, user }) {
     const [listOpen, setListOpen] = useState(false)
     const [uploads, setUploads] = useState([])
     const [snackbarMessage, setSnackbarMessage] = useState("")
@@ -106,13 +106,16 @@ export default function BotFileList({ name, bot_id }) {
                                 )
                             })
                         }
-                        <ListItem ref={inputRef} onClick={handleUploadClick} key={0} sx={{ pl: 4 }}>
-                            <ListItemIcon>
-                                <Add />
-                            </ListItemIcon>
-                            <ListItemText primary={<b>Upload New File</b>} />
-                        </ListItem>
-
+                        {
+                            Math.abs(user.files_left) > 0 && (
+                                <ListItem ref={inputRef} onClick={handleUploadClick} key={0} sx={{ pl: 4 }}>
+                                    <ListItemIcon>
+                                        <Add />
+                                    </ListItemIcon>
+                                    <ListItemText primary={<b>Upload New File</b>} />
+                                </ListItem>
+                            )
+                        }
                     </List>
                 </Collapse>
                 <input

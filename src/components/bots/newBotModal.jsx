@@ -8,6 +8,7 @@ export default function NewBotModal({ open, handleClose }) {
     const [personas, setPersonas] = useState([])
     const [botPersona, setBotPersona] = useState(null)
     const [botCode, setBotCode] = useState("")
+    const [user, setUser] = useState({})
     const [showCreation, setShowCreation] = useState(false)
     const router = useRouter()
 
@@ -51,12 +52,13 @@ export default function NewBotModal({ open, handleClose }) {
         })
 
         getRequest("/profile", (data) => {
-            setShowCreation(data.subscribed)
+            setUser(data)
+            setShowCreation(Math.abs(data.bots_left) > 0)
         })
+
     }, [])
 
     const addDisabled = () => {
-        console.log(botPersona)
         if (botCode !== "") {
             return false
         } else if (name !== "" && botPersona !== null) {

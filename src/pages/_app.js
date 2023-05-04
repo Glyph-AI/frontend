@@ -5,7 +5,6 @@ import { AnimatePresence } from 'framer-motion'
 import { useEffect } from 'react'
 
 export default function App({ Component, pageProps }) {
-  console.log(styles)
   useEffect(() => {
     window.addEventListener("resize", (ev) => {
       document.body.style.height = window.visualViewport.height + "px"

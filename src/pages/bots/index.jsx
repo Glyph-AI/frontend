@@ -43,8 +43,6 @@ export default function Bots() {
         });
 
         let bot_code = params.bot_code
-        console.log("HELLO")
-        console.log(bot_code)
         if (bot_code !== null) {
             setUrlBotCode(bot_code)
             setModalVisible(true)
@@ -71,10 +69,15 @@ export default function Bots() {
                     ))
                 }
             </List>
-            <Fab onClick={() => { setModalVisible(true) }} variant="extended" sx={{ position: 'absolute', bottom: 64, right: 16 }} >
-                <Add sx={{ mr: 1 }} />
-                Add Bot
-            </Fab>
+            {
+                Math.abs(user.bots_left) > 0 && (
+                    <Fab onClick={() => { setModalVisible(true) }} variant="extended" sx={{ position: 'absolute', bottom: 64, right: 16 }} >
+                        <Add sx={{ mr: 1 }} />
+                        Add Bot
+                    </Fab>
+                )
+            }
+
             <NewBotModal urlBotCode={urlBotCode} open={modalVisible} handleClose={handleModalClose} />
         </LayoutWithNav>
     )
