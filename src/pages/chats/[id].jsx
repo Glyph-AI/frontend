@@ -18,7 +18,7 @@ import {
   genericRequest,
   getRequest
 } from '@/components/utility/request_helper';
-import { Box, Snackbar, Typography } from '@mui/material'
+import { Alert, AlertTitle, Box, Link, Snackbar, Typography } from '@mui/material'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import SyntaxHighlighter from 'react-syntax-highlighter';
@@ -239,6 +239,14 @@ export default function Home() {
     setAnchorEl(null)
   }
 
+  const outOfMessagesError = () => {
+    if (currentUser.subscribed && currentUser.messages_left <= 0) {
+      return "You are out of messages for the month."
+    } else {
+      return "You are out of free messages! Please subscribe to continue using Glyph!"
+    }
+  }
+
   return (
     <Layout>
       <div style={{ height: "100%" }}>
@@ -250,6 +258,16 @@ export default function Home() {
           onClose={() => { setSnackbarOpen(false) }}
           message={snackbarMessage}
         />
+        <Snackbar
+          anchorOrigin={{ vertical: "top", horizontal: "right" }}
+          open={currentUser.messages_left <= 0}
+          onClick={() => { router.push("/profile") }}
+        >
+          <Alert severity="error">
+            <AlertTitle>Out of Messages!</AlertTitle>
+            {outOfMessagesError()} Click Here to subscribe!
+          </Alert>
+        </Snackbar>
         <input
           onChange={(ev) => { handleUpload(ev) }}
           accept="text/*,application/csv,application/pdf,image/*,.mp3,audio/mp3"
@@ -292,7 +310,7 @@ export default function Home() {
                 onChange={(val) => { setNewMessage(val) }}
                 value={newMessage}
                 sendButton={false}
-                disabled={(currentUser.messages_left === 0)}
+                disabled={(currentUser.messages_left <= 0)}
                 attachButton={false}
                 onSend={handleNewMessage} style={{
                   flexGrow: 1,
