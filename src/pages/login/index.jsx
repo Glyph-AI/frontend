@@ -115,7 +115,7 @@ export default function Login() {
                 </Box>
                 <Box sx={{width: "100%", flexWrap: "wrap", display: "flex", alignItems: "center", justifyContent: "Center"}}>
                     <Button onClick={() => {handleSignin()}} variant="contained" sx={{marginTop: "16px", width: "60%"}}>Sign-In</Button>
-                    <Button variant="outlined" sx={{marginTop: "16px", width: "60%"}} onClick={() => {setDisplaySignup(true)}}>Sign-Up</Button>
+                    <Button variant="outlined" sx={{marginTop: "16px", width: "60%"}} onClick={() => {setDisplaySignup(true); setEmail(""); setPassword("")}}>Sign-Up</Button>
                 </Box>
             </>
         )
@@ -133,7 +133,7 @@ export default function Login() {
                 </Box>
                 <Box sx={{width: "100%", flexWrap: "wrap", display: "flex", alignItems: "center", justifyContent: "Center"}}>
                     <Button disabled={signUpDisabled()} onClick={() => {handleSignup()}} variant="contained" sx={{marginTop: "16px", width: "60%"}}>Sign-Up</Button>
-                    <Button onClick={() => {setDisplaySignup(false)}} variant="outlined" sx={{marginTop: "16px", width: "60%"}}>Back to Sign-in</Button>
+                    <Button onClick={() => {setDisplaySignup(false); setEmail(""); setPassword("")}} variant="outlined" sx={{marginTop: "16px", width: "60%"}}>Back to Sign-in</Button>
                 </Box>
             </>
         )
