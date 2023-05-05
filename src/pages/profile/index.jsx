@@ -164,7 +164,7 @@ export default function Profile() {
                                 <ChevronRight />
                             </IconButton>
                         }
-                        onClick={() => { window.location.href = stripeUrl }}
+                        onClick={() => { profile.subscribed ? window.location.href = stripeUrl : router.push("/profile/subscription") }}
                     >
                         <ListItemAvatar>
                             <Avatar>

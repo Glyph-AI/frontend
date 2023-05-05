@@ -14,12 +14,12 @@ const variants = {
 }
 
 export default function LayoutWithNav({ children }) {
-    const [ navValue, setNavValue ] = useState(0)
+    const [navValue, setNavValue] = useState(0)
     const router = useRouter()
 
     useEffect(() => {
         if (window !== undefined) {
-            if(window.location.href.includes("profile")) {
+            if (window.location.href.includes("profile")) {
                 setNavValue(0)
             } else if (window.location.href.includes("conversation")) {
                 setNavValue(1)
@@ -32,13 +32,14 @@ export default function LayoutWithNav({ children }) {
     return (
         <ThemeProvider theme={theme}>
             <CssBaseline />
-            <motion.div 
+            <motion.div
                 variants={variants}
-                initial="hidden" 
+                initial="hidden"
                 animate="enter"
                 exit="exit"
                 transition={{ type: 'linear' }}
                 className=""
+                style={{ height: "100%" }}
             >
                 {children}
             </motion.div>
@@ -51,13 +52,13 @@ export default function LayoutWithNav({ children }) {
                     }}
                     sx={{
                         "& .Mui-selected, .Mui-selected > svg": {
-                          color: theme.palette.secondary.main
+                            color: theme.palette.secondary.main
                         }
                     }}
                 >
-                    <BottomNavigationAction onClick={() => {router.push("/profile")}} value={0} label="Profile" icon={<Person/>}/>
-                    <BottomNavigationAction onClick={() => {router.push("/conversations")}} value={1} label="Chats" icon={<Message/>}/>
-                    <BottomNavigationAction onClick={() => {router.push("/bots")}} value={2} label="Bots" icon={<SmartToy/>}/>
+                    <BottomNavigationAction onClick={() => { router.push("/profile") }} value={0} label="Profile" icon={<Person />} />
+                    <BottomNavigationAction onClick={() => { router.push("/conversations") }} value={1} label="Chats" icon={<Message />} />
+                    <BottomNavigationAction onClick={() => { router.push("/bots") }} value={2} label="Bots" icon={<SmartToy />} />
                 </BottomNavigation>
             </Paper>
         </ThemeProvider>
