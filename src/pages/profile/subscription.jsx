@@ -71,10 +71,10 @@ export default function SubscriptionOptions() {
                             </Typography>
                         </Box>
                         <Box sx={{ display: "flex", width: "100%", flexWrap: "wrap", marginTop: "16px" }}>
-                            <Card elevation={monthly ? 10 : 3} sx={{ marginBottom: "16px", width: "100%" }}>
+                            <Card onClick={handleRadioChange} elevation={monthly ? 10 : 3} sx={{ marginBottom: "16px", width: "100%" }}>
                                 <CardHeader
                                     avatar={
-                                        <Radio checked={monthly} onChange={() => { handleRadioChange() }} />
+                                        <Radio checked={monthly} />
                                     }
                                     title={
                                         <>
@@ -86,10 +86,10 @@ export default function SubscriptionOptions() {
                                     }
                                 />
                             </Card>
-                            <Card elevation={annual ? 10 : 3} sx={{ marginBottom: "16px", width: "100%" }}>
+                            <Card onClick={handleRadioChange} elevation={annual ? 10 : 3} sx={{ marginBottom: "16px", width: "100%" }}>
                                 <CardHeader
                                     avatar={
-                                        <Radio checked={annual} onChange={() => { handleRadioChange() }} />
+                                        <Radio checked={annual} />
                                     }
                                     title={
                                         <>
