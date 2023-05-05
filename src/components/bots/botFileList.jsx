@@ -80,7 +80,7 @@ export default function BotFileList({ name, bot_id, user }) {
                     <ListItemText primary={name} primaryTypographyProps={{ sx: { fontSize: 18 } }} />
                 </ListItem>
                 <Collapse in={listOpen} unmountOnExit>
-                    <List component="div" disablePadding>
+                    <List component="div" disablePadding sx={{overflowY: "scroll"}}>
                         {
                             uploads && uploads.map((item, idx) => {
                                 return (

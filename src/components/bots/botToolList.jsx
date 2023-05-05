@@ -47,7 +47,7 @@ export default function BotToolList({ bot, setBot }) {
                 <ListItemText primary="Tools" primaryTypographyProps={{ sx: { fontSize: 18 } }} />
             </ListItem>
             <Collapse in={listOpen} unmountOnExit>
-                <List component="div" disablePadding>
+                <List component="div" disablePadding sx={{overflowY: "scroll"}}>
                     {
                         availableTools && availableTools.map((item, idx) => {
                             if (item.name !== "Respond to User") {
