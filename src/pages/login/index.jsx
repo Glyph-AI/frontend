@@ -3,20 +3,21 @@ import { genericRequest } from '@/components/utility/request_helper'
 import { useRouter } from 'next/router';
 import { GOOGLE_LOGIN_KEY } from '@/components/utility/gLogin';
 import Layout from '@/components/utility/layout';
-import { motion } from "framer-motion";
 import { Box } from '@mui/system';
-import { Button, Divider, TextField } from '@mui/material';
+import { Alert, AlertTitle, Button, Divider, Snackbar, TextField } from '@mui/material';
 
 export default function Login() {
     const [redirectUrl, setRedirectUrl] = useState("/conversations")
-    const [ email, setEmail ] = useState("")
-    const [ password, setPassword ] = useState("")
-    const [ passwordConfirm, setPasswordConfirm ] = useState("")
-    const [ firstName, setFirstName ] = useState("")
-    const [ lastName, setLastName ] = useState("")
-    const [ displaySignup, setDisplaySignup ] = useState(false)
+    const [email, setEmail] = useState("")
+    const [password, setPassword] = useState("")
+    const [passwordConfirm, setPasswordConfirm] = useState("")
+    const [firstName, setFirstName] = useState("")
+    const [lastName, setLastName] = useState("")
+    const [displaySignup, setDisplaySignup] = useState(false)
+    const [snackbarOpen, setSnackbarOpen] = useState(false)
+    const [errorContent, setErrorContent] = useState("")
     const router = useRouter()
-    
+
     const handleGoogle = (resp) => {
         var auth_data = {
             "token": resp.credential
@@ -26,7 +27,8 @@ export default function Login() {
             if (status === 200) {
                 router.push(redirectUrl)
             } else if (status === 401) {
-                console.log("Failed")
+                setErrorContent(data)
+                setSnackbarOpen(true)
             }
         }, { "Content-Type": "application/json" })
     }
@@ -41,8 +43,9 @@ export default function Login() {
             if (status === 200) {
                 router.push(redirectUrl)
             } else if (status === 401) {
-                // raise some kind of thing here
-                console.log("failed")
+                console.log(data)
+                setErrorContent(data.detail)
+                setSnackbarOpen(true)
             }
         }, { "Content-Type": "application/json" })
     }
@@ -60,8 +63,8 @@ export default function Login() {
             if (status === 200) {
                 router.push(redirectUrl)
             } else if (status === 401) {
-                // raise some kind of thing here
-                console.log("failed")
+                setErrorContent(data)
+                setSnackbarOpen(true)
             }
         }, { "Content-Type": "application/json" })
     }
@@ -93,7 +96,7 @@ export default function Login() {
     }, [])
 
     const signUpDisabled = () => {
-        if ( firstName !== "" &&
+        if (firstName !== "" &&
             lastName !== "" &&
             email != "" &&
             password !== "" &&
@@ -106,16 +109,25 @@ export default function Login() {
         return true
     }
 
+    const snackbarContent = () => {
+        return (
+            <Alert severity="error">
+                <AlertTitle>Login Error</AlertTitle>
+                {errorContent}
+            </Alert>
+        )
+    }
+
     const renderLogin = () => {
         return (
             <>
-                <Box sx={{ width: "100%", flexWrap: "wrap", display: "flex", alignItems: "center", justifyContent: "center"}}>
-                    <TextField value={email} onChange={(ev) => {setEmail(ev.target.value)}} label="E-Mail" sx={{width: "90%"}}></TextField>
-                    <TextField value={password} onChange={(ev) => {setPassword(ev.target.value)}} label="Password" type="password" sx={{width: "90%", marginTop: "8px"}}></TextField>
+                <Box sx={{ width: "100%", flexWrap: "wrap", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                    <TextField value={email} onChange={(ev) => { setEmail(ev.target.value) }} label="E-Mail" sx={{ width: "90%" }}></TextField>
+                    <TextField value={password} onChange={(ev) => { setPassword(ev.target.value) }} label="Password" type="password" sx={{ width: "90%", marginTop: "8px" }}></TextField>
                 </Box>
-                <Box sx={{width: "100%", flexWrap: "wrap", display: "flex", alignItems: "center", justifyContent: "Center"}}>
-                    <Button onClick={() => {handleSignin()}} variant="contained" sx={{marginTop: "16px", width: "60%"}}>Sign-In</Button>
-                    <Button variant="outlined" sx={{marginTop: "16px", width: "60%"}} onClick={() => {setDisplaySignup(true); setEmail(""); setPassword("")}}>Sign-Up</Button>
+                <Box sx={{ width: "100%", flexWrap: "wrap", display: "flex", alignItems: "center", justifyContent: "Center" }}>
+                    <Button onClick={() => { handleSignin() }} variant="contained" sx={{ marginTop: "16px", width: "60%" }}>Sign-In</Button>
+                    <Button variant="outlined" sx={{ marginTop: "16px", width: "60%" }} onClick={() => { setDisplaySignup(true); setEmail(""); setPassword("") }}>Sign-Up</Button>
                 </Box>
             </>
         )
@@ -124,16 +136,16 @@ export default function Login() {
     const renderSignup = () => {
         return (
             <>
-                <Box sx={{ width: "100%", flexWrap: "wrap", display: "flex", alignItems: "center", justifyContent: "center"}}>
-                    <TextField value={email} onChange={(ev) => {setEmail(ev.target.value)}} label="E-Mail" sx={{width: "90%"}}></TextField>
-                    <TextField value={firstName} onChange={(ev) => {setFirstName(ev.target.value)}} label="First Name" sx={{width: "90%", marginTop: "8px"}}></TextField>
-                    <TextField value={lastName} onChange={(ev) => {setLastName(ev.target.value)}} label="Last Name" sx={{width: "90%", marginTop: "8px"}}></TextField>
-                    <TextField value={password} onChange={(ev) => {setPassword(ev.target.value)}} label="Password" type="password" sx={{width: "90%", marginTop: "8px"}}></TextField>
-                    <TextField value={passwordConfirm} onChange={(ev) => {setPasswordConfirm(ev.target.value)}} label="Confirm Password" type="password" sx={{width: "90%", marginTop: "8px"}}></TextField>
+                <Box sx={{ width: "100%", flexWrap: "wrap", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                    <TextField value={email} onChange={(ev) => { setEmail(ev.target.value) }} label="E-Mail" sx={{ width: "90%" }}></TextField>
+                    <TextField value={firstName} onChange={(ev) => { setFirstName(ev.target.value) }} label="First Name" sx={{ width: "90%", marginTop: "8px" }}></TextField>
+                    <TextField value={lastName} onChange={(ev) => { setLastName(ev.target.value) }} label="Last Name" sx={{ width: "90%", marginTop: "8px" }}></TextField>
+                    <TextField value={password} onChange={(ev) => { setPassword(ev.target.value) }} label="Password" type="password" sx={{ width: "90%", marginTop: "8px" }}></TextField>
+                    <TextField value={passwordConfirm} onChange={(ev) => { setPasswordConfirm(ev.target.value) }} label="Confirm Password" type="password" sx={{ width: "90%", marginTop: "8px" }}></TextField>
                 </Box>
-                <Box sx={{width: "100%", flexWrap: "wrap", display: "flex", alignItems: "center", justifyContent: "Center"}}>
-                    <Button disabled={signUpDisabled()} onClick={() => {handleSignup()}} variant="contained" sx={{marginTop: "16px", width: "60%"}}>Sign-Up</Button>
-                    <Button onClick={() => {setDisplaySignup(false); setEmail(""); setPassword("")}} variant="outlined" sx={{marginTop: "16px", width: "60%"}}>Back to Sign-in</Button>
+                <Box sx={{ width: "100%", flexWrap: "wrap", display: "flex", alignItems: "center", justifyContent: "Center" }}>
+                    <Button disabled={signUpDisabled()} onClick={() => { handleSignup() }} variant="contained" sx={{ marginTop: "16px", width: "60%" }}>Sign-Up</Button>
+                    <Button onClick={() => { setDisplaySignup(false); setEmail(""); setPassword("") }} variant="outlined" sx={{ marginTop: "16px", width: "60%" }}>Back to Sign-in</Button>
                 </Box>
             </>
         )
@@ -142,14 +154,23 @@ export default function Login() {
 
     return (
         <Layout>
-            <Box style={{ height: "100%", display: "flex", justifyContent: "center", alignItems: "center"}}>
+            <Snackbar
+                open={snackbarOpen}
+                anchorOrigin={{ vertical: "top", horizontal: "right" }}
+                audoHideDuration={6000}
+                onClick={() => { setSnackbarOpen(false) }}
+                onClose={() => { setSnackbarOpen(false) }}
+            >
+                {snackbarContent()}
+            </Snackbar>
+            <Box style={{ height: "100%", display: "flex", justifyContent: "center", alignItems: "center" }}>
                 <Box style={{ width: "100%" }}>
-                    <Box sx={{alignContent: "center", justifyContent: "center"}}>
-                        <Box sx={{width: "100%", display: "flex", justifyContent: "center", alignItems: "center"}}>
+                    <Box sx={{ alignContent: "center", justifyContent: "center" }}>
+                        <Box sx={{ width: "100%", display: "flex", justifyContent: "center", alignItems: "center" }}>
                             <img className="logo" alt="Glyph Logo" src={"/dark_vertical.png"} style={{ width: "50%", marginBottom: "8px" }} />
                         </Box>
                         {displaySignup ? renderSignup() : renderLogin()}
-                        <Divider sx={{marginTop: "16px"}} variant="middle" >OR</Divider>
+                        <Divider sx={{ marginTop: "16px" }} variant="middle" >OR</Divider>
                         <div style={{ marginTop: "16px", width: "100%", display: "flex", justifyContent: "center" }} id="gLogin" />
                     </Box>
                 </Box>
