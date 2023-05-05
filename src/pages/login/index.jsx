@@ -27,7 +27,7 @@ export default function Login() {
             if (status === 200) {
                 router.push(redirectUrl)
             } else if (status === 401) {
-                setErrorContent(data)
+                setErrorContent(data.detail)
                 setSnackbarOpen(true)
             }
         }, { "Content-Type": "application/json" })
@@ -63,7 +63,7 @@ export default function Login() {
             if (status === 200) {
                 router.push(redirectUrl)
             } else if (status === 401) {
-                setErrorContent(data)
+                setErrorContent(data.detail)
                 setSnackbarOpen(true)
             }
         }, { "Content-Type": "application/json" })
