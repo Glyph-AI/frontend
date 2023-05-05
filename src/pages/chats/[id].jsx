@@ -28,6 +28,7 @@ import Layout from '@/components/utility/layout';
 import { motion } from "framer-motion";
 import { getCookie } from '@/components/utility/cookie_helper';
 import { theme } from '@/components/utility/theme.jsx';
+import LayoutWithNav from '@/components/utility/layout_with_nav';
 
 export default function Home() {
   const [newMessage, setNewMessage] = useState("")
@@ -248,7 +249,7 @@ export default function Home() {
   }
 
   return (
-    <Layout>
+    <LayoutWithNav showNav={false}>
       <div style={{ height: "100%" }}>
         <Snackbar
           anchorOrigin={{ vertical: "top", horizontal: "right" }}
@@ -328,6 +329,6 @@ export default function Home() {
           </ChatContainer>
         </MainContainer>
       </div >
-    </Layout>
+    </LayoutWithNav>
   )
 }

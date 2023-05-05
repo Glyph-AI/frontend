@@ -12,7 +12,29 @@ import { Add } from "@mui/icons-material";
 import NewBotModal from "@/components/bots/newBotModal";
 import { getCookie } from "@/components/utility/cookie_helper";
 import LayoutWithNav from "@/components/utility/layout_with_nav";
+import Joyride from 'react-joyride'
+import TourContent from '@/components/tour/tourContent';
 
+
+const steps = [
+    {
+        "target": "body",
+        "placement": "center",
+        "content": (
+            <>
+                <TourContent text="This is the page where you can create and edit bots. Let's create your first bot now!" />
+            </>
+        )
+    },
+    {
+        "target": "#bot-create-fab",
+        "content": (
+            <>
+                <TourContent text="Click here to create a Bot!" />
+            </>
+        )
+    }
+]
 export default function Bots() {
     const [userBots, setUserBots] = useState([])
     const [user, setUser] = useState({})
@@ -56,6 +78,10 @@ export default function Bots() {
 
     return (
         <LayoutWithNav>
+            <Joyride
+                steps={steps}
+                styles={{ zIndex: 1000 }}
+            />
             <ConversationHeader >
                 <ConversationHeader.Content userName={<Typography variant="h6">Bots</Typography>} />
             </ConversationHeader>
@@ -71,7 +97,7 @@ export default function Bots() {
             </List>
             {
                 Math.abs(user.bots_left) > 0 && (
-                    <Fab onClick={() => { setModalVisible(true) }} variant="extended" sx={{ position: 'absolute', bottom: 64, right: 16 }} >
+                    <Fab id="bot-create-fab" onClick={() => { setModalVisible(true) }} variant="extended" sx={{ position: 'absolute', bottom: 64, right: 16 }} >
                         <Add sx={{ mr: 1 }} />
                         Add Bot
                     </Fab>

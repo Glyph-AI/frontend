@@ -20,6 +20,37 @@ import { getRequest } from '@/components/utility/request_helper';
 import { motion } from "framer-motion";
 import { useRouter } from 'next/router';
 import LayoutWithNav from '@/components/utility/layout_with_nav';
+import Joyride from 'react-joyride'
+import TourContent from '@/components/tour/tourContent';
+
+const steps = [
+    {
+        "target": "body",
+        "placement": "center",
+        "content": (
+            <>
+                <TourContent text="Welcome to Glyph, your customizable AI assistant!" />
+            </>
+        )
+    },
+    {
+        "target": "body",
+        "placement": "center",
+        "content": (
+            <>
+                <TourContent text="This is the Conversations page. There's not much here, so let's move on for now." />
+            </>
+        )
+    },
+    {
+        "target": "#bots-button",
+        "content": (
+            <>
+                <TourContent text="Let's take a look at Bots first!" />
+            </>
+        )
+    }
+]
 
 export default function Conversations() {
     const [modalVisible, setModalVisible] = useState(false)
@@ -27,6 +58,7 @@ export default function Conversations() {
     const [displayChats, setDisplayChats] = useState([])
     const [searchValue, setSearchValue] = useState([])
     const [user, setUser] = useState({})
+    const [tour, setTour] = useState(false)
     const router = useRouter()
 
     const getChatDateSafe = (chat) => {
@@ -68,6 +100,7 @@ export default function Conversations() {
         }
         getChats()
         getUser()
+        setTour(true)
     }, [])
 
     const formatLastMessage = (message) => {
@@ -103,6 +136,10 @@ export default function Conversations() {
 
     return (
         <LayoutWithNav>
+            <Joyride
+                steps={steps}
+                styles={{ zIndex: 1000 }}
+            />
             <Box sx={{ height: "100%", padding: "8px", overflow: "hidden" }}>
                 <Box sx={{ height: 40, display: "flex", marginBottom: "16px", alignContent: "center" }}>
                     <Search placeholder="Search..." style={{ flex: 1, fontSize: 16 }} value={searchValue} onChange={(val) => { handleSearchValueChange(val) }} />

@@ -2,7 +2,9 @@ import '@/styles/globals.css'
 import styles from '@chatscope/chat-ui-kit-styles/dist/default/styles.min.css';
 import '@/styles/chat.css'
 import { AnimatePresence } from 'framer-motion'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
+import NoSsr from '@mui/base/NoSsr';
+
 
 export default function App({ Component, pageProps }) {
   useEffect(() => {
@@ -12,8 +14,10 @@ export default function App({ Component, pageProps }) {
   }, [])
 
   return (
-    <AnimatePresence mode="wait" initial={false}>
-      <Component {...pageProps} />
+    <AnimatePresence suppressHydrationWarning={true} mode="wait" initial={false}>
+      <NoSsr>
+        <Component {...pageProps} />
+      </NoSsr>
     </AnimatePresence>
 
   )

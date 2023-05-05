@@ -2,6 +2,28 @@ import { Dialog, DialogContent, DialogTitle, TextField, Box, Divider, Typography
 import { useEffect, useState } from "react";
 import { genericRequest, getRequest } from "../utility/request_helper";
 import { useRouter } from "next/router";
+import Joyride from 'react-joyride'
+import TourContent from '@/components/tour/tourContent';
+
+
+const steps = [
+    {
+        "target": "#new-bot-creation",
+        "content": (
+            <>
+                <TourContent text="This is the page where you can create and edit bots. Let's create your first bot now!" />
+            </>
+        )
+    },
+    {
+        "target": "#bot-create-fab",
+        "content": (
+            <>
+                <TourContent text="Click here to create a Bot!" />
+            </>
+        )
+    }
+]
 
 export default function NewBotModal({ open, handleClose }) {
     const [name, setName] = useState("")
@@ -76,7 +98,7 @@ export default function NewBotModal({ open, handleClose }) {
                         <Typography sx={{ width: "100%", textAlign: "center", fontSize: 20, marginBottom: "8px" }}>Create New Bot</Typography>
                         <TextField disabled={botCode !== "" && botCode !== null} fullWidth label="Name" value={name} onChange={(e) => { setName(e.target.value) }} />
                     </Box>
-                    <Box sx={{ marginTop: "8px", display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "center" }}>
+                    <Box id="new-bot-creation" sx={{ marginTop: "8px", display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "center" }}>
                         <TextField select onChange={(e) => { setBotPersona(e.target.value) }} fullWidth label="Persona">
                             {
                                 personas && personas.map((p, idx) => {
@@ -87,7 +109,7 @@ export default function NewBotModal({ open, handleClose }) {
                             }
                         </TextField>
                     </Box>
-
+                    <Divider sx={{ marginTop: "8px" }} flexItem>OR</Divider>
                 </>
             )
         } else {
@@ -113,13 +135,14 @@ export default function NewBotModal({ open, handleClose }) {
             open={open}
             onClose={handleClose}
         >
+            <Joyride steps={steps} />
             <DialogTitle>Add Bot</DialogTitle>
             <DialogContent>
                 <Box sx={{}}>
                     {
                         renderBotCreation()
                     }
-                    <Box sx={{ display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "center" }}>
+                    <Box id="add-shared-bot" sx={{ display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "center" }}>
                         <Typography sx={{ width: "100%", textAlign: "center", fontSize: 20, marginBottom: "8px" }}>Sharing Code</Typography>
                         <TextField disabled={name !== "" && name !== null} fullWidth label="Code" value={botCode} onChange={(e) => { setBotCode(e.target.value) }} />
                     </Box>

@@ -11,3 +11,11 @@ body,
 body {
   overflow: hidden
 }
+
+.__floater__open {
+  z-index: 10000 !important;
+}
+
+div[class|='react-joyride-step'] {
+  z-index: 10000 !important;
+}
