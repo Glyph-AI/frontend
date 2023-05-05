@@ -90,7 +90,7 @@ export default function Login() {
         if (bot_code !== null) {
             setRedirectUrl(`/bots?bot_code=${bot_code}`)
         }
-    }, [handleGoogle])
+    }, [])
 
     const signUpDisabled = () => {
         if ( firstName !== "" &&
