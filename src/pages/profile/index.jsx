@@ -79,10 +79,6 @@ export default function Profile() {
             return 0
         }
 
-        console.log(profile.allowed_bots, profile.bots_left)
-
-        console.log(((profile.allowed_bots - profile.bots_left) / (profile.allowed_bots)) * 100)
-
         return ((profile.allowed_bots - profile.bots_left) / (profile.allowed_bots)) * 100
     }
 
