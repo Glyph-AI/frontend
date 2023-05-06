@@ -167,7 +167,7 @@ export default function Login() {
                 <Box style={{ width: "100%" }}>
                     <Box sx={{ alignContent: "center", justifyContent: "center" }}>
                         <Box sx={{ width: "100%", display: "flex", justifyContent: "center", alignItems: "center" }}>
-                            <img className="logo" alt="Glyph Logo" src={"/dark_vertical.png"} style={{ width: "50%", marginBottom: "8px" }} />
+                            <img className="logo" alt="Glyph Logo" src={"/dark_vertical.png"} style={{ width: "50%", marginBottom: "8px", maxWidth: "450px" }} />
                         </Box>
                         {displaySignup ? renderSignup() : renderLogin()}
                         <Divider sx={{ marginTop: "16px" }} variant="middle" >OR</Divider>
