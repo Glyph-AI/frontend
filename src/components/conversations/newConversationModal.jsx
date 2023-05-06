@@ -58,7 +58,7 @@ export default function NewConversationModal({ open, handleClose }) {
     useEffect(() => {
         getUserBots()
         getRequest("/profile", (data) => {
-            setShowCreation(data.subscribed)
+            setShowCreation(data.subscribed && data.is_current)
         })
     }, [])
 

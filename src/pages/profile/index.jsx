@@ -67,8 +67,12 @@ export default function Profile() {
     }
 
     const renderUserSubscription = () => {
-        if (profile.subscribed) {
+        if (profile.subscribed && profile.is_current) {
             return <i>Subscribed</i>
+        } else if (profile.subscription_canceled) {
+            return <i>Subscription Canceled</i>
+        } else if (profile.subscribed && !profile.is_current) {
+            return <i>Payment Issue</i>
         } else {
             return <i>Not Subscribed</i>
         }
