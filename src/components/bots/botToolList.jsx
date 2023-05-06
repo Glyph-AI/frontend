@@ -50,7 +50,7 @@ export default function BotToolList({ bot, setBot }) {
                 <List component="div" disablePadding sx={{overflowY: "scroll"}}>
                     {
                         availableTools && availableTools.map((item, idx) => {
-                            if (item.name !== "Respond to User") {
+                            if (item.user_configurable) {
                                 return (
                                     <>
                                         <ListItem key={idx} sx={{ pl: 4 }}>
