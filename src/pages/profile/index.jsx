@@ -126,7 +126,7 @@ export default function Profile() {
                         color="secondary"
                         sx={{ width: "100%" }}
                         value={calculateBotValue()}
-                        labelValue={profile.allowed_bots - profile.bots_left}
+                        labelValue={profile.bot_count}
                         maxValue={profile.allowed_bots}
                     />
                 </Box>
@@ -138,7 +138,7 @@ export default function Profile() {
                         variant="determinate"
                         color="secondary"
                         value={calculateMessageValue()}
-                        labelValue={profile.allowed_messages - profile.messages_left}
+                        labelValue={profile.message_count}
                         maxValue={profile.allowed_messages}
                     />
                 </Box>
@@ -150,7 +150,7 @@ export default function Profile() {
                         variant="determinate"
                         color="secondary"
                         value={calculateFileValue()}
-                        labelValue={profile.allowed_files - profile.files_left}
+                        labelValue={profile.file_count}
                         maxValue={profile.allowed_files}
                     />
                 </Box>
