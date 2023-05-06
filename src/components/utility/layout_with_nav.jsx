@@ -1,11 +1,12 @@
 import { theme, darkTheme } from './theme.jsx'
-import { ThemeProvider, CssBaseline, BottomNavigation, BottomNavigationAction, Paper } from '@mui/material';
+import { ThemeProvider, CssBaseline, BottomNavigation, BottomNavigationAction, Paper, Snackbar, Alert, AlertTitle } from '@mui/material';
 import Layout from './layout';
 import { useState } from 'react';
 import { Message, Person, SmartToy } from '@mui/icons-material';
 import { useEffect } from 'react';
 import { useRouter } from 'next/router'
 import { motion } from "framer-motion";
+import { getRequest } from './request_helper.jsx';
 
 const variants = {
     hidden: { opacity: 0, x: -400, y: 0 },
@@ -15,6 +16,7 @@ const variants = {
 
 export default function LayoutWithNav({ children }) {
     const [navValue, setNavValue] = useState(0)
+    const [paymentSnackbar, setPaymentSnackbar] = useState("")
     const router = useRouter()
 
     useEffect(() => {
@@ -27,11 +29,28 @@ export default function LayoutWithNav({ children }) {
                 setNavValue(2)
             }
         }
+
+        getRequest("/profile", (data) => {
+            if (data.subscribed && !data.is_current) {
+                setPaymentSnackbar(true);
+            }
+        })
     }, [])
 
     return (
         <ThemeProvider theme={theme}>
             <CssBaseline />
+            <Snackbar
+                anchorOrigin={{ vertical: "top", horizontal: "right" }}
+                open={paymentSnackbar}
+                audoHideDuration={6000}
+                onClick={() => { router.push("/profile") }}
+            >
+                <Alert severity="error">
+                    <AlertTitle>Payment Issue!</AlertTitle>
+                    Please go to your profile and check your payment information! Your account has been temporarily restricted.
+                </Alert>
+            </Snackbar>
             <motion.div
                 variants={variants}
                 initial="hidden"
