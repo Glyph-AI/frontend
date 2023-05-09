@@ -80,7 +80,7 @@ export default function BotFileList({ name, bot_id, user }) {
                     <ListItemText primary={name} primaryTypographyProps={{ sx: { fontSize: 18 } }} />
                 </ListItem>
                 <Collapse in={listOpen} unmountOnExit>
-                    <List component="div" disablePadding sx={{overflowY: "scroll"}}>
+                    <List component="div" disablePadding sx={{ overflowY: "scroll" }}>
                         {
                             uploads && uploads.map((item, idx) => {
                                 return (
@@ -107,12 +107,16 @@ export default function BotFileList({ name, bot_id, user }) {
                             })
                         }
                         {
-                            Math.abs(user.files_left) > 0 && (
+                            Math.abs(user.files_left) > 0 ? (
                                 <ListItem ref={inputRef} onClick={handleUploadClick} key={0} sx={{ pl: 4 }}>
                                     <ListItemIcon>
                                         <Add />
                                     </ListItemIcon>
                                     <ListItemText primary={<b>Upload New File</b>} />
+                                </ListItem>
+                            ) : (
+                                <ListItem key={0} sx={{ pl: 4 }}>
+                                    <ListItemText primary={<b>Please subscribe to add new files!</b>} />
                                 </ListItem>
                             )
                         }
