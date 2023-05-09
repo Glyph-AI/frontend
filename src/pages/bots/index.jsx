@@ -2,9 +2,9 @@ import Layout from "@/components/utility/layout";
 import { useRouter } from "next/router";
 import { motion } from "framer-motion";
 import {
-    ConversationHeader
+    ConversationHeader, Search
 } from '@chatscope/chat-ui-kit-react'
-import { Divider, List, Fab, Box, Select, TextField, Typography } from "@mui/material";
+import { Divider, List, Fab, Box, Select, TextField, Typography, Avatar } from "@mui/material";
 import BotListItem from "@/components/bots/botListItem";
 import { getRequest } from "@/components/utility/request_helper";
 import { useEffect, useState } from "react";
@@ -16,6 +16,8 @@ import { Masonry } from "@mui/lab";
 
 export default function Bots() {
     const [userBots, setUserBots] = useState([])
+    const [displayUserBots, setDisplayUserBots] = useState([])
+    const [searchValue, setSearchValue] = useState("")
     const [user, setUser] = useState({})
     const [modalVisible, setModalVisible] = useState(false)
     const [urlBotCode, setUrlBotCode] = useState(null)
@@ -24,6 +26,7 @@ export default function Bots() {
     const getUserBots = () => {
         getRequest("/bots", (data) => {
             setUserBots(data)
+            setDisplayUserBots(data)
         })
 
         getRequest("/profile", (data) => {
@@ -55,8 +58,28 @@ export default function Bots() {
         getUserBots()
     }
 
+    const searchFunction = (searchTerm, array) => {
+        return array.filter(bot => (bot.name.toLowerCase().includes(searchTerm.toLowerCase())))
+    }
+
+    const handleSearchValueChange = (newValue) => {
+        setSearchValue(newValue)
+        const newDisplayUserBots = searchFunction(newValue, userBots)
+        setDisplayUserBots(newDisplayUserBots)
+    }
+
     return (
         <LayoutWithNav>
+            <Box sx={{ padding: "8px", height: 60, display: "flex", marginBottom: "16px", alignContent: "center" }}>
+                <Search placeholder="Search..." style={{ flex: 1, fontSize: 16 }} value={searchValue} onChange={handleSearchValueChange} />
+                <Avatar
+                    onMouseEnter={(e) => { e.target.style.cursor = "pointer" }}
+                    sx={{ marginLeft: "16px", width: 40, height: 40 }}
+                    alt={user.first_name}
+                    src={user.profile_picture_location}
+                    onClick={() => { router.push("/profile") }}
+                />
+            </Box>
             <Box
                 sx={{
                     padding: "8px",
@@ -73,7 +96,7 @@ export default function Bots() {
                     sx={{ minHeight: "90%" }}
                 >
                     {
-                        userBots && userBots.map((item) => (
+                        displayUserBots && displayUserBots.map((item) => (
                             <BotListItem bot={item} displayLink={item.creator_id == user.id} />
                         ))
                     }
