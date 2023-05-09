@@ -116,7 +116,7 @@ export default function BotInfo() {
             </Table>
             <Divider />
             <>
-                <BotFileList name="Files" bot_id={id} user={currentUser} />
+                <BotFileList name="Files" bot_id={id} user={currentUser} bot={bot} setBot={setBot} />
                 <Divider />
                 <BotToolList bot={bot} setBot={setBot} />
             </>

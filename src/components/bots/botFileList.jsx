@@ -1,41 +1,64 @@
 import { Add, Delete, ExpandLess, ExpandMore, Folder } from "@mui/icons-material";
-import { Collapse, List, TableRow, ListItem, IconButton, ListItemIcon, ListItemAvatar, Checkbox, ListItemText, Avatar, Divider, Snackbar } from "@mui/material";
+import { Collapse, List, TableRow, ListItem, IconButton, ListItemIcon, ListItemAvatar, Checkbox, ListItemText, Avatar, Divider, Snackbar, Dialog, DialogTitle, DialogContentText, DialogActions, Button } from "@mui/material";
 import { useEffect, useRef, useState } from "react";
 import { genericRequest, getRequest } from "../utility/request_helper";
 
-export default function BotFileList({ name, bot_id, user }) {
+export default function BotFileList({ name, bot_id, user, bot, setBot }) {
     const [listOpen, setListOpen] = useState(false)
-    const [uploads, setUploads] = useState([])
+    const [availableTexts, setAvailableTexts] = useState([])
     const [snackbarMessage, setSnackbarMessage] = useState("")
     const [snackbarOpen, setSnackbarOpen] = useState(false)
+    const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false)
+    const [deleteTarget, setDeleteTarget] = useState(null)
     const inputFile = useRef(null)
     const inputRef = useRef();
 
-    const sortUserUploads = (data) => {
+    const sortTexts = (data) => {
         const sorted = data.sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
 
         return sorted
     }
 
-    useEffect(() => {
-        if (bot_id !== undefined) {
-            getRequest(`/user_uploads?bot_id=${bot_id}`, (data) => {
-                setUploads(sortUserUploads(data));
-            })
-        }
-    }, [])
-
-    const handleUploadDelete = (id) => {
-        genericRequest(`/user_uploads/${id}`, "DELETE", null, (data) => {
-            setUploads(sortUserUploads(data))
+    const getAvailableTexts = () => {
+        getRequest("/texts", (data) => {
+            setAvailableTexts(sortTexts(data))
         })
     }
 
-    const handleFileHiding = (idx) => {
-        const targetFile = uploads[idx]
-        genericRequest(`/user_uploads/${targetFile.id}`, "PATCH", null, (data) => {
-            setUploads(sortUserUploads(data))
+    useEffect(() => {
+        getAvailableTexts()
+    }, [])
+
+    const handleUploadDelete = () => {
+        genericRequest(`/texts/${deleteTarget}`, "DELETE", null, (data) => {
+            setAvailableTexts(sortTexts(data))
+            setDeleteTarget(null)
+            setDeleteConfirmOpen(false)
         })
+    }
+
+    const showDeleteConfirm = (id) => {
+        setDeleteConfirmOpen(true)
+        setDeleteTarget(id)
+    }
+
+    const handleFileHiding = (idx) => {
+        const targetText = availableTexts[idx]
+        genericRequest(`/bots/${bot.id}/texts/${targetText.id}`, "PATCH", null, (data) => {
+            setBot(data)
+        })
+    }
+
+    const isEnabledForBot = (id) => {
+        if (bot.enabled_texts !== undefined) {
+            var bot_text = bot.enabled_texts.find(item => item.id === id)
+            if (bot_text === undefined) {
+                return false
+            } {
+                return true
+            }
+        }
+        return false
     }
 
     const handleUpload = (ev) => {
@@ -52,8 +75,7 @@ export default function BotFileList({ name, bot_id, user }) {
 
         genericRequest(`/bots/${bot_id}/user_upload`, "POST", formData, (data, status) => {
             if (status === 200) {
-                console.log("Upload Successful")
-                setSnackbarMessage(`${file.name} Uploaded`)
+                setSnackbarMessage(`${file.name} Uploaded. File will appear in list once processing is completed.`)
                 setSnackbarOpen(true)
             }
         }, {})
@@ -88,24 +110,24 @@ export default function BotFileList({ name, bot_id, user }) {
                 <Collapse in={listOpen} unmountOnExit>
                     <List component="div" disablePadding sx={{ overflowY: "scroll" }}>
                         {
-                            uploads && uploads.map((item, idx) => {
+                            availableTexts && availableTexts.map((item, idx) => {
                                 return (
                                     <>
                                         <ListItem key={idx} sx={{ pl: 4 }} secondaryAction={
-                                            <IconButton edge="end" onClick={() => { handleUploadDelete(item.id) }}>
+                                            <IconButton edge="end" onClick={() => { showDeleteConfirm(item.id) }}>
                                                 <Delete />
                                             </IconButton>
                                         }>
                                             <ListItemIcon>
                                                 <Checkbox
                                                     edge="start"
-                                                    checked={item.include_in_context}
+                                                    checked={isEnabledForBot(item.id)}
                                                     tabIndex={-1}
                                                     disableRipple
                                                     onClick={(ev) => { handleFileHiding(idx) }}
                                                 />
                                             </ListItemIcon>
-                                            <ListItemText primary={item.filename || item.id || "No Filename Given"} secondary={item.processed ? "Processing Complete" : "Processing In Progress"} />
+                                            <ListItemText primary={item.name || "No Filename Given"} />
                                         </ListItem>
                                         <Divider />
                                     </>
@@ -133,6 +155,22 @@ export default function BotFileList({ name, bot_id, user }) {
                     style={{ display: 'none' }}
                 />
             </List>
+            <Dialog
+                open={deleteConfirmOpen}
+                onClose={() => { setDeleteConfirmOpen(false) }}
+            >
+                <DialogTitle>
+                    Are you sure?
+                </DialogTitle>
+                <DialogContentText sx={{ padding: "8px" }}>
+                    Deleting this file will delete it FOR ALL BOTS. If this is not what you want
+                    use the checkbox to DISABLE it for this bot instead.
+                </DialogContentText>
+                <DialogActions>
+                    <Button onClick={() => { setDeleteConfirmOpen(false) }}>Cancel</Button>
+                    <Button onClick={handleUploadDelete}>Delete</Button>
+                </DialogActions>
+            </Dialog>
         </>
     )
 }
