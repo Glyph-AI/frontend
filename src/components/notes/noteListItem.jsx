@@ -2,6 +2,7 @@ import { ChevronRight, Note } from "@mui/icons-material";
 import { Card, CardContent, Typography } from "@mui/material";
 import { useRouter } from "next/router";
 import ReactMarkdown from 'react-markdown'
+import remarkGfm from 'remark-gfm'
 
 export default function NoteListItem({ note }) {
     const router = useRouter()
@@ -13,7 +14,7 @@ export default function NoteListItem({ note }) {
                     {note.name}
                 </Typography>
                 <Typography variant="body2">
-                    <ReactMarkdown>{note && note.content.slice(0, 50)}</ReactMarkdown>
+                    <ReactMarkdown remarkPlugins={[remarkGfm]} children={note && note.content.slice(0, 50)}></ReactMarkdown>
                 </Typography>
             </CardContent>
         </Card>
