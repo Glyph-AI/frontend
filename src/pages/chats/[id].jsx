@@ -28,6 +28,8 @@ import Layout from '@/components/utility/layout';
 import { motion } from "framer-motion";
 import { getCookie } from '@/components/utility/cookie_helper';
 import { theme } from '@/components/utility/theme.jsx';
+import LayoutWithNav from '@/components/utility/layout_with_nav';
+import { useUserContext } from '@/context/user';
 
 export default function Home() {
   const [newMessage, setNewMessage] = useState("")
@@ -40,7 +42,7 @@ export default function Home() {
   const [snackbarMessage, setSnackbarMessage] = useState("")
   const [chat, setChat] = useState("")
   const [bot, setBot] = useState("")
-  const [currentUser, setCurrentUser] = useState({})
+  const [user, setUser] = useUserContext();
   const inputFile = useRef(null)
   const inputRef = useRef();
   const menuOpen = Boolean(anchorEl);
@@ -57,12 +59,6 @@ export default function Home() {
   const getBotById = (bot_id, callback = () => { }) => {
     getRequest(`/bots/${bot_id}`, (data) => {
       callback(data)
-    })
-  }
-
-  const getUser = () => {
-    getRequest("/profile", (data) => {
-      setCurrentUser(data)
     })
   }
 
@@ -176,7 +172,7 @@ export default function Home() {
       setBotId(chatData.bot_id)
     })
 
-    getUser()
+    // getUser()
 
   }, [])
 
@@ -246,7 +242,7 @@ export default function Home() {
   }
 
   const outOfMessagesError = () => {
-    if (currentUser.subscribed && currentUser.messages_left <= 0) {
+    if (user.subscribed && user.messages_left <= 0) {
       return "You are out of messages for the month."
     } else {
       return "You are out of free messages! Please subscribe to continue using Glyph!"
@@ -254,7 +250,7 @@ export default function Home() {
   }
 
   return (
-    <Layout>
+    <LayoutWithNav showNavigation={false}>
       <div style={{ height: "100%" }}>
         <Snackbar
           anchorOrigin={{ vertical: "top", horizontal: "right" }}
@@ -266,7 +262,7 @@ export default function Home() {
         />
         <Snackbar
           anchorOrigin={{ vertical: "top", horizontal: "right" }}
-          open={currentUser.messages_left <= 0}
+          open={user.messages_left <= 0}
           onClick={() => { router.push("/profile") }}
         >
           <Alert severity="error">
@@ -302,7 +298,7 @@ export default function Home() {
               borderTop: "1px solid #d1dbe4"
             }}>
               {
-                (currentUser.id === bot.creator_id && Math.abs(currentUser.files_left) > 0) && <AttachmentButton
+                (user.id === bot.creator_id && Math.abs(user.files_left) > 0) && <AttachmentButton
                   style={{
                     fontSize: "1.2em",
                     paddingLeft: "0.2em",
@@ -316,7 +312,7 @@ export default function Home() {
                 onChange={(val) => { setNewMessage(val) }}
                 value={newMessage}
                 sendButton={false}
-                disabled={(currentUser.messages_left <= 0)}
+                disabled={(user.messages_left <= 0)}
                 attachButton={false}
                 onSend={handleNewMessage} style={{
                   flexGrow: 1,
@@ -334,6 +330,6 @@ export default function Home() {
           </ChatContainer>
         </MainContainer>
       </div >
-    </Layout>
+    </LayoutWithNav>
   )
 }

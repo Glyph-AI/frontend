@@ -14,7 +14,7 @@ const variants = {
     exit: { opacity: 0, x: 0, y: -100 },
 }
 
-export default function LayoutWithNav({ children }) {
+export default function LayoutWithNav({ children }, showNavigation = true) {
     const [navValue, setNavValue] = useState(0)
     const [paymentSnackbar, setPaymentSnackbar] = useState("")
     const router = useRouter()
@@ -64,25 +64,29 @@ export default function LayoutWithNav({ children }) {
             >
                 {children}
             </motion.div>
-            <Paper sx={{ position: 'fixed', bottom: 0, left: 0, right: 0 }} elevation={3}>
-                <BottomNavigation
-                    showLabels
-                    value={navValue}
-                    onChange={(event, newValue) => {
-                        setNavValue(newValue);
-                    }}
-                    sx={{
-                        "& .Mui-selected, .Mui-selected > svg": {
-                            color: theme.palette.secondary.main
-                        }
-                    }}
-                >
-                    <BottomNavigationAction onClick={() => { router.push("/profile") }} value={0} label="Profile" icon={<Person />} />
-                    <BottomNavigationAction onClick={() => { router.push("/conversations") }} value={1} label="Chats" icon={<Message />} />
-                    <BottomNavigationAction onClick={() => { router.push("/bots") }} value={2} label="Bots" icon={<SmartToy />} />
-                    <BottomNavigationAction onClick={() => { router.push("/notes") }} value={3} label="Notes" icon={<Note />} />
-                </BottomNavigation>
-            </Paper>
+            {
+                showNavigation && (
+                    <Paper sx={{ position: 'fixed', bottom: 0, left: 0, right: 0 }} elevation={3}>
+                        <BottomNavigation
+                            showLabels
+                            value={navValue}
+                            onChange={(event, newValue) => {
+                                setNavValue(newValue);
+                            }}
+                            sx={{
+                                "& .Mui-selected, .Mui-selected > svg": {
+                                    color: theme.palette.secondary.main
+                                }
+                            }}
+                        >
+                            <BottomNavigationAction onClick={() => { router.push("/profile") }} value={0} label="Profile" icon={<Person />} />
+                            <BottomNavigationAction onClick={() => { router.push("/conversations") }} value={1} label="Chats" icon={<Message />} />
+                            <BottomNavigationAction onClick={() => { router.push("/bots") }} value={2} label="Bots" icon={<SmartToy />} />
+                            <BottomNavigationAction onClick={() => { router.push("/notes") }} value={3} label="Notes" icon={<Note />} />
+                        </BottomNavigation>
+                    </Paper>
+                )
+            }
         </ThemeProvider>
     )
 }

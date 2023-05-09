@@ -5,6 +5,7 @@ import "@uiw/react-markdown-preview/markdown.css";
 import '@/styles/chat.css'
 import { AnimatePresence } from 'framer-motion'
 import { useEffect } from 'react'
+import { UserProvider } from '@/context/user';
 
 export default function App({ Component, pageProps }) {
   useEffect(() => {
@@ -15,7 +16,9 @@ export default function App({ Component, pageProps }) {
 
   return (
     <AnimatePresence mode="wait" initial={false}>
-      <Component {...pageProps} />
+      <UserProvider>
+        <Component {...pageProps} />
+      </UserProvider>
     </AnimatePresence>
 
   )

@@ -13,12 +13,13 @@ import NewBotModal from "@/components/bots/newBotModal";
 import { getCookie } from "@/components/utility/cookie_helper";
 import LayoutWithNav from "@/components/utility/layout_with_nav";
 import { Masonry } from "@mui/lab";
+import { useUserContext } from "@/context/user";
 
 export default function Bots() {
     const [userBots, setUserBots] = useState([])
     const [displayUserBots, setDisplayUserBots] = useState([])
     const [searchValue, setSearchValue] = useState("")
-    const [user, setUser] = useState({})
+    const [user, setUser] = useUserContext();
     const [modalVisible, setModalVisible] = useState(false)
     const [urlBotCode, setUrlBotCode] = useState(null)
     const router = useRouter()
@@ -27,10 +28,6 @@ export default function Bots() {
         getRequest("/bots", (data) => {
             setUserBots(data)
             setDisplayUserBots(data)
-        })
-
-        getRequest("/profile", (data) => {
-            setUser(data)
         })
     }
 

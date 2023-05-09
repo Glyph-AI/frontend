@@ -2,6 +2,7 @@ import NewNoteModal from "@/components/notes/newNoteModal";
 import NoteListItem from "@/components/notes/noteListItem";
 import LayoutWithNav from "@/components/utility/layout_with_nav";
 import { getRequest } from "@/components/utility/request_helper";
+import { useUserContext } from "@/context/user";
 import { ConversationHeader, Search } from "@chatscope/chat-ui-kit-react";
 import { Add } from "@mui/icons-material";
 import { Masonry } from "@mui/lab";
@@ -12,19 +13,13 @@ export default function NotesIndex() {
     const [notes, setNotes] = useState([])
     const [displayNotes, setDisplayNotes] = useState([])
     const [searchValue, setSearchValue] = useState("")
-    const [profile, setProfile] = useState({})
+    const [user, setUser] = useUserContext();
     const [modalVisible, setModalVisible] = useState(false)
 
     const getNotes = () => {
         getRequest("/texts?text_type=note", (data) => {
             setNotes(data)
             setDisplayNotes(data)
-        })
-    }
-
-    const getProfile = () => {
-        getRequest("/profile", (data) => {
-            setProfile(data)
         })
     }
 
@@ -54,8 +49,8 @@ export default function NotesIndex() {
                 <Avatar
                     onMouseEnter={(e) => { e.target.style.cursor = "pointer" }}
                     sx={{ marginLeft: "16px", width: 40, height: 40 }}
-                    alt={profile.first_name}
-                    src={profile.profile_picture_location}
+                    alt={user.first_name}
+                    src={user.profile_picture_location}
                     onClick={() => { router.push("/profile") }}
                 />
             </Box>
@@ -84,7 +79,7 @@ export default function NotesIndex() {
                 </Masonry>
             </Box>
             {
-                Math.abs(profile.files_left) > 0 && (
+                Math.abs(user.files_left) > 0 && (
                     <Fab onClick={() => { setModalVisible(true) }} sx={{ position: 'absolute', bottom: 64, right: 16 }}>
                         <Add />
                     </Fab>
