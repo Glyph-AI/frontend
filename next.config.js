@@ -2,7 +2,9 @@ const withPWA = require('next-pwa')({
   dest: 'public'
 })
 
-module.exports = withPWA({
+const removeImports = require('next-remove-imports')();
+
+module.exports = removeImports(withPWA({
   async redirects() {
     return [
       {
@@ -32,4 +34,4 @@ module.exports = withPWA({
     }
     return config
   },
-});
+}));

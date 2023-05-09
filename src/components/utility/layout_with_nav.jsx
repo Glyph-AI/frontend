@@ -2,7 +2,7 @@ import { theme, darkTheme } from './theme.jsx'
 import { ThemeProvider, CssBaseline, BottomNavigation, BottomNavigationAction, Paper, Snackbar, Alert, AlertTitle } from '@mui/material';
 import Layout from './layout';
 import { useState } from 'react';
-import { Message, Person, SmartToy } from '@mui/icons-material';
+import { Message, Note, Person, SmartToy } from '@mui/icons-material';
 import { useEffect } from 'react';
 import { useRouter } from 'next/router'
 import { motion } from "framer-motion";
@@ -25,8 +25,10 @@ export default function LayoutWithNav({ children }) {
                 setNavValue(0)
             } else if (window.location.href.includes("conversation")) {
                 setNavValue(1)
-            } else {
+            } else if (window.location.href.includes("bots")) {
                 setNavValue(2)
+            } else {
+                setNavValue(3)
             }
         }
 
@@ -78,6 +80,7 @@ export default function LayoutWithNav({ children }) {
                     <BottomNavigationAction onClick={() => { router.push("/profile") }} value={0} label="Profile" icon={<Person />} />
                     <BottomNavigationAction onClick={() => { router.push("/conversations") }} value={1} label="Chats" icon={<Message />} />
                     <BottomNavigationAction onClick={() => { router.push("/bots") }} value={2} label="Bots" icon={<SmartToy />} />
+                    <BottomNavigationAction onClick={() => { router.push("/notes") }} value={3} label="Notes" icon={<Note />} />
                 </BottomNavigation>
             </Paper>
         </ThemeProvider>
