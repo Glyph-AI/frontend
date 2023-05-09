@@ -12,6 +12,7 @@ import { Add } from "@mui/icons-material";
 import NewBotModal from "@/components/bots/newBotModal";
 import { getCookie } from "@/components/utility/cookie_helper";
 import LayoutWithNav from "@/components/utility/layout_with_nav";
+import { Masonry } from "@mui/lab";
 
 export default function Bots() {
     const [userBots, setUserBots] = useState([])
@@ -56,24 +57,33 @@ export default function Bots() {
 
     return (
         <LayoutWithNav>
-            <ConversationHeader >
-                <ConversationHeader.Content userName={<Typography variant="h6">Bots</Typography>} />
-            </ConversationHeader>
-            <List>
-                {
-                    userBots && userBots.map((item) => (
-                        <>
+            <Box
+                sx={{
+                    padding: "8px",
+                    width: "100%",
+                    height: "95%",
+                    overflowY: "scroll",
+                    display: "flex",
+                    justifyContent: "center"
+                }}
+            >
+                <Masonry
+                    columns={1}
+                    spacing={2}
+                    sx={{ minHeight: "90%" }}
+                >
+                    {
+                        userBots && userBots.map((item) => (
                             <BotListItem bot={item} displayLink={item.creator_id == user.id} />
-                            <Divider />
-                        </>
-                    ))
-                }
-            </List>
+                        ))
+                    }
+                </Masonry>
+            </Box>
+
             {
                 Math.abs(user.bots_left) > 0 && (
-                    <Fab onClick={() => { setModalVisible(true) }} variant="extended" sx={{ position: 'absolute', bottom: 64, right: 16 }} >
-                        <Add sx={{ mr: 1 }} />
-                        Add Bot
+                    <Fab onClick={() => { setModalVisible(true) }} sx={{ position: 'absolute', bottom: 64, right: 16 }} >
+                        <Add />
                     </Fab>
                 )
             }

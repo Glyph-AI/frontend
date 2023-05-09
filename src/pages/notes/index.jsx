@@ -83,9 +83,14 @@ export default function NotesIndex() {
                     }
                 </Masonry>
             </Box>
-            <Fab onClick={() => { setModalVisible(true) }} sx={{ position: 'absolute', bottom: 64, right: 16 }}>
-                <Add />
-            </Fab>
+            {
+                Math.abs(profile.files_left) > 0 && (
+                    <Fab onClick={() => { setModalVisible(true) }} sx={{ position: 'absolute', bottom: 64, right: 16 }}>
+                        <Add />
+                    </Fab>
+                )
+            }
+
             <NewNoteModal open={modalVisible} handleClose={handleModalClose} />
         </LayoutWithNav>
     )

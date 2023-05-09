@@ -49,6 +49,14 @@ export default function NoteEdit() {
         })
     }
 
+    const embedNote = () => {
+        genericRequest(`/texts/${id}/embed`, "POST", null, (data, status) => {
+            if (status !== 200) {
+                console.log("Embed error")
+            }
+        })
+    }
+
     const saveNote = () => {
         if (id !== undefined) {
             if (content !== note.content) {
@@ -72,8 +80,10 @@ export default function NoteEdit() {
     useEffect(() => {
         getNote()
         router.events.on('routeChangeStart', saveNote);
+        router.events.on('routeChangeStart', embedNote);
         return () => {
             router.events.off('routeChangeStart', saveNote);
+            router.events.off('routeChangeStart', embedNote);
         };
     }, [router])
 
