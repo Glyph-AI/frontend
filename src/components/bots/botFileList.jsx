@@ -44,6 +44,12 @@ export default function BotFileList({ name, bot_id, user }) {
         const formData = new FormData()
         formData.append('file', file)
 
+        if (file.size / 1024 / 1024 > 15) {
+            setSnackbarMessage("File size too large.")
+            setSnackbarOpen(true)
+            return false
+        }
+
         genericRequest(`/bots/${bot_id}/user_upload`, "POST", formData, (data, status) => {
             if (status === 200) {
                 console.log("Upload Successful")
@@ -80,7 +86,7 @@ export default function BotFileList({ name, bot_id, user }) {
                     <ListItemText primary={name} primaryTypographyProps={{ sx: { fontSize: 18 } }} />
                 </ListItem>
                 <Collapse in={listOpen} unmountOnExit>
-                    <List component="div" disablePadding sx={{overflowY: "scroll"}}>
+                    <List component="div" disablePadding sx={{ overflowY: "scroll" }}>
                         {
                             uploads && uploads.map((item, idx) => {
                                 return (
