@@ -218,6 +218,12 @@ export default function Home() {
     const formData = new FormData()
     formData.append('file', file)
 
+    if (file.size / 1024 / 1024 > 15) {
+      setSnackbarMessage("File size too large.")
+      setSnackbarOpen(true)
+      return false
+    }
+
     genericRequest(`/bots/${botId}/user_upload?=chat_id${chatId}`, "POST", formData, (data, status) => {
       if (status === 200) {
         console.log("Upload Successful")
