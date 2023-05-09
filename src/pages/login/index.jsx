@@ -6,6 +6,8 @@ import Layout from '@/components/utility/layout';
 import { Box } from '@mui/system';
 import { Alert, AlertTitle, Button, Divider, Snackbar, TextField } from '@mui/material';
 
+const env = process.env.NEXT_PUBLIC_ENVIRONMENT
+
 export default function Login() {
     const [redirectUrl, setRedirectUrl] = useState("/conversations")
     const [email, setEmail] = useState("")
@@ -170,8 +172,14 @@ export default function Login() {
                             <img className="logo" alt="Glyph Logo" src={"/dark_vertical.png"} style={{ width: "50%", marginBottom: "8px", maxWidth: "450px" }} />
                         </Box>
                         {displaySignup ? renderSignup() : renderLogin()}
-                        {/* <Divider sx={{ marginTop: "16px" }} variant="middle" >OR</Divider>
-                        <div style={{ marginTop: "16px", width: "100%", display: "flex", justifyContent: "center" }} id="gLogin" /> */}
+                        {
+                            env !== "production" && (
+                                <>
+                                    <Divider sx={{ marginTop: "16px" }} variant="middle" >OR</Divider>
+                                    <div style={{ marginTop: "16px", width: "100%", display: "flex", justifyContent: "center" }} id="gLogin" />
+                                </>
+                            )
+                        }
                     </Box>
                 </Box>
             </Box>
