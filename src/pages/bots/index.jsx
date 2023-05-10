@@ -28,9 +28,15 @@ export default function Bots() {
 
     const getUserBots = () => {
         getRequest("/bots", (data) => {
-            setUserBots(data)
-            setDisplayUserBots(data)
+            setUserBots(sortItems(data))
+            setDisplayUserBots(sortItems(data))
         })
+    }
+
+    const sortItems = (data) => {
+        const sorted = data.sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
+
+        return sorted
     }
 
     useEffect(() => {
@@ -64,7 +70,7 @@ export default function Bots() {
     const handleSearchValueChange = (newValue) => {
         setSearchValue(newValue)
         const newDisplayUserBots = searchFunction(newValue, userBots)
-        setDisplayUserBots(newDisplayUserBots)
+        setDisplayUserBots(sortItems(newDisplayUserBots))
     }
 
     return (
@@ -93,7 +99,7 @@ export default function Bots() {
                 <Masonry
                     columns={1}
                     spacing={2}
-                    sx={{ minHeight: "90%" }}
+                    sx={{ minHeight: "90%", pb: "50px" }}
                 >
                     {
                         displayUserBots && displayUserBots.map((item) => (
