@@ -14,6 +14,7 @@ import { genericRequest, getRequest } from "@/components/utility/request_helper"
 import { getCookie } from "@/components/utility/cookie_helper";
 import LayoutWithNav from "@/components/utility/layout_with_nav";
 import { SocialIcon } from "react-social-icons";
+import { useUserContext } from "@/context/user";
 
 const SmallAvatar = styled(Avatar)(({ theme }) => ({
     width: 32,
@@ -39,15 +40,9 @@ function LinearProgressWithLabel(props) {
 
 export default function Profile() {
     const [stripeUrl, setStripeUrl] = useState("")
-    const [profile, setProfile] = useState({})
+    const [user, setUser] = useUserContext();
     const router = useRouter()
     const smallScreen = useMediaQuery(theme.breakpoints.down("md"))
-
-    const getProfile = () => {
-        getRequest("/profile", (data) => {
-            setProfile(data)
-        })
-    }
 
     useEffect(() => {
         const activeSession = getCookie("active_session")
@@ -57,7 +52,17 @@ export default function Profile() {
         getRequest("/subscriptions/customer-portal-session", (data) => {
             setStripeUrl(data.url)
         })
-        getProfile()
+        // reset profile if the user is coming from subscription
+        const params = new Proxy(new URLSearchParams(window.location.search), {
+            get: (searchParams, prop) => searchParams.get(prop),
+        });
+        let success = params.success
+
+        if (success !== undefined) {
+            getRequest("/profile", (data) => {
+                setUser(data)
+            })
+        }
     }, [])
 
     const handleLogout = () => {
@@ -67,11 +72,11 @@ export default function Profile() {
     }
 
     const renderUserSubscription = () => {
-        if (profile.subscribed && profile.is_current) {
+        if (user.subscribed && user.is_current) {
             return <i>Subscribed</i>
-        } else if (profile.subscription_canceled) {
+        } else if (user.subscription_canceled) {
             return <i>Subscription Canceled</i>
-        } else if (profile.subscribed && !profile.is_current) {
+        } else if (user.subscribed && !user.is_current) {
             return <i>Payment Issue</i>
         } else {
             return <i>Not Subscribed</i>
@@ -79,23 +84,23 @@ export default function Profile() {
     }
 
     const calculateBotValue = () => {
-        if (profile.allowed_bots === -1) {
+        if (user.allowed_bots === -1) {
             return 0
         }
 
-        return ((profile.allowed_bots - profile.bots_left) / (profile.allowed_bots)) * 100
+        return ((user.allowed_bots - user.bots_left) / (user.allowed_bots)) * 100
     }
 
     const calculateMessageValue = () => {
-        return ((profile.allowed_messages - profile.messages_left) / (profile.allowed_messages)) * 100
+        return ((user.allowed_messages - user.messages_left) / (user.allowed_messages)) * 100
     }
 
     const calculateFileValue = () => {
-        if (profile.allowed_files === -1) {
+        if (user.allowed_files === -1) {
             return 0
         }
 
-        return ((profile.allowed_files - profile.files_left) / (profile.allowed_files)) * 100
+        return ((user.allowed_files - user.files_left) / (user.allowed_files)) * 100
     }
 
     const progressBarWidth = smallScreen ? "90%" : "30%"
@@ -108,16 +113,16 @@ export default function Profile() {
             <Box sx={{ display: "flex", flexWrap: "wrap", alignContent: "center", justifyContent: "center", padding: "8px" }}>
                 <Avatar
                     src={
-                        profile.profile_picture_location
+                        user.profile_picture_location
                     }
                     sx={{ height: 128, width: 128, fontSize: 90, backgroundColor: "#fff" }}
-                    alt={profile.first_name}
+                    alt={user.first_name}
                 >
 
                 </Avatar>
                 <Box sx={{ marginTop: "8px", display: "flex", justifyContent: "center", flexWrap: "wrap", alignItems: "center", width: "100%" }}>
-                    <Typography variant="h5" sx={{ fontWeight: 600, width: "100%", textAlign: "center" }}>{profile.first_name} {profile.last_name}</Typography>
-                    <Typography variant="subtitle1">{profile.email}</Typography>
+                    <Typography variant="h5" sx={{ fontWeight: 600, width: "100%", textAlign: "center" }}>{user.first_name} {user.last_name}</Typography>
+                    <Typography variant="subtitle1">{user.email}</Typography>
                 </Box>
             </Box>
             <Box sx={{ flexWrap: "wrap", display: "flex", gap: "3%", alignContent: "center", justifyContent: "center", padding: "8px" }}>
@@ -130,8 +135,8 @@ export default function Profile() {
                         color="secondary"
                         sx={{ width: "100%" }}
                         value={calculateBotValue()}
-                        labelValue={profile.bot_count}
-                        maxValue={profile.allowed_bots}
+                        labelValue={user.bot_count}
+                        maxValue={user.allowed_bots}
                     />
                 </Box>
                 <Box sx={{ width: progressBarWidth }}>
@@ -142,20 +147,20 @@ export default function Profile() {
                         variant="determinate"
                         color="secondary"
                         value={calculateMessageValue()}
-                        labelValue={profile.message_count}
-                        maxValue={profile.allowed_messages}
+                        labelValue={user.message_count}
+                        maxValue={user.allowed_messages}
                     />
                 </Box>
                 <Box sx={{ width: progressBarWidth }}>
                     <Box sx={{ alignContent: "center", jusfityContent: "center", textAlign: "center" }}>
-                        <Typography variant="h6">Files</Typography>
+                        <Typography variant="h6">Files & Notes</Typography>
                     </Box>
                     <LinearProgressWithLabel
                         variant="determinate"
                         color="secondary"
                         value={calculateFileValue()}
-                        labelValue={profile.file_count}
-                        maxValue={profile.allowed_files}
+                        labelValue={user.file_count}
+                        maxValue={user.allowed_files}
                     />
                 </Box>
             </Box>
@@ -168,7 +173,7 @@ export default function Profile() {
                                 <ChevronRight />
                             </IconButton>
                         }
-                        onClick={() => { profile.subscribed ? window.location.href = stripeUrl : router.push("/profile/subscription") }}
+                        onClick={() => { user.subscribed ? window.location.href = stripeUrl : router.push("/profile/subscription") }}
                     >
                         <ListItemAvatar>
                             <Avatar>

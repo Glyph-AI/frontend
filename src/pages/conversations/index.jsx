@@ -20,13 +20,14 @@ import { getRequest } from '@/components/utility/request_helper';
 import { motion } from "framer-motion";
 import { useRouter } from 'next/router';
 import LayoutWithNav from '@/components/utility/layout_with_nav';
+import { useUserContext } from '@/context/user';
 
 export default function Conversations() {
     const [modalVisible, setModalVisible] = useState(false)
     const [userChats, setUserChats] = useState([])
     const [displayChats, setDisplayChats] = useState([])
     const [searchValue, setSearchValue] = useState([])
-    const [user, setUser] = useState({})
+    const [user, setUser] = useUserContext();
     const router = useRouter()
 
     const getChatDateSafe = (chat) => {
@@ -55,19 +56,13 @@ export default function Conversations() {
         })
     }
 
-    const getUser = () => {
-        getRequest("/profile", (data) => {
-            setUser(data)
-        })
-    }
-
     useEffect(() => {
         const activeSession = getCookie("active_session")
         if (activeSession !== "true") {
             router.push("/login")
         }
         getChats()
-        getUser()
+        // getUser()
     }, [])
 
     const formatLastMessage = (message) => {

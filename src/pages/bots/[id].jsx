@@ -5,6 +5,7 @@ import { getCookie } from "@/components/utility/cookie_helper";
 import Layout from "@/components/utility/layout"
 import LayoutWithNav from "@/components/utility/layout_with_nav";
 import { genericRequest, getRequest } from "@/components/utility/request_helper";
+import { useUserContext } from "@/context/user";
 import { ConversationHeader } from "@chatscope/chat-ui-kit-react";
 import { Share } from "@mui/icons-material";
 import { Divider, IconButton, List, ListItem, ListItemText, Snackbar, Table, TableBody, TableRow, Typography } from "@mui/material";
@@ -19,7 +20,7 @@ export default function BotInfo() {
 
     const [bot, setBot] = useState({})
     const [botId, setBotId] = useState(null)
-    const [currentUser, setCurrentUser] = useState({})
+    const [user, setUser] = useUserContext();
     const [snackbarOpen, setSnackbarOpen] = useState(false)
 
 
@@ -67,19 +68,12 @@ export default function BotInfo() {
         )
     }
 
-    const getCurrentUser = () => {
-        getRequest("/profile", (data) => {
-            setCurrentUser(data)
-        })
-    }
-
     useEffect(() => {
         const activeSession = getCookie("active_session")
         if (activeSession !== "true") {
             router.push("/login")
         }
         getBotById()
-        getCurrentUser()
     }, [])
 
     const personaData = () => {
@@ -116,7 +110,7 @@ export default function BotInfo() {
             </Table>
             <Divider />
             <>
-                <BotFileList name="Files" bot_id={id} user={currentUser} bot={bot} setBot={setBot} />
+                <BotFileList name="Files" bot_id={id} user={user} bot={bot} setBot={setBot} />
                 <Divider />
                 <BotToolList bot={bot} setBot={setBot} />
             </>

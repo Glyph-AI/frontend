@@ -2,13 +2,14 @@ import { Dialog, DialogContent, DialogTitle, TextField, Box, Divider, Typography
 import { useEffect, useState } from "react";
 import { genericRequest, getRequest } from "../utility/request_helper";
 import { useRouter } from "next/router";
+import { useUserContext } from "@/context/user";
 
 export default function NewBotModal({ open, handleClose }) {
     const [name, setName] = useState("")
     const [personas, setPersonas] = useState([])
     const [botPersona, setBotPersona] = useState(null)
     const [botCode, setBotCode] = useState("")
-    const [user, setUser] = useState({})
+    const [user, setUser] = useUserContext();
     const [showCreation, setShowCreation] = useState(false)
     const router = useRouter()
 
@@ -51,10 +52,7 @@ export default function NewBotModal({ open, handleClose }) {
             setPersonas(data)
         })
 
-        getRequest("/profile", (data) => {
-            setUser(data)
-            setShowCreation(Math.abs(data.bots_left) > 0)
-        })
+        setShowCreation(user.subscribed && Math.abs(user.bots_left) > 0)
 
     }, [])
 

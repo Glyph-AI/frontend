@@ -2,9 +2,9 @@ import Layout from "@/components/utility/layout";
 import { useRouter } from "next/router";
 import { motion } from "framer-motion";
 import {
-    ConversationHeader
+    ConversationHeader, Search
 } from '@chatscope/chat-ui-kit-react'
-import { Divider, List, Fab, Box, Select, TextField, Typography } from "@mui/material";
+import { Divider, List, Fab, Box, Select, TextField, Typography, Avatar, useMediaQuery } from "@mui/material";
 import BotListItem from "@/components/bots/botListItem";
 import { getRequest } from "@/components/utility/request_helper";
 import { useEffect, useState } from "react";
@@ -12,21 +12,24 @@ import { Add } from "@mui/icons-material";
 import NewBotModal from "@/components/bots/newBotModal";
 import { getCookie } from "@/components/utility/cookie_helper";
 import LayoutWithNav from "@/components/utility/layout_with_nav";
+import { Masonry } from "@mui/lab";
+import { useUserContext } from "@/context/user";
+import { theme } from "@/components/utility/theme";
 
 export default function Bots() {
     const [userBots, setUserBots] = useState([])
-    const [user, setUser] = useState({})
+    const [displayUserBots, setDisplayUserBots] = useState([])
+    const [searchValue, setSearchValue] = useState("")
+    const [user, setUser] = useUserContext();
     const [modalVisible, setModalVisible] = useState(false)
     const [urlBotCode, setUrlBotCode] = useState(null)
+    const smallScreen = useMediaQuery(theme.breakpoints.down("md"))
     const router = useRouter()
 
     const getUserBots = () => {
         getRequest("/bots", (data) => {
             setUserBots(data)
-        })
-
-        getRequest("/profile", (data) => {
-            setUser(data)
+            setDisplayUserBots(data)
         })
     }
 
@@ -54,26 +57,56 @@ export default function Bots() {
         getUserBots()
     }
 
+    const searchFunction = (searchTerm, array) => {
+        return array.filter(bot => (bot.name.toLowerCase().includes(searchTerm.toLowerCase())))
+    }
+
+    const handleSearchValueChange = (newValue) => {
+        setSearchValue(newValue)
+        const newDisplayUserBots = searchFunction(newValue, userBots)
+        setDisplayUserBots(newDisplayUserBots)
+    }
+
     return (
         <LayoutWithNav>
-            <ConversationHeader >
-                <ConversationHeader.Content userName={<Typography variant="h6">Bots</Typography>} />
-            </ConversationHeader>
-            <List>
-                {
-                    userBots && userBots.map((item) => (
-                        <>
+            <Box sx={{ padding: "8px", height: 60, display: "flex", marginBottom: "16px", alignContent: "center" }}>
+                <Search placeholder="Search..." style={{ flex: 1, fontSize: 16 }} value={searchValue} onChange={handleSearchValueChange} />
+                <Avatar
+                    onMouseEnter={(e) => { e.target.style.cursor = "pointer" }}
+                    sx={{ marginLeft: "16px", width: 40, height: 40 }}
+                    alt={user.first_name}
+                    src={user.profile_picture_location}
+                    onClick={() => { router.push("/profile") }}
+                />
+            </Box>
+            <Box
+                sx={{
+                    padding: "8px",
+                    width: "100%",
+                    height: "95%",
+                    overflowY: "scroll",
+                    display: "flex",
+                    justifyContent: "center",
+                    boxSizing: smallScreen ? "inherit" : "content-box"
+                }}
+            >
+                <Masonry
+                    columns={1}
+                    spacing={2}
+                    sx={{ minHeight: "90%" }}
+                >
+                    {
+                        displayUserBots && displayUserBots.map((item) => (
                             <BotListItem bot={item} displayLink={item.creator_id == user.id} />
-                            <Divider />
-                        </>
-                    ))
-                }
-            </List>
+                        ))
+                    }
+                </Masonry>
+            </Box>
+
             {
                 Math.abs(user.bots_left) > 0 && (
-                    <Fab onClick={() => { setModalVisible(true) }} variant="extended" sx={{ position: 'absolute', bottom: 64, right: 16 }} >
-                        <Add sx={{ mr: 1 }} />
-                        Add Bot
+                    <Fab onClick={() => { setModalVisible(true) }} sx={{ position: 'absolute', bottom: 64, right: 16 }} >
+                        <Add />
                     </Fab>
                 )
             }

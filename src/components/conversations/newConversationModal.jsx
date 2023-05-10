@@ -14,6 +14,7 @@ import {
 } from '@mui/material'
 import { genericRequest, getRequest } from '../utility/request_helper';
 import { useEffect } from 'react';
+import { useUserContext } from '@/context/user';
 
 const filter = createFilterOptions()
 
@@ -21,6 +22,7 @@ export default function NewConversationModal({ open, handleClose }) {
     const [bot, setBot] = useState(null)
     const [userBots, setUserBots] = useState([])
     const [conversationName, setConversationName] = useState("")
+    const [user, setUser] = useUserContext();
     const [showCreation, setShowCreation] = useState(false)
 
     const createNewBot = (obj) => {
@@ -57,9 +59,7 @@ export default function NewConversationModal({ open, handleClose }) {
 
     useEffect(() => {
         getUserBots()
-        getRequest("/profile", (data) => {
-            setShowCreation(data.subscribed && data.is_current)
-        })
+        setShowCreation(user.subscribed && user.is_current)
     }, [])
 
     return (
