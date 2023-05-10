@@ -52,6 +52,8 @@ export default function NewBotModal({ open, handleClose }) {
             setPersonas(data)
         })
 
+        setShowCreation(user.subscribed && Math.abs(user.bots_left) > 0)
+
     }, [])
 
     const addDisabled = () => {

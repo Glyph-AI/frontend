@@ -153,7 +153,7 @@ export default function Profile() {
                 </Box>
                 <Box sx={{ width: progressBarWidth }}>
                     <Box sx={{ alignContent: "center", jusfityContent: "center", textAlign: "center" }}>
-                        <Typography variant="h6">Files</Typography>
+                        <Typography variant="h6">Files & Notes</Typography>
                     </Box>
                     <LinearProgressWithLabel
                         variant="determinate"

@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import {
     ConversationHeader, Search
 } from '@chatscope/chat-ui-kit-react'
-import { Divider, List, Fab, Box, Select, TextField, Typography, Avatar } from "@mui/material";
+import { Divider, List, Fab, Box, Select, TextField, Typography, Avatar, useMediaQuery } from "@mui/material";
 import BotListItem from "@/components/bots/botListItem";
 import { getRequest } from "@/components/utility/request_helper";
 import { useEffect, useState } from "react";
@@ -14,6 +14,7 @@ import { getCookie } from "@/components/utility/cookie_helper";
 import LayoutWithNav from "@/components/utility/layout_with_nav";
 import { Masonry } from "@mui/lab";
 import { useUserContext } from "@/context/user";
+import { theme } from "@/components/utility/theme";
 
 export default function Bots() {
     const [userBots, setUserBots] = useState([])
@@ -22,6 +23,7 @@ export default function Bots() {
     const [user, setUser] = useUserContext();
     const [modalVisible, setModalVisible] = useState(false)
     const [urlBotCode, setUrlBotCode] = useState(null)
+    const smallScreen = useMediaQuery(theme.breakpoints.down("md"))
     const router = useRouter()
 
     const getUserBots = () => {
@@ -85,7 +87,7 @@ export default function Bots() {
                     overflowY: "scroll",
                     display: "flex",
                     justifyContent: "center",
-                    boxSizing: "content-box"
+                    boxSizing: smallScreen ? "inherit" : "content-box"
                 }}
             >
                 <Masonry
