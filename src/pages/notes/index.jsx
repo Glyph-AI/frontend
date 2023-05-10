@@ -61,6 +61,7 @@ export default function NotesIndex() {
                     height: "95%",
                     overflowY: "scroll",
                     display: "flex",
+                    boxSizing: "content-box",
                     justifyContent: "center"
                 }}
             >

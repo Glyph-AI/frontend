@@ -84,7 +84,8 @@ export default function Bots() {
                     height: "95%",
                     overflowY: "scroll",
                     display: "flex",
-                    justifyContent: "center"
+                    justifyContent: "center",
+                    boxSizing: "content-box"
                 }}
             >
                 <Masonry

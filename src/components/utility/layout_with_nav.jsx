@@ -60,7 +60,7 @@ export default function LayoutWithNav({ children }, showNavigation = true) {
                 exit="exit"
                 transition={{ type: 'linear' }}
                 className=""
-                style={{ height: "100%" }}
+                style={{ height: "100%", overflow: "hidden", width: "100%" }}
             >
                 {children}
             </motion.div>
