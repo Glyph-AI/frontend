@@ -22,6 +22,7 @@ export default function BotInfo() {
     const [botId, setBotId] = useState(null)
     const [user, setUser] = useUserContext();
     const [snackbarOpen, setSnackbarOpen] = useState(false)
+    const [backButtonURL, setBackButtonURL] = useState("/bots")
 
 
 
@@ -73,6 +74,15 @@ export default function BotInfo() {
         if (activeSession !== "true") {
             router.push("/login")
         }
+
+        const params = new Proxy(new URLSearchParams(window.location.search), {
+            get: (searchParams, prop) => searchParams.get(prop),
+        });
+
+        let chat_id = params.chat_id
+        if (chat_id !== null) {
+            setBackButtonURL(`/chats/${chat_id}`)
+        }
         getBotById()
     }, [])
 
@@ -96,7 +106,7 @@ export default function BotInfo() {
 
             </Snackbar>
             <ConversationHeader>
-                <ConversationHeader.Back onClick={() => { router.push("/bots") }} />
+                <ConversationHeader.Back onClick={() => { router.push(backButtonURL) }} />
                 <ConversationHeader.Content userName={<Typography variant="h6">{bot.name}</Typography>} />
             </ConversationHeader>
             <Table>
