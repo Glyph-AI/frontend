@@ -18,7 +18,7 @@ import {
   genericRequest,
   getRequest
 } from '@/components/utility/request_helper';
-import { Alert, AlertTitle, Box, Link, Snackbar, Typography } from '@mui/material'
+import { Alert, AlertTitle, Box, IconButton, Link, Snackbar, Typography } from '@mui/material'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import SyntaxHighlighter from 'react-syntax-highlighter';
@@ -30,6 +30,7 @@ import { getCookie } from '@/components/utility/cookie_helper';
 import { theme } from '@/components/utility/theme.jsx';
 import LayoutWithNav from '@/components/utility/layout_with_nav';
 import { useUserContext } from '@/context/user';
+import { Settings } from '@mui/icons-material';
 
 export default function Home() {
   const [newMessage, setNewMessage] = useState("")
@@ -249,6 +250,19 @@ export default function Home() {
     }
   }
 
+  const renderBotSettings = () => {
+    console.log(user, bot)
+    if (user.id === bot.creator_id) {
+      return (
+        <ConversationHeader.Actions>
+          <IconButton size="large" onClick={() => { router.push(`/bots/${bot.id}?chat_id=${chatId}`) }}>
+            <Settings fontSize="inherit" />
+          </IconButton>
+        </ConversationHeader.Actions>
+      )
+    }
+  }
+
   return (
     <LayoutWithNav showNavigation={false}>
       <div style={{ height: "100%" }}>
@@ -284,6 +298,10 @@ export default function Home() {
               <ConversationHeader.Back onClick={() => { router.push("/conversations") }} />
               <Avatar src={"/glyph-avatar.png"} name={bot.name} />
               <ConversationHeader.Content userName={<Typography variant="h6">{bot.name}</Typography>} info={chat.name} />
+              {
+                renderBotSettings()
+              }
+
             </ConversationHeader>
             <MessageList style={{ display: "flex", backgroundColor: theme.palette.background.default }} typingIndicator={typingIndicator()}>
               {
