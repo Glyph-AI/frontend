@@ -173,7 +173,7 @@ export default function Login() {
                         </Box>
                         {displaySignup ? renderSignup() : renderLogin()}
                         {
-                            env !== "production" && (
+                            (
                                 <>
                                     <Divider sx={{ marginTop: "16px" }} variant="middle" >OR</Divider>
                                     <div style={{ marginTop: "16px", width: "100%", display: "flex", justifyContent: "center" }} id="gLogin" />
