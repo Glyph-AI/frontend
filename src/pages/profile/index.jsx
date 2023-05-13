@@ -40,9 +40,15 @@ function LinearProgressWithLabel(props) {
 
 export default function Profile() {
     const [stripeUrl, setStripeUrl] = useState("")
-    const [user, setUser] = useUserContext();
+    const [user, setUser] = useState({})
     const router = useRouter()
     const smallScreen = useMediaQuery(theme.breakpoints.down("md"))
+
+    const getUser = () => {
+        getRequest("/profile", (data) => {
+            setUser(data)
+        })
+    }
 
     useEffect(() => {
         const activeSession = getCookie("active_session")
@@ -53,16 +59,7 @@ export default function Profile() {
             setStripeUrl(data.url)
         })
         // reset profile if the user is coming from subscription
-        const params = new Proxy(new URLSearchParams(window.location.search), {
-            get: (searchParams, prop) => searchParams.get(prop),
-        });
-        let success = params.success
-
-        if (success !== undefined) {
-            getRequest("/profile", (data) => {
-                setUser(data)
-            })
-        }
+        getUser()
     }, [])
 
     const handleLogout = () => {

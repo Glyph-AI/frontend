@@ -27,8 +27,14 @@ export default function Conversations() {
     const [userChats, setUserChats] = useState([])
     const [displayChats, setDisplayChats] = useState([])
     const [searchValue, setSearchValue] = useState([])
-    const [user, setUser] = useUserContext();
+    const [user, setUser] = useState({})
     const router = useRouter()
+
+    const getUser = () => {
+        getRequest("/profile", (data) => {
+            setUser(data)
+        })
+    }
 
     const getChatDateSafe = (chat) => {
         if (chat.chat_messages.length === 0) {
@@ -62,7 +68,7 @@ export default function Conversations() {
             router.push("/login")
         }
         getChats()
-        // getUser()
+        getUser()
     }, [])
 
     const formatLastMessage = (message) => {
@@ -128,8 +134,7 @@ export default function Conversations() {
                     }
                 </ConversationList>
                 <Fab onClick={() => { setModalVisible(true) }} variant="extended" sx={{ position: 'absolute', bottom: 64, right: 16 }} >
-                    <Add sx={{ mr: 1 }} />
-                    New Chat
+                    <Add />
                 </Fab>
                 <NewConversationModal open={modalVisible} handleClose={handleModalClose} />
             </Box>

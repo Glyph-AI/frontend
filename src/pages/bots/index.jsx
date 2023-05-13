@@ -20,7 +20,7 @@ export default function Bots() {
     const [userBots, setUserBots] = useState([])
     const [displayUserBots, setDisplayUserBots] = useState([])
     const [searchValue, setSearchValue] = useState("")
-    const [user, setUser] = useUserContext();
+    const [user, setUser] = useState({})
     const [modalVisible, setModalVisible] = useState(false)
     const [urlBotCode, setUrlBotCode] = useState(null)
     const smallScreen = useMediaQuery(theme.breakpoints.down("md"))
@@ -30,6 +30,12 @@ export default function Bots() {
         getRequest("/bots", (data) => {
             setUserBots(sortItems(data))
             setDisplayUserBots(sortItems(data))
+        })
+    }
+
+    const getUser = () => {
+        getRequest("/profile", (data) => {
+            setUser(data)
         })
     }
 
@@ -44,6 +50,8 @@ export default function Bots() {
         if (activeSession !== "true") {
             router.push("/login")
         }
+
+        getUser()
 
         getUserBots()
 

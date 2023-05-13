@@ -13,8 +13,14 @@ export default function NotesIndex() {
     const [notes, setNotes] = useState([])
     const [displayNotes, setDisplayNotes] = useState([])
     const [searchValue, setSearchValue] = useState("")
-    const [user, setUser] = useUserContext();
+    const [user, setUser] = useState({})
     const [modalVisible, setModalVisible] = useState(false)
+
+    const getUser = () => {
+        getRequest("/profile", (data) => {
+            setUser(data)
+        })
+    }
 
     const getNotes = () => {
         getRequest("/texts?text_type=note", (data) => {
@@ -40,6 +46,7 @@ export default function NotesIndex() {
 
     useEffect(() => {
         getNotes()
+        getUser()
     }, [])
 
     return (

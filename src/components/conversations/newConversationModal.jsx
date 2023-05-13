@@ -22,8 +22,15 @@ export default function NewConversationModal({ open, handleClose }) {
     const [bot, setBot] = useState(null)
     const [userBots, setUserBots] = useState([])
     const [conversationName, setConversationName] = useState("")
-    const [user, setUser] = useUserContext();
+    const [user, setUser] = useState({})
     const [showCreation, setShowCreation] = useState(false)
+
+    const getUser = () => {
+        getRequest("/profile", (data) => {
+            setUser(data)
+            setShowCreation(data.subscribed && data.is_current)
+        })
+    }
 
     const createNewBot = (obj) => {
         const data = {
@@ -58,8 +65,8 @@ export default function NewConversationModal({ open, handleClose }) {
     }
 
     useEffect(() => {
+        getUser()
         getUserBots()
-        setShowCreation(user.subscribed && user.is_current)
     }, [])
 
     return (

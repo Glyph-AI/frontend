@@ -15,7 +15,7 @@ export default function NewBotModal({ open, handleClose }) {
     const [texts, setTexts] = useState([])
     const [tools, setTools] = useState([])
     const [botCode, setBotCode] = useState("")
-    const [user, setUser] = useUserContext();
+    const [user, setUser] = useState({})
     const [showCreation, setShowCreation] = useState(false)
     const smallScreen = useMediaQuery(theme.breakpoints.down("md"))
     const router = useRouter()
@@ -49,6 +49,13 @@ export default function NewBotModal({ open, handleClose }) {
         }
     }
 
+    const getUser = () => {
+        getRequest("/profile", (data) => {
+            setUser(data)
+            setShowCreation(Math.abs(data.bots_left) > 0)
+        })
+    }
+
     const sortItems = (data) => {
         const sorted = data.sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
 
@@ -78,7 +85,7 @@ export default function NewBotModal({ open, handleClose }) {
         })
 
         console.log(user)
-        setShowCreation(Math.abs(user.bots_left) > 0)
+
 
     }, [])
 

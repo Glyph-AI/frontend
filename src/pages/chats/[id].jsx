@@ -43,7 +43,7 @@ export default function Home() {
   const [snackbarMessage, setSnackbarMessage] = useState("")
   const [chat, setChat] = useState("")
   const [bot, setBot] = useState("")
-  const [user, setUser] = useUserContext();
+  const [user, setUser] = useState({})
   const inputFile = useRef(null)
   const inputRef = useRef();
   const menuOpen = Boolean(anchorEl);
@@ -54,6 +54,12 @@ export default function Home() {
   const getChatById = (chat_id, callback = () => { }) => {
     getRequest(`/chats/${chat_id}`, (data) => {
       callback(data)
+    })
+  }
+
+  const getUser = () => {
+    getRequest("/profile", (data) => {
+      setUser(data)
     })
   }
 
@@ -158,6 +164,8 @@ export default function Home() {
     if (id === undefined) {
       router.push("/conversations")
     }
+
+    getUser()
 
     setChatId(id)
 

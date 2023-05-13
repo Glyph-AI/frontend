@@ -20,11 +20,15 @@ export default function BotInfo() {
 
     const [bot, setBot] = useState({})
     const [botId, setBotId] = useState(null)
-    const [user, setUser] = useUserContext();
+    const [user, setUser] = useState({})
     const [snackbarOpen, setSnackbarOpen] = useState(false)
     const [backButtonURL, setBackButtonURL] = useState("/bots")
 
-
+    const getUser = () => {
+        getRequest("/profile", (data) => {
+            setUser(data)
+        })
+    }
 
     const getBotById = () => {
         getRequest(`/bots/${id}`, (data) => {
@@ -74,6 +78,8 @@ export default function BotInfo() {
         if (activeSession !== "true") {
             router.push("/login")
         }
+
+        getUser()
 
         const params = new Proxy(new URLSearchParams(window.location.search), {
             get: (searchParams, prop) => searchParams.get(prop),

@@ -127,7 +127,7 @@ export default function BotFileList({ name, bot_id, user, bot, setBot }) {
                                                     onClick={(ev) => { handleFileHiding(idx) }}
                                                 />
                                             </ListItemIcon>
-                                            <ListItemText primary={item.name || "No Filename Given"} />
+                                            <ListItemText primary={item.name || "No Filename Given"} secondary={item.processed ? "Processing Complete" : "Processing in Progress"} />
                                         </ListItem>
                                         <Divider />
                                     </>
