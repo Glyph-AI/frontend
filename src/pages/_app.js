@@ -6,6 +6,7 @@ import '@/styles/chat.css'
 import { AnimatePresence } from 'framer-motion'
 import { useEffect } from 'react'
 import { UserProvider } from '@/context/user';
+import Script from 'next/script'
 
 export default function App({ Component, pageProps }) {
   useEffect(() => {
@@ -15,11 +16,28 @@ export default function App({ Component, pageProps }) {
   }, [])
 
   return (
-    <AnimatePresence mode="wait" initial={false}>
-      <UserProvider>
-        <Component {...pageProps} />
-      </UserProvider>
-    </AnimatePresence>
+    <>
+      <Script strategy="afterInteractive" src="https://www.googletagmanager.com/gtag/js?id=G-V6RXH45WCW" />
+      <Script
+        id="google-analytics"
+        strategy="afterInteractive"
+        dangerouslySetInnerHTML={{
+          __html: `
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-V6RXH45WCW', {
+              page_path: window.location.pathname,
+            });
+          `
+        }}
+      />
+      <AnimatePresence mode="wait" initial={false}>
+        <UserProvider>
+          <Component {...pageProps} />
+        </UserProvider>
+      </AnimatePresence>
+    </>
 
   )
 }
