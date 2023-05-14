@@ -4,11 +4,11 @@ import {
     ConversationHeader
 } from '@chatscope/chat-ui-kit-react'
 import { useRouter } from "next/router";
-import { Avatar, Badge, Box, ListItem, ListItemText, List, ListItemAvatar, Divider, IconButton, Typography, Button, LinearProgress, useMediaQuery, Link } from "@mui/material";
+import { Avatar, Badge, Box, ListItem, ListItemText, List, ListItemAvatar, Divider, IconButton, Typography, Button, LinearProgress, useMediaQuery, Link, TextField } from "@mui/material";
 import { styled } from '@mui/material/styles';
 import { theme } from "@/components/utility/theme";
 import FileUploadIcon from '@mui/icons-material/FileUpload';
-import { ChevronRight, EmailOutlined, Logout, MonetizationOnOutlined, Person, SmartToyOutlined } from "@mui/icons-material";
+import { ChevronRight, Edit, EmailOutlined, Logout, MonetizationOnOutlined, Person, SmartToyOutlined } from "@mui/icons-material";
 import { useEffect, useState } from "react";
 import { genericRequest, getRequest } from "@/components/utility/request_helper";
 import { getCookie } from "@/components/utility/cookie_helper";
@@ -41,12 +41,15 @@ function LinearProgressWithLabel(props) {
 export default function Profile() {
     const [stripeUrl, setStripeUrl] = useState("")
     const [user, setUser] = useState({})
+    const [name, setName] = useState("")
     const router = useRouter()
+    const [isNameFocused, setIsNamedFocused] = useState(false);
     const smallScreen = useMediaQuery(theme.breakpoints.down("md"))
 
     const getUser = () => {
         getRequest("/profile", (data) => {
             setUser(data)
+            setName(`${data.first_name} ${data.last_name}`)
         })
     }
 
@@ -100,6 +103,35 @@ export default function Profile() {
         return ((user.allowed_files - user.files_left) / (user.allowed_files)) * 100
     }
 
+    const handleNameChange = (val) => {
+        var split = val.split(" ")
+        var first_name = split[0]
+        split.splice(0, 1)
+        var last_name = split.join(" ")
+        setName(`${first_name} ${last_name}`)
+    }
+
+    const handleNameSubmit = () => {
+        setIsNamedFocused(false)
+        var split = name.split(" ")
+        var first_name = split[0]
+        split.splice(0, 1)
+        var last_name = split.join(" ")
+        console.log(first_name, last_name)
+        if (first_name !== user.first_name || last_name !== user.last_name) {
+            const data = {
+                id: user.id,
+                first_name: first_name,
+                last_name: last_name
+            }
+
+            genericRequest("/profile", "PATCH", JSON.stringify(data), (data) => {
+                setUser(data)
+                setName(`${data.first_name} ${data.last_name}`)
+            })
+        }
+    }
+
     const progressBarWidth = smallScreen ? "90%" : "30%"
 
     return (
@@ -118,7 +150,24 @@ export default function Profile() {
 
                 </Avatar>
                 <Box sx={{ marginTop: "8px", display: "flex", justifyContent: "center", flexWrap: "wrap", alignItems: "center", width: "100%" }}>
-                    <Typography variant="h5" sx={{ fontWeight: 600, width: "100%", textAlign: "center" }}>{user.first_name} {user.last_name}</Typography>
+                    <Box sx={{ fontWeight: 600, width: "100%", textAlign: "center" }}>
+                        {
+                            !isNameFocused ? (
+                                <Badge sx={{ padding: "4px" }} badgeContent={<Edit sx={{ color: "gray", fontSize: 16 }} />}>
+                                    <Typography variant="h5" onClick={() => { setIsNamedFocused(true) }}>{name}</Typography>
+                                </Badge>
+                            ) : (
+                                <TextField
+                                    autoFocus
+                                    variant="standard"
+                                    placeholder={name}
+                                    onChange={(e) => { handleNameChange(e.target.value) }}
+                                    onBlur={(e) => { handleNameSubmit() }}
+                                />
+                            )
+                        }
+
+                    </Box>
                     <Typography variant="subtitle1">{user.email}</Typography>
                 </Box>
             </Box>
