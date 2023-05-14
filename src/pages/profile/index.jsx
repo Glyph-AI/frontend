@@ -8,13 +8,14 @@ import { Avatar, Badge, Box, ListItem, ListItemText, List, ListItemAvatar, Divid
 import { styled } from '@mui/material/styles';
 import { theme } from "@/components/utility/theme";
 import FileUploadIcon from '@mui/icons-material/FileUpload';
-import { ChevronRight, Edit, EmailOutlined, Logout, MonetizationOnOutlined, Person, SmartToyOutlined } from "@mui/icons-material";
+import { ChevronRight, Edit, EmailOutlined, Logout, MonetizationOnOutlined, Person, SmartToyOutlined, Upload } from "@mui/icons-material";
 import { useEffect, useState } from "react";
 import { genericRequest, getRequest } from "@/components/utility/request_helper";
 import { getCookie } from "@/components/utility/cookie_helper";
 import LayoutWithNav from "@/components/utility/layout_with_nav";
 import { SocialIcon } from "react-social-icons";
 import { useUserContext } from "@/context/user";
+import FileUploadModal from "@/components/utility/fileUploadModal";
 
 const SmallAvatar = styled(Avatar)(({ theme }) => ({
     width: 32,
@@ -42,6 +43,7 @@ export default function Profile() {
     const [stripeUrl, setStripeUrl] = useState("")
     const [user, setUser] = useState({})
     const [name, setName] = useState("")
+    const [uploadModalOpen, setUploadModalOpen] = useState(false)
     const router = useRouter()
     const [isNameFocused, setIsNamedFocused] = useState(false);
     const smallScreen = useMediaQuery(theme.breakpoints.down("md"))
@@ -132,6 +134,10 @@ export default function Profile() {
         }
     }
 
+    const handleUploadClose = () => {
+        setUploadModalOpen(false)
+    }
+
     const progressBarWidth = smallScreen ? "90%" : "30%"
 
     return (
@@ -140,15 +146,24 @@ export default function Profile() {
                 <ConversationHeader.Content userName={<Typography variant="h6">Profile</Typography>} />
             </ConversationHeader>
             <Box sx={{ display: "flex", flexWrap: "wrap", alignContent: "center", justifyContent: "center", padding: "8px" }}>
-                <Avatar
-                    src={
-                        user.profile_picture_location
+                <Badge
+                    overlap="circular"
+                    sx={{ padding: "-8px" }}
+                    badgeContent={
+                        <SmallAvatar onClick={() => { setUploadModalOpen(true) }}>
+                            <FileUploadIcon />
+                        </SmallAvatar>
                     }
-                    sx={{ height: 128, width: 128, fontSize: 90, backgroundColor: "#fff" }}
-                    alt={user.first_name}
+                    anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
                 >
-
-                </Avatar>
+                    <Avatar
+                        src={
+                            user.profile_picture_location
+                        }
+                        sx={{ height: 128, width: 128, fontSize: 90, backgroundColor: "#fff" }}
+                        alt={user.first_name}
+                    />
+                </Badge>
                 <Box sx={{ marginTop: "8px", display: "flex", justifyContent: "center", flexWrap: "wrap", alignItems: "center", width: "100%" }}>
                     <Box sx={{ fontWeight: 600, width: "100%", textAlign: "center" }}>
                         {
@@ -260,6 +275,7 @@ export default function Profile() {
                 </Link>
                 <SocialIcon url="https://discord.gg/DKmvWgAx" style={{ marginTop: "2px", height: 25, width: 25 }} />
             </Box>
+            <FileUploadModal setUser={setUser} open={uploadModalOpen} handleClose={handleUploadClose} uploadUrl={"/profile/picture"} />
         </LayoutWithNav >
     )
 }
