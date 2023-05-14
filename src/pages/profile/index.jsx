@@ -149,8 +149,9 @@ export default function Profile() {
                 <Badge
                     overlap="circular"
                     sx={{ padding: "-8px" }}
+                    onClick={() => { setUploadModalOpen(true) }}
                     badgeContent={
-                        <SmallAvatar onClick={() => { setUploadModalOpen(true) }}>
+                        <SmallAvatar>
                             <FileUploadIcon />
                         </SmallAvatar>
                     }
@@ -275,7 +276,7 @@ export default function Profile() {
                 </Link>
                 <SocialIcon url="https://discord.gg/DKmvWgAx" style={{ marginTop: "2px", height: 25, width: 25 }} />
             </Box>
-            <FileUploadModal setUser={setUser} open={uploadModalOpen} handleClose={handleUploadClose} uploadUrl={"/profile/picture"} />
+            <FileUploadModal setRecord={setUser} open={uploadModalOpen} handleClose={handleUploadClose} uploadUrl={"/profile/picture"} />
         </LayoutWithNav >
     )
 }

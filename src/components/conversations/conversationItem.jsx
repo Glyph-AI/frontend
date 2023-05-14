@@ -16,13 +16,14 @@ import ExpandLess from '@mui/icons-material/ExpandLess';
 import { useRouter } from 'next/router';
 
 
-export default function ConversationItem({ name, info, id }) {
+export default function ConversationItem({ name, info, id, bot }) {
     const [chatsVisible, setChatsVisible] = useState(false)
     const router = useRouter()
+    console.log(bot)
     return (
         <>
             <Conversation name={name} style={{ marginTop: "2px" }} info={info} onClick={() => { router.push(`/chats/${id}`) }}>
-                <Avatar src={"/glyph-avatar.png"} name={"Glyph"} />
+                <Avatar src={bot.avatar_location || "/glyph-avatar.png"} name={bot.name} alt={bot.name} />
             </Conversation>
         </>
     )

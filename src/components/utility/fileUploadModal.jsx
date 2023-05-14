@@ -3,7 +3,7 @@ import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle } from "
 import { useState } from "react";
 import { genericRequest } from "./request_helper";
 
-export default function FileUploadModal({ open, handleClose, setUser, uploadUrl }) {
+export default function FileUploadModal({ open, handleClose, setRecord, uploadUrl }) {
     const [file, setFile] = useState(null)
 
     const handleSubmit = (ev) => {
@@ -12,7 +12,7 @@ export default function FileUploadModal({ open, handleClose, setUser, uploadUrl 
         formData.append('file', file)
         genericRequest(uploadUrl, "POST", formData, (data, status) => {
             if (status === 200) {
-                setUser(data)
+                setRecord(data)
                 handleClose()
             }
         }, {})
