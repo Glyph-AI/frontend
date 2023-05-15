@@ -42,7 +42,7 @@
     "shortcuts": [
         {
             "name": "Send a Message",
-            "url": "/conversations",
+            "url": "/conversations"
         },
         {
             "name": "Take Notes",
