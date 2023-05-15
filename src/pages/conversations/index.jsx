@@ -71,11 +71,11 @@ export default function Conversations() {
         getUser()
     }, [])
 
-    const formatLastMessage = (message) => {
+    const formatLastMessage = (message, bot_name) => {
         if (message === undefined) {
             return <i>Start Chatting...</i>
         }
-        const sender = message.role == "user" ? "You" : "Glyph"
+        const sender = message.role == "user" ? "You" : bot_name
         const formatted_message = `${sender}: ${message.content}`
         if (sender === "You") {
             return (<i>{formatted_message}</i>)
@@ -124,8 +124,9 @@ export default function Conversations() {
                                 <>
                                     <ConversationItem
                                         name={record.name}
-                                        info={formatLastMessage(last_message)}
+                                        info={formatLastMessage(last_message, record.bot.name)}
                                         id={record.id}
+                                        bot={record.bot}
                                     />
                                     <Divider component="li" />
                                 </>

@@ -19,6 +19,9 @@ export default function BotListItem({ bot, displayLink }) {
             <CardHeader
                 sx={{ paddingBottom: 0 }}
                 title={bot.name}
+                avatar={
+                    <Avatar src={bot.avatar_location || "/glyph-avatar.png"} />
+                }
                 action={
                     displayLink && <IconButton>
                         <ChevronRight />
@@ -36,4 +39,4 @@ export default function BotListItem({ bot, displayLink }) {
         </Card>
 
     )
-}
+}   
