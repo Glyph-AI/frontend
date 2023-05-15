@@ -2,16 +2,27 @@ import LayoutWithNav from "@/components/utility/layout_with_nav";
 import { getRequest } from "@/components/utility/request_helper";
 import { ChatBubble, SmartToy, UploadFile } from "@mui/icons-material";
 import { Box, Button, Card, CardContent, CardHeader, CardMedia, List, ListItem, ListItemIcon, ListItemText, Paper, Radio, Typography } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function SubscriptionOptions() {
     const [monthly, setMonthly] = useState(true)
     const [annual, setAnnual] = useState(false)
+    const [useGoogle, setUseGoogle] = useState(false)
+    const [googleService, setGoogleService] = useState(null)
 
     const handleRadioChange = () => {
         setMonthly(!monthly)
         setAnnual(!annual)
     }
+
+    useEffect(() => {
+        if (window && 'getDigitalGoodsService' in window) {
+            try {
+                const service = await window.getDigitalGoodsService('https://play.google.com/billing');
+                setGoogleService(service)
+            }
+        }
+    })
 
     const handleCheckout = () => {
         if (annual) {
