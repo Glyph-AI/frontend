@@ -7,6 +7,15 @@
     "name": "Glyph",
     "short_name": "Glyph",
     "description": "Your personal AI assistant",
+    "orientation": "portrait-primary",
+    "dir": "ltr",
+    "lang": "en",
+    "categories": [
+        "productivity",
+        "utilities",
+        "business",
+        "education"
+    ],
     "icons": [
         {
             "src": "/icon-192x192.png",
@@ -26,7 +35,18 @@
         {
             "src": "/icon-512x512.png",
             "sizes": "512x512",
-            "type": "image/png"
+            "type": "image/png",
+            "purpose": "any"
+        }
+    ],
+    "shortcuts": [
+        {
+            "name": "Send a Message",
+            "url": "/conversations",
+        },
+        {
+            "name": "Take Notes",
+            "url": "/notes"
         }
     ]
 }
