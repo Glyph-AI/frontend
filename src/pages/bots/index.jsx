@@ -15,6 +15,7 @@ import LayoutWithNav from "@/components/utility/layout_with_nav";
 import { Masonry } from "@mui/lab";
 import { useUserContext } from "@/context/user";
 import { theme } from "@/components/utility/theme";
+import AdBanner from "@/components/utility/ad_banner";
 
 export default function Bots() {
     const [userBots, setUserBots] = useState([])
@@ -92,6 +93,9 @@ export default function Bots() {
                     src={user.profile_picture_location}
                     onClick={() => { router.push("/profile") }}
                 />
+            </Box>
+            <Box sx={{ pr: "16px", pl: "16px" }}>
+                <AdBanner style={{ zIndex: "1000", marginBottom: "8px" }} />
             </Box>
             <Box
                 sx={{

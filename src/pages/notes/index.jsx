@@ -1,5 +1,6 @@
 import NewNoteModal from "@/components/notes/newNoteModal";
 import NoteListItem from "@/components/notes/noteListItem";
+import AdBanner from "@/components/utility/ad_banner";
 import LayoutWithNav from "@/components/utility/layout_with_nav";
 import { getRequest } from "@/components/utility/request_helper";
 import { useUserContext } from "@/context/user";
@@ -60,6 +61,9 @@ export default function NotesIndex() {
                     src={user.profile_picture_location}
                     onClick={() => { router.push("/profile") }}
                 />
+            </Box>
+            <Box sx={{ pr: "16px", pl: "16px" }}>
+                <AdBanner style={{ zIndex: "1000", marginBottom: "8px" }} />
             </Box>
             <Box
                 sx={{

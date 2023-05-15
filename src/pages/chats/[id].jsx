@@ -31,6 +31,7 @@ import { theme } from '@/components/utility/theme.jsx';
 import LayoutWithNav from '@/components/utility/layout_with_nav';
 import { useUserContext } from '@/context/user';
 import { Settings } from '@mui/icons-material';
+import AdBanner from '@/components/utility/ad_banner';
 
 export default function Home() {
   const [newMessage, setNewMessage] = useState("")
@@ -300,6 +301,7 @@ export default function Home() {
           ref={inputFile}
           style={{ display: 'none' }}
         />
+        <AdBanner style={{ position: "absolute", top: "4.7em", zIndex: "1000" }} />
         <MainContainer>
           <ChatContainer>
             <ConversationHeader >
@@ -312,11 +314,14 @@ export default function Home() {
 
             </ConversationHeader>
             <MessageList style={{ display: "flex", backgroundColor: theme.palette.background.default }} typingIndicator={typingIndicator()}>
-              {
-                chatData && chatData.map((obj, index) => {
-                  return customMessage(obj, index)
-                })
-              }
+              <MessageList.Content>
+
+                {
+                  chatData && chatData.map((obj, index) => {
+                    return customMessage(obj, index)
+                  })
+                }
+              </MessageList.Content>
             </MessageList>
             <div as={MessageInput} style={{
               display: "flex",

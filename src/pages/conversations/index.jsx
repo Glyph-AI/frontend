@@ -21,6 +21,7 @@ import { motion } from "framer-motion";
 import { useRouter } from 'next/router';
 import LayoutWithNav from '@/components/utility/layout_with_nav';
 import { useUserContext } from '@/context/user';
+import AdBanner from '@/components/utility/ad_banner';
 
 export default function Conversations() {
     const [modalVisible, setModalVisible] = useState(false)
@@ -114,6 +115,9 @@ export default function Conversations() {
                         src={user.profile_picture_location}
                         onClick={() => { router.push("/profile") }}
                     />
+                </Box>
+                <Box sx={{ padding: "8px" }}>
+                    <AdBanner style={{ zIndex: "1000", marginBottom: "8px" }} />
                 </Box>
 
                 <ConversationList style={{ height: "95%", overflowY: "scroll", paddingRight: "25px", boxSizing: "content-box", width: "100%" }}>

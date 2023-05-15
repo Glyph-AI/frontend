@@ -32,6 +32,12 @@ export default function App({ Component, pageProps }) {
           `
         }}
       />
+      <Script
+        async
+        src={"https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4673351659658307"}
+        strategy="lazyOnload"
+        crossOrigin="anonymous"
+      />
       <AnimatePresence mode="wait" initial={false}>
         <UserProvider>
           <Component {...pageProps} />
