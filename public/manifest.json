@@ -48,5 +48,23 @@
             "name": "Take Notes",
             "url": "/notes"
         }
+    ],
+    "screenshots": [
+        {
+            "src": "/screenshot-1.png",
+            "type": "image/png"
+        },
+        {
+            "src": "/screenshot-2.png",
+            "type": "image/png"
+        },
+        {
+            "src": "/screenshot-3.png",
+            "type": "image/png"
+        },
+        {
+            "src": "/screenshot-4.png",
+            "type": "image/png"
+        }
     ]
 }
