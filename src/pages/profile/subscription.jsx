@@ -18,13 +18,44 @@ export default function SubscriptionOptions() {
     useEffect(() => {
         if (window && 'getDigitalGoodsService' in window) {
             try {
-                const service = await window.getDigitalGoodsService('https://play.google.com/billing');
+                const service = window.getDigitalGoodsService('https://play.google.com/billing');
                 setGoogleService(service)
+            } catch (error) {
+                console.log("Not in a TWA")
             }
+        } else {
+            console.log("Not in a TWA")
         }
     })
 
-    const handleCheckout = () => {
+    const handleGoogleCheckout = async () => {
+        if (annual) {
+            var itemId = "annual_subscription"
+        } else {
+            var itemId = "monthly_subscription"
+        }
+
+        const paymentMethodData = [
+            {
+                supportedMethods: "https://play.google.com/billing",
+                data: {
+                    sku: itemId
+                }
+            }
+        ]
+
+        const request = new PaymentRequest(paymentMethodData)
+        const paymentResponse = await request.show()
+
+        const { purchaseToken } = paymentResponse.details
+        let paymentComplete;
+
+        // if ()
+    }
+
+
+
+    const handleStripeCheckout = () => {
         if (annual) {
             const url = "/subscriptions/checkout-session?bill_cycle=Annual"
             getRequest(url, (data) => {
@@ -114,7 +145,7 @@ export default function SubscriptionOptions() {
                             </Card>
                         </Box>
                         <Box sx={{ width: "100%", display: "flex", justifyContent: "center", alignItems: "center", marginTop: "16px" }}>
-                            <Button onClick={handleCheckout} sx={{ width: "80%" }} variant="contained">Checkout</Button>
+                            <Button onClick={useGoogle ? handleGoogleCheckout : handleStripeCheckout} sx={{ width: "80%" }} variant="contained">Checkout</Button>
                         </Box>
                     </CardContent>
                 </Card>
