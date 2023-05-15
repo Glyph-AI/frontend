@@ -3,6 +3,7 @@ import { getRequest } from "@/components/utility/request_helper";
 import { ChatBubble, SmartToy, UploadFile } from "@mui/icons-material";
 import { Box, Button, Card, CardContent, CardHeader, CardMedia, List, ListItem, ListItemIcon, ListItemText, Paper, Radio, Typography } from "@mui/material";
 import { useState } from "react";
+import Carousel from "react-material-ui-carousel";
 
 export default function SubscriptionOptions() {
     const [monthly, setMonthly] = useState(true)
@@ -13,17 +14,31 @@ export default function SubscriptionOptions() {
         setAnnual(!annual)
     }
 
-    const handleCheckout = () => {
-        if (annual) {
-            const url = "/subscriptions/checkout-session?bill_cycle=Annual"
-            getRequest(url, (data) => {
-                window.location.href = data.url
-            })
-        } else {
-            const url = "/subscriptions/checkout-session?bill_cycle=Monthly"
-            getRequest(url, (data) => {
-                window.location.href = data.url
-            })
+    const handleCheckout = (type) => {
+        if (type == "gold")
+            if (annual) {
+                const url = "/subscriptions/checkout-session?bill_cycle=Annual"
+                getRequest(url, (data) => {
+                    window.location.href = data.url
+                })
+            } else {
+                const url = "/subscriptions/checkout-session?bill_cycle=Monthly"
+                getRequest(url, (data) => {
+                    window.location.href = data.url
+                })
+            }
+        else {
+            if (annual) {
+                const url = "/subscriptions/checkout-session?bill_cycle=Lite_Yearly"
+                getRequest(url, (data) => {
+                    window.location.href = data.url
+                })
+            } else {
+                const url = "/subscriptions/checkout-session?bill_cycle=Lite_Monthly"
+                getRequest(url, (data) => {
+                    window.location.href = data.url
+                })
+            }
         }
     }
 
@@ -31,83 +46,165 @@ export default function SubscriptionOptions() {
     return (
         <LayoutWithNav>
             <Box sx={{ display: "flex", alignItems: "center", justifyContent: "center", height: "100%" }}>
-                <Card sx={{ width: "90%" }}>
+                <Carousel sx={{ width: "100%" }} animation="slide" autoPlay={false}>
                     <Box sx={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
-                        <CardMedia
-                            image={"/glyph-avatar.png"}
-                            alt={"Glyph"}
-                            component="img"
-                            sx={{ width: 150, height: 150 }}
-                        />
+                        <Card sx={{ width: "90%" }}>
+                            <Box sx={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
+                                <CardMedia
+                                    image={"/glyph-avatar.png"}
+                                    alt={"Glyph"}
+                                    component="img"
+                                    sx={{ width: 150, height: 150 }}
+                                />
+                            </Box>
+                            <CardContent sx={{ flexWrap: "wrap", display: "flex", justifyContent: 'center' }}>
+                                <Box sx={{ width: "100%", display: "flex", justifyContent: 'center' }}>
+                                    <Typography variant="h4">
+                                        Glyph Lite
+                                    </Typography>
+                                </Box>
+                                <Box sx={{ width: "100%", display: "flex", justifyContent: 'center' }}>
+                                    <Typography variant="body2">
+                                        <List>
+                                            <ListItem>
+                                                <ListItemIcon>
+                                                    <UploadFile />
+                                                </ListItemIcon>
+                                                <ListItemText>2 Files & Notes</ListItemText>
+                                            </ListItem>
+                                            <ListItem>
+                                                <ListItemIcon>
+                                                    <SmartToy />
+                                                </ListItemIcon>
+                                                <ListItemText>2 Bots</ListItemText>
+                                            </ListItem>
+                                            <ListItem>
+                                                <ListItemIcon>
+                                                    <ChatBubble />
+                                                </ListItemIcon>
+                                                <ListItemText>50 Monthly Messages</ListItemText>
+                                            </ListItem>
+                                        </List>
+                                    </Typography>
+                                </Box>
+                                <Box sx={{ display: "flex", width: "100%", flexWrap: "wrap", marginTop: "16px" }}>
+                                    <Card onClick={handleRadioChange} elevation={monthly ? 10 : 3} sx={{ marginBottom: "16px", width: "100%" }}>
+                                        <CardHeader
+                                            avatar={
+                                                <Radio checked={monthly} />
+                                            }
+                                            title={
+                                                <>
+                                                    <Typography variant="h5">Monthly</Typography>
+                                                </>
+                                            }
+                                            action={
+                                                <Typography variant="subtitle">$1.99 / Month</Typography>
+                                            }
+                                        />
+                                    </Card>
+                                    <Card onClick={handleRadioChange} elevation={annual ? 10 : 3} sx={{ marginBottom: "16px", width: "100%" }}>
+                                        <CardHeader
+                                            avatar={
+                                                <Radio checked={annual} />
+                                            }
+                                            title={
+                                                <>
+                                                    <Typography variant="h5">Annual</Typography>
+                                                </>
+                                            }
+                                            action={
+                                                <Typography variant="subtitle">$20 / Year</Typography>
+                                            }
+                                        />
+                                    </Card>
+                                </Box>
+                                <Box sx={{ width: "100%", display: "flex", justifyContent: "center", alignItems: "center", marginTop: "16px" }}>
+                                    <Button onClick={() => { handleCheckout("lite") }} sx={{ width: "80%" }} variant="contained">Checkout</Button>
+                                </Box>
+                            </CardContent>
+                        </Card>
                     </Box>
-                    <CardContent sx={{ flexWrap: "wrap", display: "flex", justifyContent: 'center' }}>
-                        <Box sx={{ width: "100%", display: "flex", justifyContent: 'center' }}>
-                            <Typography variant="h4">
-                                Subscription
-                            </Typography>
-                        </Box>
-                        <Box sx={{ width: "100%", display: "flex", justifyContent: 'center' }}>
-                            <Typography variant="body2">
-                                <List>
-                                    <ListItem>
-                                        <ListItemIcon>
-                                            <UploadFile />
-                                        </ListItemIcon>
-                                        <ListItemText>Unlimited File Uploads</ListItemText>
-                                    </ListItem>
-                                    <ListItem>
-                                        <ListItemIcon>
-                                            <SmartToy />
-                                        </ListItemIcon>
-                                        <ListItemText>Unlimited Bots</ListItemText>
-                                    </ListItem>
-                                    <ListItem>
-                                        <ListItemIcon>
-                                            <ChatBubble />
-                                        </ListItemIcon>
-                                        <ListItemText>750 Monthly Messages</ListItemText>
-                                    </ListItem>
-                                </List>
-                            </Typography>
-                        </Box>
-                        <Box sx={{ display: "flex", width: "100%", flexWrap: "wrap", marginTop: "16px" }}>
-                            <Card onClick={handleRadioChange} elevation={monthly ? 10 : 3} sx={{ marginBottom: "16px", width: "100%" }}>
-                                <CardHeader
-                                    avatar={
-                                        <Radio checked={monthly} />
-                                    }
-                                    title={
-                                        <>
-                                            <Typography variant="h5">Monthly</Typography>
-                                        </>
-                                    }
-                                    action={
-                                        <Typography variant="subtitle">$14.99 / Month</Typography>
-                                    }
+                    <Box sx={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
+                        <Card sx={{ width: "90%" }}>
+                            <Box sx={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
+                                <CardMedia
+                                    image={"/glyph-avatar.png"}
+                                    alt={"Glyph"}
+                                    component="img"
+                                    sx={{ width: 150, height: 150 }}
                                 />
-                            </Card>
-                            <Card onClick={handleRadioChange} elevation={annual ? 10 : 3} sx={{ marginBottom: "16px", width: "100%" }}>
-                                <CardHeader
-                                    avatar={
-                                        <Radio checked={annual} />
-                                    }
-                                    title={
-                                        <>
-                                            <Typography variant="h5">Annual</Typography>
-                                        </>
-                                    }
-                                    action={
-                                        <Typography variant="subtitle">$150 / Year</Typography>
-                                    }
-                                />
-                            </Card>
-                        </Box>
-                        <Box sx={{ width: "100%", display: "flex", justifyContent: "center", alignItems: "center", marginTop: "16px" }}>
-                            <Button onClick={handleCheckout} sx={{ width: "80%" }} variant="contained">Checkout</Button>
-                        </Box>
-                    </CardContent>
-                </Card>
+                            </Box>
+                            <CardContent sx={{ flexWrap: "wrap", display: "flex", justifyContent: 'center' }}>
+                                <Box sx={{ width: "100%", display: "flex", justifyContent: 'center' }}>
+                                    <Typography variant="h4">
+                                        Glyph Gold
+                                    </Typography>
+                                </Box>
+                                <Box sx={{ width: "100%", display: "flex", justifyContent: 'center' }}>
+                                    <Typography variant="body2">
+                                        <List>
+                                            <ListItem>
+                                                <ListItemIcon>
+                                                    <UploadFile />
+                                                </ListItemIcon>
+                                                <ListItemText>Unlimited File Uploads</ListItemText>
+                                            </ListItem>
+                                            <ListItem>
+                                                <ListItemIcon>
+                                                    <SmartToy />
+                                                </ListItemIcon>
+                                                <ListItemText>Unlimited Bots</ListItemText>
+                                            </ListItem>
+                                            <ListItem>
+                                                <ListItemIcon>
+                                                    <ChatBubble />
+                                                </ListItemIcon>
+                                                <ListItemText>750 Monthly Messages</ListItemText>
+                                            </ListItem>
+                                        </List>
+                                    </Typography>
+                                </Box>
+                                <Box sx={{ display: "flex", width: "100%", flexWrap: "wrap", marginTop: "16px" }}>
+                                    <Card onClick={handleRadioChange} elevation={monthly ? 10 : 3} sx={{ marginBottom: "16px", width: "100%" }}>
+                                        <CardHeader
+                                            avatar={
+                                                <Radio checked={monthly} />
+                                            }
+                                            title={
+                                                <>
+                                                    <Typography variant="h5">Monthly</Typography>
+                                                </>
+                                            }
+                                            action={
+                                                <Typography variant="subtitle">$14.99 / Month</Typography>
+                                            }
+                                        />
+                                    </Card>
+                                    <Card onClick={handleRadioChange} elevation={annual ? 10 : 3} sx={{ marginBottom: "16px", width: "100%" }}>
+                                        <CardHeader
+                                            avatar={
+                                                <Radio checked={annual} />
+                                            }
+                                            title={
+                                                <>
+                                                    <Typography variant="h5">Annual</Typography>
+                                                </>
+                                            }
+                                            action={
+                                                <Typography variant="subtitle">$150 / Year</Typography>
+                                            }
+                                        />
+                                    </Card>
+                                </Box>
+                                <Box sx={{ width: "100%", display: "flex", justifyContent: "center", alignItems: "center", marginTop: "16px" }}>
+                                    <Button onClick={() => { handleCheckout("gold") }} sx={{ width: "80%" }} variant="contained">Checkout</Button>
+                                </Box>
+                            </CardContent>
+                        </Card>
+                    </Box>
+                </Carousel>
             </Box>
-        </LayoutWithNav>
+        </LayoutWithNav >
     )
 }
