@@ -84,6 +84,8 @@ export default function NewBotModal({ open, handleClose }) {
             setAvailableTools(sortItems(data))
         })
 
+        getUser()
+
         console.log(user)
 
 
