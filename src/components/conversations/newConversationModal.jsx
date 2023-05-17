@@ -43,10 +43,11 @@ export default function NewConversationModal({ open, handleClose }) {
         }, { "Content-Type": "application/json" })
     }
 
-    const createNewChat = (name, botId) => {
+    const createNewChat = (name) => {
         const data = {
             name: name,
-            bot_id: botId
+            bot_id: bot.id,
+            bot: bot
         }
 
         genericRequest("/chats", "POST", JSON.stringify(data), () => {
@@ -61,7 +62,7 @@ export default function NewConversationModal({ open, handleClose }) {
     }
 
     const handleCreate = () => {
-        createNewChat(conversationName, bot.id);
+        createNewChat(conversationName);
     }
 
     useEffect(() => {

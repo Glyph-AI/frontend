@@ -8,6 +8,8 @@ import { useEffect } from 'react'
 import { UserProvider } from '@/context/user';
 import Script from 'next/script'
 
+const env = process.env.NEXT_PUBLIC_ENVIRONMENT
+
 export default function App({ Component, pageProps }) {
   useEffect(() => {
     window.addEventListener("resize", (ev) => {
@@ -17,21 +19,27 @@ export default function App({ Component, pageProps }) {
 
   return (
     <>
-      <Script strategy="afterInteractive" src="https://www.googletagmanager.com/gtag/js?id=G-V6RXH45WCW" />
-      <Script
-        id="google-analytics"
-        strategy="afterInteractive"
-        dangerouslySetInnerHTML={{
-          __html: `
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-            gtag('config', 'G-V6RXH45WCW', {
-              page_path: window.location.pathname,
-            });
-          `
-        }}
-      />
+      {
+        env === "production" && (
+          <>
+            <Script strategy="afterInteractive" src="https://www.googletagmanager.com/gtag/js?id=G-V6RXH45WCW" />
+            <Script
+              id="google-analytics"
+              strategy="afterInteractive"
+              dangerouslySetInnerHTML={{
+                __html: `
+                  window.dataLayer = window.dataLayer || [];
+                  function gtag(){dataLayer.push(arguments);}
+                  gtag('js', new Date());
+                  gtag('config', 'G-V6RXH45WCW', {
+                    page_path: window.location.pathname,
+                  });
+                `
+              }}
+            />
+        </>
+        )
+      }
       <AnimatePresence mode="wait" initial={false}>
         <UserProvider>
           <Component {...pageProps} />

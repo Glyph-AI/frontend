@@ -259,7 +259,6 @@ export default function Home() {
   }
 
   const renderBotSettings = () => {
-    console.log(user, bot)
     if (user.id === bot.creator_id) {
       return (
         <ConversationHeader.Actions>
