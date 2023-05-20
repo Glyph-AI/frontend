@@ -150,7 +150,7 @@ export default function BotInfo() {
             <ConversationHeader>
                 <ConversationHeader.Back onClick={() => { router.push(backButtonURL) }} />
             </ConversationHeader>
-            <Box sx={{ display: "flex", flexWrap: "wrap", alignContent: "center", justifyContent: "center", padding: "8px" }}>
+            <Box sx={{ display: "flex", flexWrap: "wrap", alignContent: "center", justifyContent: "center", padding: "8px", overflowY: "scroll" }}>
                 <Badge
                     overlap="circular"
                     sx={{ padding: "-8px" }}
