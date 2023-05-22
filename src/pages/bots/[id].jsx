@@ -150,62 +150,64 @@ export default function BotInfo() {
             <ConversationHeader>
                 <ConversationHeader.Back onClick={() => { router.push(backButtonURL) }} />
             </ConversationHeader>
-            <Box sx={{ display: "flex", flexWrap: "wrap", alignContent: "center", justifyContent: "center", padding: "8px", overflowY: "scroll" }}>
-                <Badge
-                    overlap="circular"
-                    sx={{ padding: "-8px" }}
-                    onClick={() => { setUploadModalOpen(true) }}
-                    badgeContent={
-                        <SmallAvatar>
-                            <FileUpload />
-                        </SmallAvatar>
-                    }
-                    anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-                >
-                    <Avatar
-                        src={
-                            bot.avatar_location
+            <Box sx={{height: "83%", overflowY: "scroll"}}>
+                <Box sx={{ display: "flex", flexWrap: "wrap", alignContent: "center", justifyContent: "center", padding: "8px"}}>
+                    <Badge
+                        overlap="circular"
+                        sx={{ padding: "-8px" }}
+                        onClick={() => { setUploadModalOpen(true) }}
+                        badgeContent={
+                            <SmallAvatar>
+                                <FileUpload />
+                            </SmallAvatar>
                         }
-                        sx={{ height: 128, width: 128, fontSize: 90, backgroundColor: "#fff" }}
-                        alt={bot.name}
-                    />
-                </Badge>
-                <Box sx={{ marginTop: "8px", display: "flex", justifyContent: "center", flexWrap: "wrap", alignItems: "center", width: "100%" }}>
-                    <Box sx={{ fontWeight: 600, width: "100%", textAlign: "center" }}>
-                        {
-                            !isNameFocused ? (
-                                <Badge sx={{ padding: "4px" }} badgeContent={<Edit sx={{ color: "gray", fontSize: 16 }} />}>
-                                    <Typography variant="h5" onClick={() => { setIsNameFocused(true) }}>{botName}</Typography>
-                                </Badge>
-                            ) : (
-                                <TextField
-                                    autoFocus
-                                    variant="standard"
-                                    placeholder={botName}
-                                    onChange={(e) => { handleNameChange(e.target.value) }}
-                                    onBlur={(e) => { handleNameSubmit() }}
-                                />
-                            )
-                        }
+                        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+                    >
+                        <Avatar
+                            src={
+                                bot.avatar_location
+                            }
+                            sx={{ height: 128, width: 128, fontSize: 90, backgroundColor: "#fff" }}
+                            alt={bot.name}
+                        />
+                    </Badge>
+                    <Box sx={{ marginTop: "8px", display: "flex", justifyContent: "center", flexWrap: "wrap", alignItems: "center", width: "100%" }}>
+                        <Box sx={{ fontWeight: 600, width: "100%", textAlign: "center" }}>
+                            {
+                                !isNameFocused ? (
+                                    <Badge sx={{ padding: "4px" }} badgeContent={<Edit sx={{ color: "gray", fontSize: 16 }} />}>
+                                        <Typography variant="h5" onClick={() => { setIsNameFocused(true) }}>{botName}</Typography>
+                                    </Badge>
+                                ) : (
+                                    <TextField
+                                        autoFocus
+                                        variant="standard"
+                                        placeholder={botName}
+                                        onChange={(e) => { handleNameChange(e.target.value) }}
+                                        onBlur={(e) => { handleNameSubmit() }}
+                                    />
+                                )
+                            }
 
+                        </Box>
                     </Box>
                 </Box>
-            </Box>
-            <Table>
-                <TableBody>
-                    <BotAttribute name={"Chats"} value={bot.chats && bot.chats.length} />
-                    <BotAttribute name={"Sharing Enabled"} value={bot.sharing_enabled || false} onChange={handleSharingChange} />
-                    <BotAttribute name={"Persona"} value={personaData()} />
-                    <BotAttribute name={"Sharing Code"} value={renderSharingCode()} />
-                    <BotAttribute name={"Sharing URL"} value={renderSharingUrl()} />
-                </TableBody>
-            </Table>
-            <Divider />
-            <>
-                <BotFileList name="Files" bot_id={id} user={user} bot={bot} setBot={setBot} />
+                <Table>
+                    <TableBody>
+                        <BotAttribute name={"Chats"} value={bot.chats && bot.chats.length} />
+                        <BotAttribute name={"Sharing Enabled"} value={bot.sharing_enabled || false} onChange={handleSharingChange} />
+                        <BotAttribute name={"Persona"} value={personaData()} />
+                        <BotAttribute name={"Sharing Code"} value={renderSharingCode()} />
+                        <BotAttribute name={"Sharing URL"} value={renderSharingUrl()} />
+                    </TableBody>
+                </Table>
                 <Divider />
-                <BotToolList bot={bot} setBot={setBot} />
-            </>
+                <>
+                    <BotFileList name="Files" bot_id={id} user={user} bot={bot} setBot={setBot} />
+                    <Divider />
+                    <BotToolList bot={bot} setBot={setBot} />
+                </>
+            </Box>
             <FileUploadModal setRecord={setBot} open={uploadModalOpen} handleClose={handleUploadClose} uploadUrl={`/bots/${bot.id}/avatar`} />
         </LayoutWithNav>
     )
