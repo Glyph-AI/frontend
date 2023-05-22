@@ -8,7 +8,7 @@ import { Avatar, Badge, Box, ListItem, ListItemText, List, ListItemAvatar, Divid
 import { styled } from '@mui/material/styles';
 import { theme } from "@/components/utility/theme";
 import FileUploadIcon from '@mui/icons-material/FileUpload';
-import { ChevronRight, Edit, EmailOutlined, Logout, MonetizationOnOutlined, Person, SmartToyOutlined, Upload } from "@mui/icons-material";
+import { ChevronRight, Edit, EmailOutlined, Lock, Logout, MonetizationOnOutlined, Person, SmartToyOutlined, Upload } from "@mui/icons-material";
 import { useEffect, useState } from "react";
 import { genericRequest, getRequest } from "@/components/utility/request_helper";
 import { getCookie } from "@/components/utility/cookie_helper";
@@ -243,6 +243,23 @@ export default function Profile() {
                             </Avatar>
                         </ListItemAvatar>
                         <ListItemText primary={"Subscription"} secondary={renderUserSubscription()} />
+                    </ListItem>
+                    <Divider />
+                    <ListItem
+                        sx={{ cursor: "pointer", backgroundColor: "white" }}
+                        secondaryAction={
+                            <IconButton edge="end" aria-label="subscription">
+                                <ChevronRight />
+                            </IconButton>
+                        }
+                        onClick={() => { router.push("/profile/tokens")}}
+                    >
+                        <ListItemAvatar>
+                            <Avatar>
+                                <Lock />
+                            </Avatar>
+                        </ListItemAvatar>
+                        <ListItemText primary={"Access Tokens"} />
                     </ListItem>
                     <Divider />
                     <ListItem
