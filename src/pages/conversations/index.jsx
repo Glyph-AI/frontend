@@ -127,6 +127,7 @@ export default function Conversations() {
                                         info={formatLastMessage(last_message, record.bot.name)}
                                         id={record.id}
                                         bot={record.bot}
+                                        getChats={getChats}
                                     />
                                     <Divider component="li" />
                                 </>
