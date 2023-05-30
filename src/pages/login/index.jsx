@@ -52,6 +52,7 @@ export default function Login() {
                                 full_name: data.name,
                             },
                             account: {
+                                id: data.user_id,
                                 name: data.name,
                                 is_paying: data.subscribed,
                                 monthly_value: data.monthly_cost,
