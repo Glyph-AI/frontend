@@ -22,24 +22,22 @@ export default function App({ Component, pageProps }) {
       {
         env === "production" && (
           <>
-            <Script strategy="afterInteractive" src="https://www.googletagmanager.com/gtag/js?id=G-V6RXH45WCW" />
             <Script
-              id="google-analytics"
-              strategy="afterInteractive"
               dangerouslySetInnerHTML={{
-                __html: `
-                  window.dataLayer = window.dataLayer || [];
-                  function gtag(){dataLayer.push(arguments);}
-                  gtag('js', new Date());
-                  gtag('config', 'G-V6RXH45WCW', {
-                    page_path: window.location.pathname,
-                  });
-                `
+                __html: `(function(apiKey){
+                  (function(p,e,n,d,o){var v,w,x,y,z;o=p[d]=p[d]||{};o._q=o._q||[];
+                  v=['initialize','identify','updateOptions','pageLoad','track'];for(w=0,x=v.length;w<x;++w)(function(m){
+                      o[m]=o[m]||function(){o._q[m===v[0]?'unshift':'push']([m].concat([].slice.call(arguments,0)));};})(v[w]);
+                      y=e.createElement(n);y.async=!0;y.src='https://cdn.pendo.io/agent/static/'+apiKey+'/pendo.js';
+                      z=e.getElementsByTagName(n)[0];z.parentNode.insertBefore(y,z);})(window,document,'script','pendo');
+              })('7bf96b94-515a-4087-4ac7-08e6e0a72db2');`
               }}
             />
-        </>
+          </>
         )
       }
+
+
       <AnimatePresence mode="wait" initial={false}>
         <UserProvider>
           <Component {...pageProps} />

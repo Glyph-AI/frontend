@@ -44,6 +44,23 @@ export default function Login() {
         genericRequest("/login", "POST", JSON.stringify(data), (data, status) => {
             if (status === 200) {
                 router.push(redirectUrl)
+                if (env === "production") {
+                    pendo.initialize(
+                        {
+                            visitor: {
+                                id: data.user_id,
+                                full_name: data.name,
+                            },
+                            account: {
+                                name: data.name,
+                                is_paying: data.subscribed,
+                                monthly_value: data.monthly_cost,
+                                planPrice: data.monthly_cost
+                            }
+
+                        }
+                    )
+                }
             } else if (status === 401) {
                 console.log(data)
                 setErrorContent(data.detail)
