@@ -27,23 +27,6 @@ export default function Login() {
 
         genericRequest("/auth/google", "POST", JSON.stringify(auth_data), (data, status) => {
             if (status === 200) {
-                router.push(redirectUrl)
-            } else if (status === 401) {
-                setErrorContent(data.detail)
-                setSnackbarOpen(true)
-            }
-        }, { "Content-Type": "application/json" })
-    }
-
-    const handleSignin = () => {
-        const data = {
-            "email": email,
-            "password": password
-        }
-
-        genericRequest("/login", "POST", JSON.stringify(data), (data, status) => {
-            if (status === 200) {
-                router.push(redirectUrl)
                 if (env === "production") {
                     console.log("Initializing Pendo")
                     pendo.initialize(
@@ -63,6 +46,42 @@ export default function Login() {
                         }
                     )
                 }
+                router.push(redirectUrl)
+            } else if (status === 401) {
+                setErrorContent(data.detail)
+                setSnackbarOpen(true)
+            }
+        }, { "Content-Type": "application/json" })
+    }
+
+    const handleSignin = () => {
+        const data = {
+            "email": email,
+            "password": password
+        }
+
+        genericRequest("/login", "POST", JSON.stringify(data), (data, status) => {
+            if (status === 200) {
+                if (env === "production") {
+                    console.log("Initializing Pendo")
+                    pendo.initialize(
+                        {
+                            visitor: {
+                                id: data.user_id,
+                                full_name: data.name,
+                            },
+                            account: {
+                                id: data.user_id,
+                                name: data.name,
+                                is_paying: data.subscribed,
+                                monthly_value: data.monthly_cost,
+                                planPrice: data.monthly_cost
+                            }
+
+                        }
+                    )
+                }
+                router.push(redirectUrl)
             } else if (status === 401) {
                 console.log(data)
                 setErrorContent(data.detail)
