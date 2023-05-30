@@ -43,20 +43,20 @@ export default function ConversationItem({ name, info, id, bot, getChats }) {
     }
 
     const popoverOpen = Boolean(anchorEl)
-    
+
     return (
         <>
             <Conversation name={name} style={{ marginTop: "2px" }} info={info} onClick={() => { router.push(`/chats/${id}`) }}>
                 <Avatar src={bot.avatar_location || "/glyph-avatar.png"} name={bot.name} alt={bot.name} />
-                <Conversation.Operations>
-                    <IconButton onClick={(e) => {contextHandler(e)}}>
-                        <MoreVert/>
+                <Conversation.Operations visible>
+                    <IconButton onClick={(e) => { contextHandler(e) }}>
+                        <MoreVert />
                     </IconButton>
                 </Conversation.Operations>
             </Conversation>
-            <Menu 
-                open={popoverOpen} 
-                onClose={() => {setAnchorEl(null)}} 
+            <Menu
+                open={popoverOpen}
+                onClose={() => { setAnchorEl(null) }}
                 anchorEl={anchorEl}
                 anchorOrigin={{
                     vertical: 'bottom',
@@ -64,7 +64,7 @@ export default function ConversationItem({ name, info, id, bot, getChats }) {
                 }}>
                 <MenuItem onClick={handleDelete}>
                     <ListItemIcon>
-                        <Delete/>
+                        <Delete />
                     </ListItemIcon>
                     <ListItemText>
                         Delete
