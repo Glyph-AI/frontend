@@ -45,6 +45,7 @@ export default function Login() {
             if (status === 200) {
                 router.push(redirectUrl)
                 if (env === "production") {
+                    console.log("Initializing Pendo")
                     pendo.initialize(
                         {
                             visitor: {
