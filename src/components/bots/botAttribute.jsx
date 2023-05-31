@@ -1,15 +1,15 @@
 import { TableRow, TableCell, Checkbox } from "@mui/material";
 
-export default function BotAttribute({ name, value, onChange }) {
+export default function BotAttribute({ valueId, name, value, onChange }) {
     const tableValue = () => {
         if (typeof (value) === 'boolean') {
             return (
                 <TableCell sx={{ fontSize: 18 }} align="right">
-                    <Checkbox checked={value} onChange={onChange}></Checkbox>
+                    <Checkbox id={valueId} checked={value} onChange={onChange} />
                 </TableCell>
             )
         } else {
-            return (<TableCell sx={{ fontSize: 18 }} align="right">{value}</TableCell>)
+            return (<TableCell id={valueId} sx={{ fontSize: 18 }} align="right">{value}</TableCell>)
         }
     }
     return (

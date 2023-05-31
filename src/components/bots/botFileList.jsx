@@ -136,7 +136,7 @@ export default function BotFileList({ name, bot_id, user, bot, setBot }) {
                         }
                         {
                             Math.abs(user.files_left) > 0 && (
-                                <ListItem ref={inputRef} onClick={handleUploadClick} key={0} sx={{ pl: 4 }}>
+                                <ListItem id="upload-file-button" ref={inputRef} onClick={handleUploadClick} key={0} sx={{ pl: 4 }}>
                                     <ListItemIcon>
                                         <Add />
                                     </ListItemIcon>

@@ -150,8 +150,8 @@ export default function BotInfo() {
             <ConversationHeader>
                 <ConversationHeader.Back onClick={() => { router.push(backButtonURL) }} />
             </ConversationHeader>
-            <Box sx={{height: "83%", overflowY: "scroll"}}>
-                <Box sx={{ display: "flex", flexWrap: "wrap", alignContent: "center", justifyContent: "center", padding: "8px"}}>
+            <Box sx={{ height: "83%", overflowY: "scroll" }}>
+                <Box sx={{ display: "flex", flexWrap: "wrap", alignContent: "center", justifyContent: "center", padding: "8px" }}>
                     <Badge
                         overlap="circular"
                         sx={{ padding: "-8px" }}
@@ -195,7 +195,7 @@ export default function BotInfo() {
                 <Table>
                     <TableBody>
                         <BotAttribute name={"Chats"} value={bot.chats && bot.chats.length} />
-                        <BotAttribute name={"Sharing Enabled"} value={bot.sharing_enabled || false} onChange={handleSharingChange} />
+                        <BotAttribute valueId={"bot-sharing-checkbox"} name={"Sharing Enabled"} value={bot.sharing_enabled || false} onChange={handleSharingChange} />
                         <BotAttribute name={"Persona"} value={personaData()} />
                         <BotAttribute name={"Sharing Code"} value={renderSharingCode()} />
                         <BotAttribute name={"Sharing URL"} value={renderSharingUrl()} />
