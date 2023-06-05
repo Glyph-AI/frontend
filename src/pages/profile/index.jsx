@@ -44,6 +44,7 @@ export default function Profile() {
     const [user, setUser] = useState({})
     const [name, setName] = useState("")
     const [uploadModalOpen, setUploadModalOpen] = useState(false)
+    const [inTwa, setInTwa] = useState(false)
     const router = useRouter()
     const [isNameFocused, setIsNamedFocused] = useState(false);
     const smallScreen = useMediaQuery(theme.breakpoints.down("md"))
@@ -65,6 +66,11 @@ export default function Profile() {
         })
         // reset profile if the user is coming from subscription
         getUser()
+
+
+        if (window && 'getDigitalGoodsService' in window) {
+            setInTwa(true)
+        }
     }, [])
 
     const handleLogout = () => {
@@ -75,6 +81,9 @@ export default function Profile() {
 
     const renderUserSubscription = () => {
         if (user.subscribed && user.is_current) {
+            if (inTwa) {
+                return <i>Manage Subscription on our Website</i>
+            }
             return <i>Subscribed</i>
         } else if (user.subscription_canceled) {
             return <i>Subscription Canceled</i>
@@ -235,7 +244,7 @@ export default function Profile() {
                                 <ChevronRight />
                             </IconButton>
                         }
-                        onClick={() => { user.subscribed ? window.location.href = stripeUrl : router.push("/profile/subscription") }}
+                        onClick={() => { user.subscribed && !inTwa ? window.location.href = stripeUrl : router.push("/profile/subscription") }}
                     >
                         <ListItemAvatar>
                             <Avatar>
