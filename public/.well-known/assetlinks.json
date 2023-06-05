@@ -1,0 +1,14 @@
+[
+      {
+            "relation": [
+                  "delegate_permission/common.handle_all_urls"
+            ],
+            "target": {
+                  "namespace": "android_app",
+                  "package_name": "com.glyphassistant.app.twa",
+                  "sha256_cert_fingerprints": [
+                        "E9:D2:A8:1B:10:98:59:5F:7E:5F:9C:BC:54:22:00:4F:B5:EF:D6:A7:1C:59:24:10:FE:95:ED:F5:57:29:6F:71"
+                  ]
+            }
+      }
+]
