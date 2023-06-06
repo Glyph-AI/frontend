@@ -223,7 +223,7 @@ export default function Home() {
     const formData = new FormData()
     formData.append('file', file)
 
-    if (file.size / 1024 / 1024 > 15) {
+    if (file.size / 1024 / 1024 > 50) {
       setSnackbarMessage("File size too large.")
       setSnackbarOpen(true)
       return false
