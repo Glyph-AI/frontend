@@ -7,6 +7,8 @@ if (env === 'local') {
     backendHost = 'https://dev-api.glyphassistant.com';
 } else if (env === "production") {
     backendHost = "https://api.glyphassistant.com"
+} else if (env === "ios") {
+    backendHost = "https://api.glyphassistant.com"
 } else {
     backendHost = process.env.REACT_APP_BACKEND_HOST || 'http://localhost:8000';
 }
