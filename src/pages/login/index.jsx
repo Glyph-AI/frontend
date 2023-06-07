@@ -9,7 +9,6 @@ import { Alert, AlertTitle, Button, Divider, Snackbar, TextField } from '@mui/ma
 const env = process.env.NEXT_PUBLIC_ENVIRONMENT
 
 export default function Login() {
-    const [redirectUrl, setRedirectUrl] = useState("/conversations")
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     const [passwordConfirm, setPasswordConfirm] = useState("")
@@ -46,7 +45,8 @@ export default function Login() {
                         }
                     )
                 }
-                router.push(redirectUrl)
+                console.log(redirectUrl())
+                router.push(redirectUrl())
             } else if (status === 401) {
                 setErrorContent(data.detail)
                 setSnackbarOpen(true)
@@ -81,13 +81,28 @@ export default function Login() {
                         }
                     )
                 }
-                router.push(redirectUrl)
+                console.log(redirectUrl())
+                router.push(redirectUrl())
             } else if (status === 401) {
                 console.log(data)
                 setErrorContent(data.detail)
                 setSnackbarOpen(true)
             }
         }, { "Content-Type": "application/json" })
+    }
+
+    const redirectUrl = () => {
+        console.log("HERE")
+        const params = new Proxy(new URLSearchParams(window.location.search), {
+            get: (searchParams, prop) => searchParams.get(prop),
+        });
+
+        let bot_code = params.bot_code
+        if (bot_code !== null) {
+            return `/bots?bot_code=${bot_code}`
+        }
+
+        return "/conversations"
     }
 
     const handleSignup = () => {
@@ -101,7 +116,7 @@ export default function Login() {
 
         genericRequest("/users", "POST", JSON.stringify(data), (data, status) => {
             if (status === 200) {
-                router.push(redirectUrl)
+                router.push(redirectUrl())
             } else if (status === 401) {
                 setErrorContent(data.detail)
                 setSnackbarOpen(true)
@@ -123,18 +138,6 @@ export default function Login() {
                 size: "large",
                 shape: "circle",
             });
-        }
-
-        const params = new Proxy(new URLSearchParams(window.location.search), {
-            get: (searchParams, prop) => searchParams.get(prop),
-        });
-
-        let bot_code = params.bot_code
-        console.log(bot_code)
-        console.log("HERE")
-        if (bot_code !== null) {
-            setRedirectUrl(`/bots?bot_code=${bot_code}`)
-            console.log(redirectUrl)
         }
     }, [])
 
