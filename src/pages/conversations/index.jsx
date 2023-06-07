@@ -65,6 +65,7 @@ export default function Conversations() {
     useEffect(() => {
         const activeSession = getCookie("active_session")
         if (activeSession !== "true") {
+            console.log("REDIRECTING TO LOGIN")
             router.push("/login")
         }
         getChats()

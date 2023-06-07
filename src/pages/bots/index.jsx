@@ -48,6 +48,18 @@ export default function Bots() {
     useEffect(() => {
         const activeSession = getCookie("active_session")
         if (activeSession !== "true") {
+            const params = new Proxy(new URLSearchParams(window.location.search), {
+                get: (searchParams, prop) => searchParams.get(prop),
+            });
+
+            let bot_code = params.bot_code
+            console.log("HERE")
+            if (bot_code !== null) {
+                router.push(`/login?bot_code=${bot_code}`)
+            } else {
+                router.push("/login")
+            }
+
             router.push("/login")
         }
 
