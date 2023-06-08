@@ -102,6 +102,8 @@ export default function NewBotModal({ open, handleClose }) {
             return false
         } else if (name !== "" && botPersona !== null) {
             return false
+        } else if (!showCreation) {
+            return false
         }
 
         return true
