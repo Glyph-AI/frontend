@@ -93,6 +93,16 @@ export default function Bots() {
         setDisplayUserBots(sortItems(newDisplayUserBots))
     }
 
+    const showCreation = () => {
+        if (user.allowed_bots == -1) {
+            return true
+        } else if (user.bots_left <= 0) {
+            return false
+        }
+
+        return true
+    }
+
     return (
         <LayoutWithNav>
             <Box sx={{ padding: "8px", height: 60, display: "flex", marginBottom: "16px", alignContent: "center" }}>
@@ -130,7 +140,7 @@ export default function Bots() {
             </Box>
 
             {
-                Math.abs(user.bots_left) > 0 && (
+                showCreation() && (
                     <Fab onClick={() => { setModalVisible(true) }} sx={{ position: 'absolute', bottom: 64, right: 16 }} >
                         <Add />
                     </Fab>

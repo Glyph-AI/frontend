@@ -52,7 +52,13 @@ export default function NewBotModal({ open, handleClose }) {
     const getUser = () => {
         getRequest("/profile", (data) => {
             setUser(data)
-            setShowCreation(Math.abs(data.bots_left) > 0)
+            if (data.allowed_bots == -1) {
+                setShowCreation(true)
+            } else if (data.bots_left <= 0) {
+                setShowCreation(false)
+            }
+
+            return true
         })
     }
 
@@ -209,6 +215,11 @@ export default function NewBotModal({ open, handleClose }) {
                         </List>
                     </Box>
                     <Divider sx={{ mt: "8px", mb: "8px" }} flexItem >OR</Divider>
+                    <Box sx={{ position: "relative", display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "center" }}>
+                        <Backdrop sx={{ position: "absolute" }} open={name !== "" && name !== null} />
+                        <Typography sx={{ width: "100%", textAlign: "center", fontSize: 20, marginBottom: "8px" }}>Sharing Code</Typography>
+                        <TextField disabled={name !== "" && name !== null} fullWidth label="Code" value={botCode} onChange={(e) => { setBotCode(e.target.value) }} />
+                    </Box>
                 </Box>
             )
         } else {
@@ -221,7 +232,6 @@ export default function NewBotModal({ open, handleClose }) {
                         <AlertTitle>User Not Subscribed</AlertTitle>
                         You cannot create new bots unless you are subscribed! Click Here!
                     </Alert>
-                    <Divider sx={{ mt: "8px", mb: "8px" }} flexItem >OR</Divider>
                 </>
             )
         }
@@ -243,12 +253,6 @@ export default function NewBotModal({ open, handleClose }) {
                     {
                         renderBotCreation()
                     }
-                    <Box sx={{ position: "relative", display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "center" }}>
-                        <Backdrop sx={{ position: "absolute" }} open={name !== "" && name !== null} />
-                        <Typography sx={{ width: "100%", textAlign: "center", fontSize: 20, marginBottom: "8px" }}>Sharing Code</Typography>
-                        <TextField disabled={name !== "" && name !== null} fullWidth label="Code" value={botCode} onChange={(e) => { setBotCode(e.target.value) }} />
-                    </Box>
-
                 </Box>
                 <Box sx={{ width: "100%", display: "flex" }}>
                     <Box sx={{ display: "flex", justifyContent: "flex-start", width: "50%", padding: "0 0 8px 24px" }}>
