@@ -303,7 +303,7 @@ export default function Home() {
           <ChatContainer>
             <ConversationHeader >
               <ConversationHeader.Back onClick={() => { router.push("/conversations") }} />
-              <Avatar src={"/glyph-avatar.png"} name={bot.name} />
+              <Avatar src={bot.avatar_location || "/glyph-avatar.png"} name={bot.name} />
               <ConversationHeader.Content userName={<Typography variant="h6">{bot.name}</Typography>} info={chat.name} />
               {
                 renderBotSettings()
