@@ -56,6 +56,8 @@ export default function NewBotModal({ open, handleClose }) {
                 setShowCreation(true)
             } else if (data.bots_left <= 0) {
                 setShowCreation(false)
+            } else {
+                setShowCreation(true)
             }
 
             return true
