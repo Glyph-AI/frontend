@@ -320,7 +320,8 @@ export default function Home() {
             <div as={MessageInput} style={{
               display: "flex",
               flexDirection: "row",
-              borderTop: "1px solid #d1dbe4"
+              borderTop: "1px solid #d1dbe4",
+              padding: "0 12px 0 12px"
             }}>
               {
                 (user.id === bot.creator_id && Math.abs(user.files_left) > 0) && <AttachmentButton
