@@ -339,10 +339,12 @@ export default function Home() {
                 sendButton={false}
                 disabled={(user.messages_left <= 0)}
                 attachButton={false}
-                onSend={handleNewMessage} style={{
+                onSend={handleNewMessage} 
+                style={{
                   flexGrow: 1,
                   borderTop: 0,
-                  flexShrink: "initial"
+                  flexShrink: "initial",
+                  fontSize: "16px"
                 }}
               />
               <SendButton onClick={() => handleNewMessage(newMessage)} disabled={newMessage.length === 0} style={{

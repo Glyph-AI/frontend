@@ -8,3 +8,7 @@
 .messageContent p {
     margin: 0
 }
+
+.cs-message-input__content-editor {
+    font-size: 16px;
+}
