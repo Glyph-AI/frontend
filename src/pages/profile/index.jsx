@@ -39,6 +39,8 @@ function LinearProgressWithLabel(props) {
     );
 }
 
+const env = process.env.NEXT_PUBLIC_ENVIRONMENT
+
 export default function Profile() {
     const [stripeUrl, setStripeUrl] = useState("")
     const [user, setUser] = useState({})
@@ -69,6 +71,10 @@ export default function Profile() {
 
 
         if (window && 'getDigitalGoodsService' in window) {
+            setInTwa(true)
+        }
+
+        if (env === "ios") {
             setInTwa(true)
         }
     }, [])

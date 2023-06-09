@@ -4,6 +4,8 @@ import { ChatBubble, SmartToy, UploadFile } from "@mui/icons-material";
 import { Box, Button, Card, CardContent, CardHeader, CardMedia, List, ListItem, ListItemIcon, ListItemText, Paper, Radio, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 
+const env = process.env.NEXT_PUBLIC_ENVIRONMENT
+
 export default function SubscriptionOptions() {
     const [monthly, setMonthly] = useState(true)
     const [annual, setAnnual] = useState(false)
@@ -16,6 +18,10 @@ export default function SubscriptionOptions() {
 
     useEffect(() => {
         if (window && 'getDigitalGoodsService' in window) {
+            setInTwa(true)
+        }
+
+        if (env === "ios") {
             setInTwa(true)
         }
     })
