@@ -37,20 +37,15 @@ export default function Conversations() {
     }
 
     const getChatDateSafe = (chat) => {
-        if (chat.chat_messages.length === 0) {
+        if (chat.last_message === null) {
             return chat.created_at
         } else {
-            return chat.chat_messages[chat.chat_messages.length - 1].created_at
+            return chat.last_message.created_at
         }
     }
 
     const sortChats = (chats) => {
-        var chatsWithMessagesSorted = chats.map((item) => {
-            item.chat_messages = item.chat_messages.sort((a, b) => new Date(a.created_at) - new Date(b.created_at))
-            return item
-        })
-
-        var sortedChats = chatsWithMessagesSorted.sort((a, b) => new Date(getChatDateSafe(b)) - new Date(getChatDateSafe(a)))
+        var sortedChats = chats.sort((a, b) => new Date(getChatDateSafe(b)) - new Date(getChatDateSafe(a)))
         return sortedChats
 
     }
@@ -73,7 +68,7 @@ export default function Conversations() {
     }, [])
 
     const formatLastMessage = (message, bot_name) => {
-        if (message === undefined) {
+        if (message === null) {
             return <i>Start Chatting...</i>
         }
         const sender = message.role == "user" ? "You" : bot_name
@@ -86,7 +81,7 @@ export default function Conversations() {
     }
 
     const searchFunction = (searchTerm, array) => {
-        return array.filter(chat => (chat.name.toLowerCase().includes(searchTerm) || chat.chat_messages.filter(m => m.content.toLowerCase().includes(searchTerm)).length > 0))
+        return array.filter(chat => (chat.name.toLowerCase().includes(searchTerm)))
     }
 
     const handleSearchValueChange = (newValue) => {
@@ -120,7 +115,7 @@ export default function Conversations() {
                 <ConversationList style={{ height: "95%", overflowY: "scroll", paddingRight: "25px", boxSizing: "content-box", width: "100%" }}>
                     {
                         displayChats && displayChats.map((record, idx) => {
-                            const last_message = record.chat_messages.sort((a, b) => new Date(a.created_at) - new Date(b.created_at))[record.chat_messages.length - 1]
+                            const last_message = record.last_message
                             return (
                                 <>
                                     <ConversationItem
