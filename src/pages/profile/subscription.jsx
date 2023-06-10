@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 
 const env = process.env.NEXT_PUBLIC_ENVIRONMENT
 
-export default function SubscriptionOptions() {
+export default function SubscriptionOptions({profile, setProfile}) {
     const [monthly, setMonthly] = useState(true)
     const [annual, setAnnual] = useState(false)
     const [inTwa, setInTwa] = useState(false)

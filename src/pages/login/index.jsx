@@ -8,7 +8,7 @@ import { Alert, AlertTitle, Button, Divider, Snackbar, TextField } from '@mui/ma
 
 const env = process.env.NEXT_PUBLIC_ENVIRONMENT
 
-export default function Login() {
+export default function Login({profile, setProfile}) {
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     const [passwordConfirm, setPasswordConfirm] = useState("")
@@ -46,6 +46,7 @@ export default function Login() {
                     )
                 }
                 console.log(redirectUrl())
+                setProfile(data)
                 router.push(redirectUrl())
             } else if (status === 401) {
                 setErrorContent(data.detail)
@@ -83,6 +84,7 @@ export default function Login() {
                 }
                 console.log(redirectUrl())
                 router.push(redirectUrl())
+                setProfile(data)
             } else if (status === 401) {
                 console.log(data)
                 setErrorContent(data.detail)

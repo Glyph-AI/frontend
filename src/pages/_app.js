@@ -4,17 +4,20 @@ import "@uiw/react-md-editor/markdown-editor.css";
 import "@uiw/react-markdown-preview/markdown.css";
 import '@/styles/chat.css'
 import { AnimatePresence } from 'framer-motion'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { UserProvider } from '@/context/user';
 import Script from 'next/script'
 
 const env = process.env.NEXT_PUBLIC_ENVIRONMENT
 
 export default function App({ Component, pageProps }) {
+  const [profile, setProfile] = useState({})
   useEffect(() => {
     window.addEventListener("resize", (ev) => {
       document.body.style.height = window.visualViewport.height + "px"
     }, true)
+
+    console.log("Hello from _app.js")
   }, [])
 
   return (
@@ -38,7 +41,7 @@ export default function App({ Component, pageProps }) {
       }
       <AnimatePresence mode="wait" initial={false}>
         <UserProvider>
-          <Component {...pageProps} />
+          <Component {...pageProps} setProfile={setProfile} profile={profile}/>
         </UserProvider>
       </AnimatePresence>
     </>
