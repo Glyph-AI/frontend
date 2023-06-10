@@ -8,7 +8,7 @@ import LayoutWithNav from "@/components/utility/layout_with_nav";
 import { genericRequest, getRequest } from "@/components/utility/request_helper";
 import { useUserContext } from "@/context/user";
 import { ConversationHeader } from "@chatscope/chat-ui-kit-react";
-import { Edit, FileUpload, Share } from "@mui/icons-material";
+import { Edit, FileUpload, Refresh, Share } from "@mui/icons-material";
 import { Avatar, Badge, Box, Divider, IconButton, List, ListItem, ListItemText, Snackbar, Table, TableBody, TableRow, TextField, Typography } from "@mui/material";
 import { styled } from '@mui/material/styles';
 import { useRouter } from "next/router";
@@ -30,6 +30,7 @@ export default function BotInfo() {
     const [bot, setBot] = useState({})
     const [botName, setBotName] = useState("")
     const [botId, setBotId] = useState(null)
+    const [chatId, setChatId] = useState(null)
     const [user, setUser] = useState({})
     const [snackbarOpen, setSnackbarOpen] = useState(false)
     const [backButtonURL, setBackButtonURL] = useState("/bots")
@@ -90,6 +91,30 @@ export default function BotInfo() {
         )
     }
 
+    const renderTokenGeneration = () => {
+        if (!bot.sharing_enabled) {
+            return ""
+        }
+
+        return (
+            <IconButton onClick={() => { handleTokenRefresh() }}>
+                <Refresh/>
+            </IconButton>
+        )
+    }
+
+    const handleTokenRefresh = () => {
+        let url = `/bots/${botId}/token`
+        if (chatId !== null) {
+            url = `/bots/${botId}/${chatId}/token`
+        }
+
+        getRequest(url, (data) => {
+            setSnackbarOpen(true)
+            navigator.clipboard.writeText(data.token)
+        })
+    }
+
     useEffect(() => {
         const activeSession = getCookie("active_session")
         if (activeSession !== "true") {
@@ -105,6 +130,7 @@ export default function BotInfo() {
         let chat_id = params.chat_id
         if (chat_id !== null) {
             setBackButtonURL(`/chats/${chat_id}`)
+            setChatId(chat_id)
         }
         getBotById()
     }, [])
@@ -199,6 +225,7 @@ export default function BotInfo() {
                         <BotAttribute name={"Persona"} value={personaData()} />
                         <BotAttribute name={"Sharing Code"} value={renderSharingCode()} />
                         <BotAttribute name={"Sharing URL"} value={renderSharingUrl()} />
+                        <BotAttribute name={"API Token"} value={renderTokenGeneration()}/>
                     </TableBody>
                 </Table>
                 <Divider />
