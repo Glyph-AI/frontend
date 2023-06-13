@@ -17,6 +17,7 @@ export default function Login() {
     const [displaySignup, setDisplaySignup] = useState(false)
     const [snackbarOpen, setSnackbarOpen] = useState(false)
     const [errorContent, setErrorContent] = useState("")
+    const [inTwa, setInTwa] = useState(false)
     const router = useRouter()
 
     const handleGoogle = (resp) => {
@@ -33,6 +34,7 @@ export default function Login() {
                             visitor: {
                                 id: data.user_id,
                                 full_name: data.name,
+                                native: inTwa
                             },
                             account: {
                                 id: data.user_id,
@@ -69,6 +71,7 @@ export default function Login() {
                             visitor: {
                                 id: data.user_id,
                                 full_name: data.name,
+                                native: inTwa
                             },
                             account: {
                                 id: data.user_id,
@@ -138,6 +141,14 @@ export default function Login() {
                 size: "large",
                 shape: "circle",
             });
+        }
+
+        if (window && 'getDigitalGoodsService' in window) {
+            setInTwa(true)
+        }
+
+        if (env === "ios") {
+            setInTwa(true)
         }
     }, [])
 
