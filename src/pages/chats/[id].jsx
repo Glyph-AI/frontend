@@ -105,6 +105,7 @@ export default function Home() {
           <ReactMarkdown
             children={message.content}
             remarkPlugins={[remarkGfm]}
+            linkTarget="_blank"
             components={{
               code({ node, inline, className, children, ...props }) {
                 const match = /language-(\w+)/.exec(className || '')
@@ -320,8 +321,7 @@ export default function Home() {
             <div as={MessageInput} style={{
               display: "flex",
               flexDirection: "row",
-              borderTop: "1px solid #d1dbe4",
-              padding: "0 12px 0 12px"
+              borderTop: "1px solid #d1dbe4"
             }}>
               {
                 (user.id === bot.creator_id && Math.abs(user.files_left) > 0) && <AttachmentButton
@@ -340,12 +340,10 @@ export default function Home() {
                 sendButton={false}
                 disabled={(user.messages_left <= 0)}
                 attachButton={false}
-                onSend={handleNewMessage} 
-                style={{
+                onSend={handleNewMessage} style={{
                   flexGrow: 1,
                   borderTop: 0,
-                  flexShrink: "initial",
-                  fontSize: "16px"
+                  flexShrink: "initial"
                 }}
               />
               <SendButton onClick={() => handleNewMessage(newMessage)} disabled={newMessage.length === 0} style={{
