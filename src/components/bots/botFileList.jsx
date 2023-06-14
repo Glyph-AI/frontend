@@ -148,7 +148,7 @@ export default function BotFileList({ name, bot_id, user, bot, setBot }) {
                 </Collapse>
                 <input
                     onChange={(ev) => { handleUpload(ev) }}
-                    accept="text/*,application/csv,application/pdf,image/*,.mp3,audio/mp3"
+                    accept="text/*,application/csv,application/pdf,image/*,.mp3,audio/mp3,.yaml,.json"
                     type='file'
                     id='file'
                     ref={inputFile}
