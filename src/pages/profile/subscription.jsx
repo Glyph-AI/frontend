@@ -96,53 +96,20 @@ export default function SubscriptionOptions() {
         )
     }
 
+    const renderStripeTable = () => {
+        return (
+            <Box sx={{padding: "8px", display: "flex", alignItems: "center", justifyContent: "center", height: "90%"}}>
+                <stripe-pricing-table pricing-table-id="prctbl_1NIi4KKHkgogKyeFgGCc19RW"
+                publishable-key="pk_test_51K7WUzKHkgogKyeFbc5m7sWzqpXvf4m0rZYfNIpogxMYIJ0VH9SA3Y8d4WBDdzQeP1ioQmomFvwd8vk09z1PggnO00uTmUtWkt">
+                </stripe-pricing-table>
+            </Box>
+        )
+    }
+
 
     return (
         <LayoutWithNav>
-            <Box sx={{ display: "flex", alignItems: "center", justifyContent: "center", height: "100%" }}>
-                <Card sx={{ width: "90%" }}>
-                    <Box sx={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
-                        <CardMedia
-                            image={"/glyph-avatar.png"}
-                            alt={"Glyph"}
-                            component="img"
-                            sx={{ width: 150, height: 150 }}
-                        />
-                    </Box>
-                    <CardContent sx={{ flexWrap: "wrap", display: "flex", justifyContent: 'center' }}>
-                        <Box sx={{ width: "100%", display: "flex", justifyContent: 'center' }}>
-                            <Typography variant="h4">
-                                Subscription
-                            </Typography>
-                        </Box>
-                        <Box sx={{ width: "100%", display: "flex", justifyContent: 'center' }}>
-                            <Typography variant="body2">
-                                <List>
-                                    <ListItem>
-                                        <ListItemIcon>
-                                            <UploadFile />
-                                        </ListItemIcon>
-                                        <ListItemText>Unlimited File Uploads</ListItemText>
-                                    </ListItem>
-                                    <ListItem>
-                                        <ListItemIcon>
-                                            <SmartToy />
-                                        </ListItemIcon>
-                                        <ListItemText>Unlimited Bots</ListItemText>
-                                    </ListItem>
-                                    <ListItem>
-                                        <ListItemIcon>
-                                            <ChatBubble />
-                                        </ListItemIcon>
-                                        <ListItemText>750 Monthly Messages</ListItemText>
-                                    </ListItem>
-                                </List>
-                            </Typography>
-                        </Box>
-                        {inTwa ? renderTwaMessage() : renderCheckout()}
-                    </CardContent>
-                </Card>
-            </Box>
+            {inTwa ? renderTwaMessage() : renderStripeTable()}
         </LayoutWithNav>
     )
 }

@@ -39,6 +39,7 @@ export default function Document() {
         href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
       />
       <script src="https://accounts.google.com/gsi/client"></script>
+      <script async src="https://js.stripe.com/v3/pricing-table.js"></script>
       <body>
         <Main />
         <NextScript />
