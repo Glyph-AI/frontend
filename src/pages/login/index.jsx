@@ -163,6 +163,8 @@ export default function Login() {
             });
         }
 
+        google.accounts.id.prompt()
+
         if (window && 'getDigitalGoodsService' in window) {
             setInTwa(true)
         }
