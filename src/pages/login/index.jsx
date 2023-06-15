@@ -161,9 +161,9 @@ export default function Login() {
                 size: "large",
                 shape: "circle",
             });
-        }
 
-        google.accounts.id.prompt()
+            google.accounts.id.prompt()
+        }
 
         if (window && 'getDigitalGoodsService' in window) {
             setInTwa(true)
