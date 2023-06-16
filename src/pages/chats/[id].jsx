@@ -18,7 +18,7 @@ import {
   genericRequest,
   getRequest
 } from '@/components/utility/request_helper';
-import { Alert, AlertTitle, Box, IconButton, Link, Snackbar, Typography } from '@mui/material'
+import { Alert, AlertTitle, Backdrop, Box, IconButton, Link, List, ListItemButton, ListItemIcon, ListItemText, Popover, Snackbar, Typography } from '@mui/material'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import SyntaxHighlighter from 'react-syntax-highlighter';
@@ -30,7 +30,7 @@ import { getCookie } from '@/components/utility/cookie_helper';
 import { theme } from '@/components/utility/theme.jsx';
 import LayoutWithNav from '@/components/utility/layout_with_nav';
 import { useUserContext } from '@/context/user';
-import { Settings } from '@mui/icons-material';
+import { CopyAll, Delete, Settings } from '@mui/icons-material';
 
 export default function Home() {
   const [newMessage, setNewMessage] = useState("")
@@ -39,6 +39,9 @@ export default function Home() {
   const [chatData, setChatData] = useState([])
   const [glyphTyping, setGlyphTyping] = useState(false)
   const [anchorEl, setAnchorEl] = useState(null)
+  const [messageAnchor, setMessageAnchor] = useState(null)
+  const [selectedContent, setSelectedContent] = useState(null)
+  const [popoverLocation, setPopoverLocation] = useState("left")
   const [snackbarOpen, setSnackbarOpen] = useState(false)
   const [snackbarMessage, setSnackbarMessage] = useState("")
   const [chat, setChat] = useState("")
@@ -131,17 +134,43 @@ export default function Home() {
     )
   }
 
+  const getToMessageRoot = (target) => {
+    if (target.classList.contains("cs-message__content")) {
+      return target
+    }
+
+    return getToMessageRoot(target.parentElement)
+  }
+
+  const handlePopoverClose = () => {
+    messageAnchor.classList.toggle("highlightMessage")
+    setMessageAnchor(null); 
+    setSelectedContent(null);
+  }
+
+  const displayMessageDropdown = (ev, message, loc) => {
+    const messageRoot = getToMessageRoot(ev.target)
+    messageRoot.classList.toggle("highlightMessage")
+    setMessageAnchor(messageRoot)
+    setPopoverLocation(loc)
+    setSelectedContent(message)
+  }
+
   const customMessage = (message, index) => {
     if (message.sender === "system") {
       return (<MessageSeparator>{message.content}</MessageSeparator>)
     } else if (message.sender == "You") {
-      return (<Message model={message} key={index} style={{ fontSize: "16px" }} >
-        {customMessageContent(message)}
-      </Message>)
+      return (
+        <Message onClick={(ev) => displayMessageDropdown(ev, message, "left")} model={message} key={index} style={{ fontSize: "16px" }} >
+          {customMessageContent(message)}
+        </Message>
+      )
     } else {
-      return (<Message className="TestClass2" model={message} key={index} style={{ fontSize: "16px" }}>
-        {customMessageContent(message)}
-      </Message>)
+      return (
+        <Message onClick={(ev) => displayMessageDropdown(ev, message, "right")} id={index} className="TestClass2" model={message} key={index} style={{ fontSize: "16px" }}>
+          {customMessageContent(message)}
+        </Message>
+      )
     }
   }
 
@@ -271,6 +300,8 @@ export default function Home() {
     }
   }
 
+  const showMessagePopver = Boolean(messageAnchor)
+
   return (
     <LayoutWithNav showNavigation={false}>
       <div style={{ height: "100%" }}>
@@ -355,6 +386,31 @@ export default function Home() {
             </div>
           </ChatContainer>
         </MainContainer>
+        <Popover 
+          open={showMessagePopver}
+          anchorEl={messageAnchor}
+          onClose={() => {handlePopoverClose()}}
+          anchorOrigin={{
+            vertical: 'bottom',
+            horizontal: popoverLocation,
+          }}
+          transformOrigin={{
+            vertical: 'top',
+            horizontal: popoverLocation,
+          }}
+          sx={{zIndex: 101}}
+        >
+          <List>
+            <ListItemButton onClick={() => {navigator.clipboard.writeText(selectedContent.content)}}>
+              <ListItemIcon>
+                <CopyAll/>
+              </ListItemIcon>
+              <ListItemText>
+                Copy
+              </ListItemText>
+            </ListItemButton>
+          </List>
+        </Popover>
       </div >
     </LayoutWithNav>
   )
