@@ -4,7 +4,7 @@ import { useRouter } from 'next/router';
 import { GOOGLE_LOGIN_KEY } from '@/components/utility/gLogin';
 import Layout from '@/components/utility/layout';
 import { Box } from '@mui/system';
-import { Alert, AlertTitle, Button, Divider, Snackbar, TextField } from '@mui/material';
+import { Alert, AlertTitle, Button, Divider, Snackbar, TextField, Typography } from '@mui/material';
 
 const env = process.env.NEXT_PUBLIC_ENVIRONMENT
 
@@ -199,6 +199,9 @@ export default function Login() {
                     <TextField value={lastName} onChange={(ev) => { setLastName(ev.target.value) }} label="Last Name" sx={{ width: "90%", marginTop: "8px" }}></TextField>
                     <TextField value={password} onChange={(ev) => { setPassword(ev.target.value) }} label="Password" type="password" sx={{ width: "90%", marginTop: "8px" }}></TextField>
                     <TextField value={passwordConfirm} onChange={(ev) => { setPasswordConfirm(ev.target.value) }} label="Confirm Password" type="password" sx={{ width: "90%", marginTop: "8px" }}></TextField>
+                    <Box sx={{ padding: "16px", widht: "90%", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                        <Typography align="center" variant="subtitle2">By signing up to Glyph, you agree to our <a href="https://www.glyphassistant.com/terms-of-service">Terms of Service</a> and our <a href="https://www.glyphassistant.com/privacy">Privacy Policy</a>.</Typography>
+                    </Box>
                 </Box>
                 <Box sx={{ width: "100%", flexWrap: "wrap", display: "flex", alignItems: "center", justifyContent: "Center" }}>
                     <Button disabled={signUpDisabled()} onClick={() => { handleSignup() }} variant="contained" sx={{ marginTop: "16px", width: "60%" }}>Sign-Up</Button>
