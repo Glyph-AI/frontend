@@ -34,6 +34,7 @@ export default function Document() {
       <meta property="og:site_name" content="Glyph" />
       <meta property="og:url" content="https://dev.glyphassistant.com" />
       <meta property="og:image" content="https://dev.glyphassisant.com/icon.png" />
+      <meta name="robots" content="noindex"/>
       <link
         rel="stylesheet"
         href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"

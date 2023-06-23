@@ -5,6 +5,7 @@ import { GOOGLE_LOGIN_KEY } from '@/components/utility/gLogin';
 import Layout from '@/components/utility/layout';
 import { Box } from '@mui/system';
 import { Alert, AlertTitle, Button, Divider, Snackbar, TextField, Typography } from '@mui/material';
+import Script from 'next/script';
 
 const env = process.env.NEXT_PUBLIC_ENVIRONMENT
 
@@ -119,6 +120,26 @@ export default function Login() {
 
         genericRequest("/users", "POST", JSON.stringify(data), (data, status) => {
             if (status === 200) {
+                if (env === "production") {
+                    console.log("Initializing Pendo")
+                    pendo.initialize(
+                        {
+                            visitor: {
+                                id: data.user_id,
+                                full_name: data.name,
+                                native: inTwa
+                            },
+                            account: {
+                                id: data.user_id,
+                                name: data.name,
+                                is_paying: data.subscribed,
+                                monthly_value: data.monthly_cost,
+                                planPrice: data.monthly_cost
+                            }
+
+                        }
+                    )
+                }
                 router.push(redirectUrl())
             } else if (status === 401) {
                 setErrorContent(data.detail)
@@ -141,6 +162,8 @@ export default function Login() {
                 size: "large",
                 shape: "circle",
             });
+
+            google.accounts.id.prompt()
         }
 
         if (window && 'getDigitalGoodsService' in window) {
@@ -213,34 +236,57 @@ export default function Login() {
 
 
     return (
-        <Layout>
-            <Snackbar
-                open={snackbarOpen}
-                anchorOrigin={{ vertical: "top", horizontal: "right" }}
-                audoHideDuration={6000}
-                onClick={() => { setSnackbarOpen(false) }}
-                onClose={() => { setSnackbarOpen(false) }}
-            >
-                {snackbarContent()}
-            </Snackbar>
-            <Box style={{ height: "100%", display: "flex", justifyContent: "center", alignItems: "center" }}>
-                <Box style={{ width: "100%" }}>
-                    <Box sx={{ alignContent: "center", justifyContent: "center" }}>
-                        <Box sx={{ width: "100%", display: "flex", justifyContent: "center", alignItems: "center" }}>
-                            <img className="logo" alt="Glyph Logo" src={"/dark_vertical.png"} style={{ width: "50%", marginBottom: "8px", maxWidth: "450px" }} />
+        <>
+            {
+                (env === "production" || env === "ios") && (
+                    <>
+                        <Script strategy="afterInteractive" src="https://www.googletagmanager.com/gtag/js?id=G-V6RXH45WCW" />
+                        <Script
+                            id="google-analytics"
+                            strategy="afterInteractive"
+                            dangerouslySetInnerHTML={{
+                                __html: `
+                                window.dataLayer = window.dataLayer || [];
+                                function gtag(){dataLayer.push(arguments);}
+                                gtag('js', new Date());
+                                gtag('config', 'G-V6RXH45WCW', {
+                                page_path: window.location.pathname,
+                                });
+                            `
+                            }}
+                        />
+                    </>
+                )
+            }
+            <Layout>
+                <Snackbar
+                    open={snackbarOpen}
+                    anchorOrigin={{ vertical: "top", horizontal: "right" }}
+                    audoHideDuration={6000}
+                    onClick={() => { setSnackbarOpen(false) }}
+                    onClose={() => { setSnackbarOpen(false) }}
+                >
+                    {snackbarContent()}
+                </Snackbar>
+                <Box style={{ height: "100%", display: "flex", justifyContent: "center", alignItems: "center" }}>
+                    <Box style={{ width: "100%" }}>
+                        <Box sx={{ alignContent: "center", justifyContent: "center" }}>
+                            <Box sx={{ width: "100%", display: "flex", justifyContent: "center", alignItems: "center" }}>
+                                <img className="logo" alt="Glyph Logo" src={"/dark_vertical.png"} style={{ width: "50%", marginBottom: "8px", maxWidth: "450px" }} />
+                            </Box>
+                            {displaySignup ? renderSignup() : renderLogin()}
+                            {
+                                (
+                                    <>
+                                        <Divider sx={{ marginTop: "16px" }} variant="middle" >OR</Divider>
+                                        <div style={{ marginTop: "16px", width: "100%", display: "flex", justifyContent: "center" }} id="gLogin" />
+                                    </>
+                                )
+                            }
                         </Box>
-                        {displaySignup ? renderSignup() : renderLogin()}
-                        {
-                            (
-                                <>
-                                    <Divider sx={{ marginTop: "16px" }} variant="middle" >OR</Divider>
-                                    <div style={{ marginTop: "16px", width: "100%", display: "flex", justifyContent: "center" }} id="gLogin" />
-                                </>
-                            )
-                        }
                     </Box>
                 </Box>
-            </Box>
-        </Layout>
+            </Layout>
+        </>
     )
 }
