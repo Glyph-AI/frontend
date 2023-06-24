@@ -6,7 +6,7 @@ import { Message, Note, Person, SmartToy } from '@mui/icons-material';
 import { useEffect } from 'react';
 import { useRouter } from 'next/router'
 import { motion } from "framer-motion";
-import { getRequest } from './request_helper.jsx';
+import { genericRequest, getRequest } from './request_helper.jsx';
 
 const variants = {
     hidden: { opacity: 0, x: -400, y: 0 },
@@ -16,7 +16,7 @@ const variants = {
 
 export default function LayoutWithNav({ children }, showNavigation = true) {
     const [navValue, setNavValue] = useState(0)
-    const [paymentSnackbar, setPaymentSnackbar] = useState("")
+    const [paymentSnackbar, setPaymentSnackbar] = useState(false)
     const router = useRouter()
 
     useEffect(() => {
@@ -36,7 +36,28 @@ export default function LayoutWithNav({ children }, showNavigation = true) {
             if (data.subscribed && !data.is_current) {
                 setPaymentSnackbar(true);
             }
+
+            if (typeof (window) !== 'undefined' && window.Notification && data.notifications === null) {
+                Notification.requestPermission(() => {
+                    if (Notification.permission === 'granted') {
+                        navigator.serviceWorker.register('/service-worker.js')
+                            .then((registration) => {
+                            console.log("SW Registered: ", registration)
+                            });
+
+                        // update user record with notification permissions accepted
+                        const update_data = {
+                            id: data.id,
+                            notifications: true
+                        }
+                        genericRequest("/profile", "PATCH", JSON.stringify(update_data), () => {})
+                    }
+                });
+            }
         })
+
+        
+
     }, [])
 
     return (
