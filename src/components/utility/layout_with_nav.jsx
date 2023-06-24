@@ -38,6 +38,7 @@ export default function LayoutWithNav({ children }, showNavigation = true) {
             }
 
             if (typeof (window) !== 'undefined' && window.Notification && data.notifications === null) {
+                
                 Notification.requestPermission(() => {
                     if (Notification.permission === 'granted') {
                         navigator.serviceWorker.register('/service-worker.js')
@@ -51,6 +52,13 @@ export default function LayoutWithNav({ children }, showNavigation = true) {
                             notifications: true
                         }
                         genericRequest("/profile", "PATCH", JSON.stringify(update_data), () => {})
+                    } else if (Notification.permission === 'denied') {
+                        const update_data = {
+                            id: data.id,
+                            notifications: false
+                        }
+                        genericRequest("/profile", "PATCH", JSON.stringify(update_data), () => {})
+
                     }
                 });
             }
