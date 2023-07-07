@@ -286,10 +286,10 @@ export default function Profile() {
             </Box>
             <Divider sx={{ marginTop: "16px" }} />
             <Box sx={{ display: "flex", alignContent: "center", justifyContent: "center", gap: "8px", paddingTop: "16px" }}>
-                <Link href="https://discord.gg/DKmvWgAx">
+                <Link href="https://discord.com/channels/1103348778104279110/1107050513696030871/1126965614930571356">
                     <Typography variant="h6">Join our Discord!</Typography>
                 </Link>
-                <SocialIcon url="https://discord.gg/DKmvWgAx" style={{ marginTop: "2px", height: 25, width: 25 }} />
+                <SocialIcon url="https://discord.com/channels/1103348778104279110/1107050513696030871/1126965614930571356" style={{ marginTop: "2px", height: 25, width: 25 }} />
             </Box>
             <FileUploadModal setRecord={setUser} open={uploadModalOpen} handleClose={handleUploadClose} uploadUrl={"/profile/picture"} />
         </LayoutWithNav >
