@@ -24,6 +24,8 @@ export default function SubscriptionOptions() {
         if (env === "ios") {
             setInTwa(true)
         }
+
+        setInTwa(true)
     })
 
     const handleCheckout = () => {
