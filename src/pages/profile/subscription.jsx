@@ -70,7 +70,7 @@ export default function SubscriptionOptions() {
                                 </>
                             }
                             action={
-                                <Typography variant="subtitle">{itemDetails.price}</Typography>
+                                <Typography variant="subtitle">{gpItemDetails.price}</Typography>
                             }
                         />
                     </Card>
