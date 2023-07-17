@@ -23,7 +23,7 @@ export default function SubscriptionOptions() {
             setInTwa(true)
             setInGoogle(true)
             try {
-                window.getDigitalGoodsService('https://play.google.com/billing');
+                const service = window.getDigitalGoodsService('https://play.google.com/billing');
                 const itemDetails = service.getDetails(['glyph']);
                 setGpItemDetails(itemDetails[0])
                 console.log(itemDetails)
