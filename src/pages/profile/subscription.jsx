@@ -60,7 +60,7 @@ export default function SubscriptionOptions() {
     }
 
     const renderPlatformCheckout = () => {
-        if (inGoogle) {
+        if (inGoogle && gpItemDetails) {
             return (
                 <>
                 <Box sx={{ display: "flex", width: "100%", flexWrap: "wrap", marginTop: "16px" }}>
@@ -87,9 +87,8 @@ export default function SubscriptionOptions() {
             )
         } else if (inTwa) {
             return renderTwaMessage()
-        } else {
-            return renderCheckout()
         }
+        return renderCheckout()
     
     }
 
