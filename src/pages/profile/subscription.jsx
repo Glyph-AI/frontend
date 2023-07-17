@@ -18,19 +18,20 @@ export default function SubscriptionOptions() {
         setAnnual(!annual)
     }
 
+    const fetchGoogleService = async () => {
+        const service = await window.getDigitalGoodsService('https://play.google.com/billing');
+        const itemDetails = await service.getDetails(['glyph']);
+        setGpItemDetails(itemDetails[0])
+        console.log(itemDetails)
+        console.log("HERE")
+    }
+
     useEffect(() => {
         if (window && 'getDigitalGoodsService' in window) {
             setInTwa(true)
             setInGoogle(true)
             try {
-                const fetchService = async () => {
-                    const service = await window.getDigitalGoodsService('https://play.google.com/billing');
-                    const itemDetails = await service.getDetails(['glyph']);
-                    setGpItemDetails(itemDetails[0])
-                    console.log(itemDetails)
-                }
-
-                fetchService()
+                fetchGoogleService()
             } catch (er) {
                 console.log("Google Play Billing Unavailable")
                 console.log(er)
