@@ -9,7 +9,9 @@ const env = process.env.NEXT_PUBLIC_ENVIRONMENT
 export default function SubscriptionOptions() {
     const [monthly, setMonthly] = useState(true)
     const [annual, setAnnual] = useState(false)
+    const [gpItemDetails, setGpItemDetails] = useState(null)
     const [inTwa, setInTwa] = useState(false)
+    const [inGoogle, setInGoogle] = useState(false)
 
     const handleRadioChange = () => {
         setMonthly(!monthly)
@@ -19,6 +21,16 @@ export default function SubscriptionOptions() {
     useEffect(() => {
         if (window && 'getDigitalGoodsService' in window) {
             setInTwa(true)
+            setInGoogle(true)
+            try {
+                window.getDigitalGoodsService('https://play.google.com/billing');
+                const itemDetails = service.getDetails(['glyph']);
+                setGpItemDetails(itemDetails[0])
+                console.log(itemDetails)
+            } catch {
+                console.log("Google Play Billing Unavailable")
+            }
+
         }
 
         if (env === "ios") {
@@ -42,6 +54,40 @@ export default function SubscriptionOptions() {
         }
     }
 
+    const renderPlatformCheckout = () => {
+        if (inGoogle) {
+            return (
+                <>
+                <Box sx={{ display: "flex", width: "100%", flexWrap: "wrap", marginTop: "16px" }}>
+                    <Card onClick={handleRadioChange} elevation={monthly ? 10 : 3} sx={{ marginBottom: "16px", width: "100%" }}>
+                        <CardHeader
+                            avatar={
+                                <Radio checked={monthly} />
+                            }
+                            title={
+                                <>
+                                    <Typography variant="h5">Monthly</Typography>
+                                </>
+                            }
+                            action={
+                                <Typography variant="subtitle">{itemDetails.price}</Typography>
+                            }
+                        />
+                    </Card>
+                </Box>
+                <Box sx={{ width: "100%", display: "flex", justifyContent: "center", alignItems: "center", marginTop: "16px" }}>
+                    <Button onClick={handleCheckout} sx={{ width: "80%" }} variant="contained">Checkout</Button>
+                </Box>
+            </>
+            )
+        } else if (inTwa) {
+            return renderTwaMessage()
+        } else {
+            return renderCheckout()
+        }
+    
+    }
+
     const renderCheckout = () => {
         return (
             <>
@@ -57,22 +103,7 @@ export default function SubscriptionOptions() {
                                 </>
                             }
                             action={
-                                <Typography variant="subtitle">$14.99 / Month</Typography>
-                            }
-                        />
-                    </Card>
-                    <Card onClick={handleRadioChange} elevation={annual ? 10 : 3} sx={{ marginBottom: "16px", width: "100%" }}>
-                        <CardHeader
-                            avatar={
-                                <Radio checked={annual} />
-                            }
-                            title={
-                                <>
-                                    <Typography variant="h5">Annual</Typography>
-                                </>
-                            }
-                            action={
-                                <Typography variant="subtitle">$150 / Year</Typography>
+                                <Typography variant="subtitle">$4.99 / Month</Typography>
                             }
                         />
                     </Card>
@@ -141,7 +172,7 @@ export default function SubscriptionOptions() {
                                 </List>
                             </Typography>
                         </Box>
-                        {inTwa ? renderTwaMessage() : renderCheckout()}
+                        {renderPlatformCheckout()}
                     </CardContent>
                 </Card>
             </Box>
