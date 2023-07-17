@@ -27,8 +27,9 @@ export default function SubscriptionOptions() {
                 const itemDetails = service.getDetails(['glyph']);
                 setGpItemDetails(itemDetails[0])
                 console.log(itemDetails)
-            } catch {
+            } catch (er) {
                 console.log("Google Play Billing Unavailable")
+                console.log(er)
             }
 
         }
