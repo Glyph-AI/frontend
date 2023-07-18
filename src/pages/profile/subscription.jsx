@@ -11,6 +11,7 @@ export default function SubscriptionOptions() {
     const [monthly, setMonthly] = useState(true)
     const [annual, setAnnual] = useState(false)
     const [gpItemDetails, setGpItemDetails] = useState(null)
+    const [gpPrice, setGpPrice] = useState(0.00)
     const [inTwa, setInTwa] = useState(false)
     const [inGoogle, setInGoogle] = useState(false)
     const [user, setUser] = useState({})
@@ -40,6 +41,7 @@ export default function SubscriptionOptions() {
                         service.getDetails(['glyph']).then(
                             (details) => {
                                 setGpItemDetails(details)
+                                setGpPrice(details.price.value)
                                 setInTwa(true)
                                 setInGoogle(true)
                             }
@@ -96,7 +98,7 @@ export default function SubscriptionOptions() {
                                 </>
                             }
                             action={
-                                <Typography variant="subtitle">{Math.round(formatCurrency(gpItemDetails.price.value) * 100) / 100} / Month</Typography>
+                                <Typography variant="subtitle">{Math.round(formatCurrency(gpPrice) * 100) / 100} / Month</Typography>
                             }
                         />
                     </Card>
