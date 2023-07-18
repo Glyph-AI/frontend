@@ -18,20 +18,22 @@ export default function SubscriptionOptions() {
         setAnnual(!annual)
     }
 
-    const fetchGoogleService = async () => {
-        const service = await window.getDigitalGoodsService('https://play.google.com/billing');
-        const itemDetails = await service.getDetails(['glyph']);
-        setGpItemDetails(itemDetails[0])
-        console.log(itemDetails)
-        console.log("HERE")
-    }
-
     useEffect(() => {
         if (window && 'getDigitalGoodsService' in window) {
+            console.log("Found Digital Goods Service. Attempting to load")
             setInTwa(true)
             setInGoogle(true)
             try {
-                fetchGoogleService()
+                window.getDigitalGoodsService('https://play.google.com/billing').then(
+                    (service) => {
+                        console.log(service)
+                        service.getDetails(['glyph']).then(
+                            (details) => {
+                                setGpItemDetails(details)
+                            }
+                        )
+                    }
+                )
             } catch (er) {
                 console.log("Google Play Billing Unavailable")
                 console.log(er)
@@ -134,6 +136,7 @@ export default function SubscriptionOptions() {
         )
     }
 
+    console.log(gpItemDetails)
 
     return (
         <LayoutWithNav>
@@ -154,25 +157,25 @@ export default function SubscriptionOptions() {
                             </Typography>
                         </Box>
                         <Box sx={{ width: "100%", display: "flex", justifyContent: 'center' }}>
-                            <Typography variant="body2">
+                            <Typography component="span" variant="body2">
                                 <List>
                                     <ListItem>
                                         <ListItemIcon>
                                             <UploadFile />
                                         </ListItemIcon>
-                                        <ListItemText>Unlimited File Uploads</ListItemText>
+                                        <ListItemText>100 Files & Notes</ListItemText>
                                     </ListItem>
                                     <ListItem>
                                         <ListItemIcon>
                                             <SmartToy />
                                         </ListItemIcon>
-                                        <ListItemText>Unlimited Bots</ListItemText>
+                                        <ListItemText>10 Bots</ListItemText>
                                     </ListItem>
                                     <ListItem>
                                         <ListItemIcon>
                                             <ChatBubble />
                                         </ListItemIcon>
-                                        <ListItemText>750 Monthly Messages</ListItemText>
+                                        <ListItemText>200 Monthly Messages</ListItemText>
                                     </ListItem>
                                 </List>
                             </Typography>
