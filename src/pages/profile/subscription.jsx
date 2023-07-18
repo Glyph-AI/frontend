@@ -3,6 +3,7 @@ import { getRequest } from "@/components/utility/request_helper";
 import { ChatBubble, SmartToy, UploadFile } from "@mui/icons-material";
 import { Box, Button, Card, CardContent, CardHeader, CardMedia, List, ListItem, ListItemIcon, ListItemText, Paper, Radio, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
+import { useRouter } from "next/router";
 
 const env = process.env.NEXT_PUBLIC_ENVIRONMENT
 
@@ -12,6 +13,7 @@ export default function SubscriptionOptions() {
     const [gpItemDetails, setGpItemDetails] = useState(null)
     const [inTwa, setInTwa] = useState(false)
     const [inGoogle, setInGoogle] = useState(false)
+    const router = useRouter()
 
     const handleRadioChange = () => {
         setMonthly(!monthly)
@@ -92,6 +94,36 @@ export default function SubscriptionOptions() {
     
     }
 
+    const handleGoogleCheckout = () => {
+        console.log("HERE")
+        const paymentMethodData = [
+            {
+              supportedMethods: 'https://play.google.com/billing',
+              data: {
+                sku: "glyph",
+              },
+            },
+        ];
+
+        const request = new PaymentRequest(paymentMethodData);
+        request.show().then((resp) => {
+            const { purchaseToken } = paymentResponse.details;
+
+            let paymentComplete;
+            if (validatePurchaseOnBackend(purchaseToken)) {
+                paymentComplete = paymentResponse.complete('success').then(() => {
+                    router.push("/profile")
+                });
+                // Let user know their purchase transaction has successfully completed and been verified
+              } else {
+                paymentComplete = paymentResponse.complete('fail').then(() => {
+                    router.push("/profile")
+                });;
+                // Let user know their purchase transaction failed to verify
+              }
+        });
+    }
+
     const renderCheckout = () => {
         return (
             <>
@@ -113,7 +145,7 @@ export default function SubscriptionOptions() {
                     </Card>
                 </Box>
                 <Box sx={{ width: "100%", display: "flex", justifyContent: "center", alignItems: "center", marginTop: "16px" }}>
-                    <Button onClick={handleCheckout} sx={{ width: "80%" }} variant="contained">Checkout</Button>
+                    <Button onClick={handleGoogleCheckout} sx={{ width: "80%" }} variant="contained">Checkout</Button>
                 </Box>
             </>
         )
