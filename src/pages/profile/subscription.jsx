@@ -72,6 +72,13 @@ export default function SubscriptionOptions() {
         }
     }
 
+    const formatCurrency = (value) => {
+        const localePrice = new Intl.NumberFormat(navigator.language, {
+            style: 'currency',
+            currency: gpItemDetails.price.currency,
+          }).format(value);
+    }
+
     const renderPlatformCheckout = () => {
         console.log(inGoogle, gpItemDetails)
         if (inGoogle && gpItemDetails && user.email === "j.davenport@glyphassistant.com") {
@@ -89,7 +96,7 @@ export default function SubscriptionOptions() {
                                 </>
                             }
                             action={
-                                <Typography variant="subtitle">{Math.round(gpItemDetails.price.value * 100) / 100} / Month</Typography>
+                                <Typography variant="subtitle">{Math.round(formatCurrency(gpItemDetails.price.value) * 100) / 100} / Month</Typography>
                             }
                         />
                     </Card>
