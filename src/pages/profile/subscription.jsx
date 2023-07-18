@@ -21,15 +21,14 @@ export default function SubscriptionOptions() {
     useEffect(() => {
         if (window && 'getDigitalGoodsService' in window) {
             console.log("Found Digital Goods Service. Attempting to load")
-            setInTwa(true)
-            setInGoogle(true)
             try {
                 window.getDigitalGoodsService('https://play.google.com/billing').then(
                     (service) => {
-                        console.log(service)
                         service.getDetails(['glyph']).then(
                             (details) => {
                                 setGpItemDetails(details)
+                                setInTwa(true)
+                                setInGoogle(true)
                             }
                         )
                     }
@@ -44,8 +43,6 @@ export default function SubscriptionOptions() {
         if (env === "ios") {
             setInTwa(true)
         }
-
-        setInTwa(true)
     })
 
     const handleCheckout = () => {
@@ -135,8 +132,6 @@ export default function SubscriptionOptions() {
             </>
         )
     }
-
-    console.log(gpItemDetails)
 
     return (
         <LayoutWithNav>
