@@ -1,7 +1,7 @@
 import LayoutWithNav from "@/components/utility/layout_with_nav";
-import { getRequest } from "@/components/utility/request_helper";
+import { genericRequest, getRequest } from "@/components/utility/request_helper";
 import { ChatBubble, SmartToy, UploadFile } from "@mui/icons-material";
-import { Box, Button, Card, CardContent, CardHeader, CardMedia, List, ListItem, ListItemIcon, ListItemText, Paper, Radio, Typography } from "@mui/material";
+import { Box, Button, Card, CardContent, CardHeader, CardMedia, CircularProgress, List, ListItem, ListItemIcon, ListItemText, Paper, Radio, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 
@@ -13,6 +13,7 @@ export default function SubscriptionOptions() {
     const [gpItemDetails, setGpItemDetails] = useState(null)
     const [inTwa, setInTwa] = useState(false)
     const [inGoogle, setInGoogle] = useState(false)
+    const [user, setUser] = useState({})
     const router = useRouter()
 
     const handleRadioChange = () => {
@@ -20,12 +21,22 @@ export default function SubscriptionOptions() {
         setAnnual(!annual)
     }
 
+    // REMOVE BEFORE MERGE
+    const getUser = () => {
+        getRequest("/profile", (data) => {
+            setUser(data)
+        })
+    }
+    // REMOVE BEFORE MERGE
+
     useEffect(() => {
+        getUser()
         if (window && 'getDigitalGoodsService' in window) {
             console.log("Found Digital Goods Service. Attempting to load")
             try {
                 window.getDigitalGoodsService('https://play.google.com/billing').then(
                     (service) => {
+                        console.log("SERVICE RETRIEVED")
                         service.getDetails(['glyph']).then(
                             (details) => {
                                 setGpItemDetails(details)
@@ -45,7 +56,7 @@ export default function SubscriptionOptions() {
         if (env === "ios") {
             setInTwa(true)
         }
-    })
+    }, [])
 
     const handleCheckout = () => {
         if (annual) {
@@ -62,7 +73,8 @@ export default function SubscriptionOptions() {
     }
 
     const renderPlatformCheckout = () => {
-        if (inGoogle && gpItemDetails) {
+        console.log(inGoogle, gpItemDetails)
+        if (inGoogle && gpItemDetails && user.email === "j.davenport@glyphassistant.com") {
             return (
                 <>
                 <Box sx={{ display: "flex", width: "100%", flexWrap: "wrap", marginTop: "16px" }}>
@@ -83,15 +95,22 @@ export default function SubscriptionOptions() {
                     </Card>
                 </Box>
                 <Box sx={{ width: "100%", display: "flex", justifyContent: "center", alignItems: "center", marginTop: "16px" }}>
-                    <Button onClick={handleCheckout} sx={{ width: "80%" }} variant="contained">Checkout</Button>
+                    <Button onClick={handleGoogleCheckout} sx={{ width: "80%" }} variant="contained">Checkout</Button>
                 </Box>
             </>
             )
-        } else if (inTwa) {
+        } else if (env === 'ios') {
             return renderTwaMessage()
         }
-        return renderCheckout()
+        // return (<CircularProgress/>)
+        return renderTwaMessage()
     
+    }
+
+    const validatePurchaseOnBackend = async (token) => {
+        const { success } = await genericRequest("/google-verification", "POST", ({googleToken: token}), null)
+
+        return success
     }
 
     const handleGoogleCheckout = () => {
@@ -145,7 +164,7 @@ export default function SubscriptionOptions() {
                     </Card>
                 </Box>
                 <Box sx={{ width: "100%", display: "flex", justifyContent: "center", alignItems: "center", marginTop: "16px" }}>
-                    <Button onClick={handleGoogleCheckout} sx={{ width: "80%" }} variant="contained">Checkout</Button>
+                    <Button onClick={handleCheckout} sx={{ width: "80%" }} variant="contained">Checkout</Button>
                 </Box>
             </>
         )
