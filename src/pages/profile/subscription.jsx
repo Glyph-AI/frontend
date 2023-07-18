@@ -78,7 +78,7 @@ export default function SubscriptionOptions() {
         if (gpItemDetails !== undefined) {
             const localePrice = new Intl.NumberFormat(navigator.language, {
                 style: 'currency',
-                currency: gpItemDetails.price.currency,
+                currency: "USD",
               }).format(value);
 
             return localePrice
