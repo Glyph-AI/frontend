@@ -75,7 +75,7 @@ export default function SubscriptionOptions() {
     }
 
     const formatCurrency = (value) => {
-        if (gpItemDetails) {
+        if (gpItemDetails !== undefined) {
             const localePrice = new Intl.NumberFormat(navigator.language, {
                 style: 'currency',
                 currency: gpItemDetails.price.currency,
