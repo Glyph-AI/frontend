@@ -111,7 +111,7 @@ export default function SubscriptionOptions() {
                     </Card>
                 </Box>
                 <Box sx={{ width: "100%", display: "flex", justifyContent: "center", alignItems: "center", marginTop: "16px" }}>
-                    <Button onClick={handleGoogleCheckout} sx={{ width: "80%" }} variant="contained">Checkout</Button>
+                    <Button onClick={handleGoogleCheckout} sx={{ width: "80%" }} variant="contained">Subscribe with Google</Button>
                 </Box>
             </>
             )
