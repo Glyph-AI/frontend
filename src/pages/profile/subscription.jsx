@@ -89,7 +89,7 @@ export default function SubscriptionOptions() {
                                 </>
                             }
                             action={
-                                <Typography variant="subtitle">{gpItemDetails.price}</Typography>
+                                <Typography variant="subtitle">{Math.round(gpItemDetails.price.value * 100) / 100} / Month</Typography>
                             }
                         />
                     </Card>
