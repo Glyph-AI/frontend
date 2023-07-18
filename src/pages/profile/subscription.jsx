@@ -76,10 +76,10 @@ export default function SubscriptionOptions() {
 
     const formatCurrency = (value) => {
         if (gpItemDetails !== undefined) {
-            const localePrice = new Intl.NumberFormat(navigator.language, {
-                style: 'currency',
-                currency: "USD",
-              }).format(value);
+                const localePrice = new Intl.NumberFormat(navigator.language, {
+                    style: 'currency',
+                    currency: "USD",
+                }).format(value);
 
             return localePrice
         }
@@ -105,7 +105,7 @@ export default function SubscriptionOptions() {
                                 </>
                             }
                             action={
-                                <Typography variant="subtitle">{Math.round(formatCurrency(gpPrice) * 100) / 100} / Month</Typography>
+                                <Typography variant="subtitle">{formatCurrency(gpPrice)} / Month</Typography>
                             }
                         />
                     </Card>
