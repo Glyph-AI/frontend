@@ -75,10 +75,17 @@ export default function SubscriptionOptions() {
     }
 
     const formatCurrency = (value) => {
-        const localePrice = new Intl.NumberFormat(navigator.language, {
-            style: 'currency',
-            currency: gpItemDetails.price.currency,
-          }).format(value);
+        if (gpItemDetails) {
+            const localePrice = new Intl.NumberFormat(navigator.language, {
+                style: 'currency',
+                currency: gpItemDetails.price.currency,
+              }).format(value);
+
+            return localePrice
+        }
+
+        return 0.00
+
     }
 
     const renderPlatformCheckout = () => {
