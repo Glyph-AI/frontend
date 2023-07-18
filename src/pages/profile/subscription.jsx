@@ -41,7 +41,7 @@ export default function SubscriptionOptions() {
                         service.getDetails(['glyph']).then(
                             (details) => {
                                 setGpItemDetails(details)
-                                setGpPrice(details.price.value)
+                                setGpPrice(details[0].price.value)
                                 setInTwa(true)
                                 setInGoogle(true)
                             }
