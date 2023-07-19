@@ -49,6 +49,7 @@ export default function Profile() {
     const [inTwa, setInTwa] = useState(false)
     const router = useRouter()
     const [isNameFocused, setIsNamedFocused] = useState(false);
+    const [inGoogle, setInGoogle] = useState(false);
     const smallScreen = useMediaQuery(theme.breakpoints.down("md"))
 
     const getUser = () => {
@@ -62,6 +63,10 @@ export default function Profile() {
         const activeSession = getCookie("active_session")
         if (activeSession !== "true") {
             router.push("/login")
+        }
+
+        if (window && 'getDigitalGoodsService' in window) {
+            setInGoogle(true)
         }
         getRequest("/subscriptions/customer-portal-session", (data) => {
             setStripeUrl(data.url)
@@ -87,8 +92,10 @@ export default function Profile() {
 
     const renderUserSubscription = () => {
         if (user.subscribed && user.is_current) {
-            if (inTwa) {
-                return <i>Manage Subscription on our Website</i>
+            if (inGoogle) {
+                return <i>Manage Subscription on Google Play</i>
+            } else {
+                return <i>Manage Subscription on Our Website</i>
             }
             return <i>Subscribed</i>
         } else if (user.subscription_canceled) {
@@ -151,6 +158,16 @@ export default function Profile() {
 
     const handleUploadClose = () => {
         setUploadModalOpen(false)
+    }
+
+    const subscriptionManageClick = () => {
+        if (user.subscribed && !inTwa) {
+            window.location.href = stripeUrl
+        } else if (user.subscribed && inGoogle) {
+            window.location.href = "https://play.google.com/store/account/subscriptions?sku=glyph&package=com.glyphassistant.app.twa"
+        } else {
+            router.push("/profile/subscription")
+        }
     }
 
     const progressBarWidth = smallScreen ? "90%" : "30%"
@@ -250,7 +267,7 @@ export default function Profile() {
                                 <ChevronRight />
                             </IconButton>
                         }
-                        onClick={() => { user.subscribed && !inTwa ? window.location.href = stripeUrl : router.push("/profile/subscription") }}
+                        onClick={() => { subscriptionManageClick() }}
                     >
                         <ListItemAvatar>
                             <Avatar>
