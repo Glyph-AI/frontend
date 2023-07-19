@@ -125,7 +125,7 @@ export default function SubscriptionOptions() {
         ];
 
         const request = new PaymentRequest(paymentMethodData);
-        request.show().then((resp) => {
+        request.show().then((paymentResponse) => {
             const { purchaseToken } = paymentResponse.details;
 
             let paymentComplete;
