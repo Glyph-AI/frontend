@@ -129,7 +129,7 @@ export default function SubscriptionOptions() {
             const { purchaseToken } = paymentResponse.details;
 
             let paymentComplete;
-            genericRequest("/google-verification", "POST", ({googleToken: purchaseToken}), (resp) => {
+            genericRequest("/google-verification", "POST", JSON.stringify({googleToken: purchaseToken}), (resp) => {
                 if (resp.success) {
                     paymentComplete = paymentResponse.complete('success').then(() => {
                         router.push("/profile")
@@ -139,7 +139,7 @@ export default function SubscriptionOptions() {
                         router.push("/profile")
                     });;
                 }
-            })
+            }, { "Content-Type": "application/json" })
         });
     }
 
