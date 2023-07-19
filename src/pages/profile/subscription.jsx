@@ -14,7 +14,6 @@ export default function SubscriptionOptions() {
     const [gpPrice, setGpPrice] = useState(0.00)
     const [inTwa, setInTwa] = useState(false)
     const [inGoogle, setInGoogle] = useState(false)
-    const [user, setUser] = useState({})
     const router = useRouter()
 
     const handleRadioChange = () => {
@@ -22,16 +21,7 @@ export default function SubscriptionOptions() {
         setAnnual(!annual)
     }
 
-    // REMOVE BEFORE MERGE
-    const getUser = () => {
-        getRequest("/profile", (data) => {
-            setUser(data)
-        })
-    }
-    // REMOVE BEFORE MERGE
-
     useEffect(() => {
-        getUser()
         if (window && 'getDigitalGoodsService' in window) {
             console.log("Found Digital Goods Service. Attempting to load")
             try {
@@ -90,7 +80,7 @@ export default function SubscriptionOptions() {
 
     const renderPlatformCheckout = () => {
         console.log(inGoogle, gpItemDetails)
-        if (inGoogle && gpItemDetails && user.email === "j.davenport@glyphassistant.com") {
+        if (inGoogle && gpItemDetails) {
             return (
                 <>
                 <Box sx={{ display: "flex", width: "100%", flexWrap: "wrap", marginTop: "16px" }}>
