@@ -113,12 +113,6 @@ export default function SubscriptionOptions() {
     
     }
 
-    const validatePurchaseOnBackend = async (token) => {
-        const { success } = await genericRequest("/google-verification", "POST", ({googleToken: token}), null)
-
-        return success
-    }
-
     const handleGoogleCheckout = () => {
         console.log("HERE")
         const paymentMethodData = [
@@ -135,17 +129,17 @@ export default function SubscriptionOptions() {
             const { purchaseToken } = paymentResponse.details;
 
             let paymentComplete;
-            if (validatePurchaseOnBackend(purchaseToken)) {
-                paymentComplete = paymentResponse.complete('success').then(() => {
-                    router.push("/profile")
-                });
-                // Let user know their purchase transaction has successfully completed and been verified
-              } else {
-                paymentComplete = paymentResponse.complete('fail').then(() => {
-                    router.push("/profile")
-                });;
-                // Let user know their purchase transaction failed to verify
-              }
+            genericRequest("/google-verification", "POST", ({googleToken: purchaseToken}), (resp) => {
+                if (resp.success) {
+                    paymentComplete = paymentResponse.complete('success').then(() => {
+                        router.push("/profile")
+                    });
+                } else {
+                    paymentComplete = paymentResponse.complete('fail').then(() => {
+                        router.push("/profile")
+                    });;
+                }
+            })
         });
     }
 
