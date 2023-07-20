@@ -1,15 +1,20 @@
 import LayoutWithNav from "@/components/utility/layout_with_nav";
-import { getRequest } from "@/components/utility/request_helper";
+import { genericRequest, getRequest } from "@/components/utility/request_helper";
 import { ChatBubble, SmartToy, UploadFile } from "@mui/icons-material";
-import { Box, Button, Card, CardContent, CardHeader, CardMedia, List, ListItem, ListItemIcon, ListItemText, Paper, Radio, Typography } from "@mui/material";
+import { Box, Button, Card, CardContent, CardHeader, CardMedia, CircularProgress, List, ListItem, ListItemIcon, ListItemText, Paper, Radio, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
+import { useRouter } from "next/router";
 
 const env = process.env.NEXT_PUBLIC_ENVIRONMENT
 
 export default function SubscriptionOptions() {
     const [monthly, setMonthly] = useState(true)
     const [annual, setAnnual] = useState(false)
+    const [gpItemDetails, setGpItemDetails] = useState(null)
+    const [gpPrice, setGpPrice] = useState(0.00)
     const [inTwa, setInTwa] = useState(false)
+    const [inGoogle, setInGoogle] = useState(false)
+    const router = useRouter()
 
     const handleRadioChange = () => {
         setMonthly(!monthly)
@@ -18,15 +23,32 @@ export default function SubscriptionOptions() {
 
     useEffect(() => {
         if (window && 'getDigitalGoodsService' in window) {
-            setInTwa(true)
+            console.log("Found Digital Goods Service. Attempting to load")
+            try {
+                window.getDigitalGoodsService('https://play.google.com/billing').then(
+                    (service) => {
+                        console.log("SERVICE RETRIEVED")
+                        service.getDetails(['glyph']).then(
+                            (details) => {
+                                setGpItemDetails(details)
+                                setGpPrice(details[0].price.value)
+                                setInTwa(true)
+                                setInGoogle(true)
+                            }
+                        )
+                    }
+                )
+            } catch (er) {
+                console.log("Google Play Billing Unavailable")
+                console.log(er)
+            }
+
         }
 
         if (env === "ios") {
             setInTwa(true)
         }
-
-        setInTwa(true)
-    })
+    }, [])
 
     const handleCheckout = () => {
         if (annual) {
@@ -40,6 +62,85 @@ export default function SubscriptionOptions() {
                 window.location.href = data.url
             })
         }
+    }
+
+    const formatCurrency = (value) => {
+        if (gpItemDetails !== undefined) {
+                const localePrice = new Intl.NumberFormat(navigator.language, {
+                    style: 'currency',
+                    currency: "USD",
+                }).format(value);
+
+            return localePrice
+        }
+
+        return 0.00
+
+    }
+
+    const renderPlatformCheckout = () => {
+        console.log(inGoogle, gpItemDetails)
+        if (inGoogle && gpItemDetails) {
+            return (
+                <>
+                <Box sx={{ display: "flex", width: "100%", flexWrap: "wrap", marginTop: "16px" }}>
+                    <Card onClick={handleRadioChange} elevation={monthly ? 10 : 3} sx={{ marginBottom: "16px", width: "100%" }}>
+                        <CardHeader
+                            avatar={
+                                <Radio checked={monthly} />
+                            }
+                            title={
+                                <>
+                                    <Typography variant="h5">Monthly</Typography>
+                                </>
+                            }
+                            action={
+                                <Typography variant="subtitle">{formatCurrency(gpPrice)} / Month</Typography>
+                            }
+                        />
+                    </Card>
+                </Box>
+                <Box sx={{ width: "100%", display: "flex", justifyContent: "center", alignItems: "center", marginTop: "16px" }}>
+                    <Button onClick={handleGoogleCheckout} sx={{ width: "80%" }} variant="contained">Subscribe with Google</Button>
+                </Box>
+            </>
+            )
+        } else if (env === 'ios') {
+            return renderTwaMessage()
+        }
+        // return (<CircularProgress/>)
+        return renderTwaMessage()
+    
+    }
+
+    const handleGoogleCheckout = () => {
+        console.log("HERE")
+        const paymentMethodData = [
+            {
+              supportedMethods: 'https://play.google.com/billing',
+              data: {
+                sku: "glyph",
+              },
+            },
+        ];
+
+        const request = new PaymentRequest(paymentMethodData);
+        request.show().then((paymentResponse) => {
+            const { purchaseToken } = paymentResponse.details;
+
+            let paymentComplete;
+            genericRequest("/google-verification", "POST", JSON.stringify({googleToken: purchaseToken}), (resp) => {
+                if (resp.success) {
+                    paymentComplete = paymentResponse.complete('success').then(() => {
+                        router.push("/profile")
+                    });
+                } else {
+                    paymentComplete = paymentResponse.complete('fail').then(() => {
+                        router.push("/profile")
+                    });;
+                }
+            }, { "Content-Type": "application/json" })
+        });
     }
 
     const renderCheckout = () => {
@@ -57,22 +158,7 @@ export default function SubscriptionOptions() {
                                 </>
                             }
                             action={
-                                <Typography variant="subtitle">$14.99 / Month</Typography>
-                            }
-                        />
-                    </Card>
-                    <Card onClick={handleRadioChange} elevation={annual ? 10 : 3} sx={{ marginBottom: "16px", width: "100%" }}>
-                        <CardHeader
-                            avatar={
-                                <Radio checked={annual} />
-                            }
-                            title={
-                                <>
-                                    <Typography variant="h5">Annual</Typography>
-                                </>
-                            }
-                            action={
-                                <Typography variant="subtitle">$150 / Year</Typography>
+                                <Typography variant="subtitle">$4.99 / Month</Typography>
                             }
                         />
                     </Card>
@@ -98,7 +184,6 @@ export default function SubscriptionOptions() {
         )
     }
 
-
     return (
         <LayoutWithNav>
             <Box sx={{ display: "flex", alignItems: "center", justifyContent: "center", height: "100%" }}>
@@ -118,30 +203,30 @@ export default function SubscriptionOptions() {
                             </Typography>
                         </Box>
                         <Box sx={{ width: "100%", display: "flex", justifyContent: 'center' }}>
-                            <Typography variant="body2">
+                            <Typography component="span" variant="body2">
                                 <List>
                                     <ListItem>
                                         <ListItemIcon>
                                             <UploadFile />
                                         </ListItemIcon>
-                                        <ListItemText>Unlimited File Uploads</ListItemText>
+                                        <ListItemText>100 Files & Notes</ListItemText>
                                     </ListItem>
                                     <ListItem>
                                         <ListItemIcon>
                                             <SmartToy />
                                         </ListItemIcon>
-                                        <ListItemText>Unlimited Bots</ListItemText>
+                                        <ListItemText>10 Bots</ListItemText>
                                     </ListItem>
                                     <ListItem>
                                         <ListItemIcon>
                                             <ChatBubble />
                                         </ListItemIcon>
-                                        <ListItemText>750 Monthly Messages</ListItemText>
+                                        <ListItemText>200 Monthly Messages</ListItemText>
                                     </ListItem>
                                 </List>
                             </Typography>
                         </Box>
-                        {inTwa ? renderTwaMessage() : renderCheckout()}
+                        {renderPlatformCheckout()}
                     </CardContent>
                 </Card>
             </Box>
