@@ -92,7 +92,7 @@ export default function Profile() {
 
     const renderUserSubscription = () => {
         if (user.subscribed && user.is_current) {
-            if (inGoogle) {
+            if (user.subscription_provider === "Google") {
                 return <i>Manage Subscription on Google Play</i>
             } else {
                 return <i>Manage Subscription on Our Website</i>
