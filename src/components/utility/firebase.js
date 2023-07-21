@@ -7,15 +7,12 @@ export const fetchToken = (setTokenFound, messaging, userId) => {
             vapidKey: 'BA4lbbj9vRoTdbUUa1NBklv5jfnCJu4mxa0610mOh5i7ClPZu0KDv7QhhkOsgCt-Siz3VIs6VG9YPePAHJ7YXTU' 
         }).then((currentToken) => {
         if (currentToken) {
-            console.log('current token for client: ', currentToken);
             setTokenFound(true);
 
             const data = {
                 device_token: currentToken,
                 user_id: userId
             }
-
-            console.log(userId)
 
             genericRequest("/notifications/user_device", "POST", JSON.stringify(data), () => {}, { "Content-Type": "application/json"})
             // Track the token -> client mapping, by sending to backend server
