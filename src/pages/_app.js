@@ -4,10 +4,9 @@ import "@uiw/react-md-editor/markdown-editor.css";
 import "@uiw/react-markdown-preview/markdown.css";
 import '@/styles/chat.css'
 import { AnimatePresence } from 'framer-motion'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { UserProvider } from '@/context/user';
 import Script from 'next/script'
-
 
 const env = process.env.NEXT_PUBLIC_ENVIRONMENT
 
@@ -16,6 +15,13 @@ export default function App({ Component, pageProps }) {
     window.addEventListener("resize", (ev) => {
       document.body.style.height = window.visualViewport.height + "px"
     }, true);
+
+    // if ('serviceWorker' in navigator) {
+    //   console.log("Registering Service Worker")
+    //   navigator.serviceWorker
+    //     .register('/service-worker.js')
+    //     .then((registration) => console.log('scope is: ', registration.scope));
+    // }
   }, [])
 
   return (

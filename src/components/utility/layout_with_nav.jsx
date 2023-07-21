@@ -7,11 +7,6 @@ import { useEffect } from 'react';
 import { useRouter } from 'next/router'
 import { motion } from "framer-motion";
 import { genericRequest, getRequest } from './request_helper.jsx';
-import { initializeApp } from 'firebase/app';
-import { getMessaging, onMessage } from "firebase/messaging";
-import { fetchToken } from '@/components/utility/firebase';
-import { FIREBASE_CONFIG } from '@/components/utility/firebaseConfig';
-
 
 const variants = {
     hidden: { opacity: 0, x: -400, y: 0 },
@@ -22,8 +17,6 @@ const variants = {
 export default function LayoutWithNav({ children }, showNavigation = true) {
     const [navValue, setNavValue] = useState(0)
     const [paymentSnackbar, setPaymentSnackbar] = useState(false)
-    const [tokenFound, setTokenFound] = useState(false)
-    const [userId, setUserId] = useState(0)
     const router = useRouter()
 
     useEffect(() => {
@@ -40,29 +33,20 @@ export default function LayoutWithNav({ children }, showNavigation = true) {
         }
 
         getRequest("/profile", (data) => {
-            setUserId(data.id)
             if (data.subscribed && !data.is_current) {
                 setPaymentSnackbar(true);
             }
 
-            if (typeof (window) !== 'undefined' && window.Notification) {
+            if (typeof (window) !== 'undefined' && window.Notification && data.notifications === null) {
                 
                 Notification.requestPermission(() => {
                     if (Notification.permission === 'granted') {
                         navigator.serviceWorker.register('/service-worker.js')
                             .then((registration) => {
                             console.log("SW Registered: ", registration)
-                        });
+                            });
 
                         // update user record with notification permissions accepted
-                        const app = initializeApp(FIREBASE_CONFIG);
-                        const messaging = getMessaging(app)
-                        fetchToken(setTokenFound, messaging, userId)
-                        console.log("Messaging service ", messaging)
-                        onMessage(messaging, (payload) => {
-                            setNotification(payload.notification)
-                            setNotificationShow(true)
-                        })
                         const update_data = {
                             id: data.id,
                             notifications: true

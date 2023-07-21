@@ -11,14 +11,3 @@ const installEvent = () => {
     });
   };
   activateEvent();
-
-  self.addEventListener('push', event => {
-    const notificationData = event.data.text();
-
-    const title = "Glyph";
-    const options = {
-        body: notificationData
-    };
-
-    event.waitUntil(self.registration.showNotification(title, options));
-});
