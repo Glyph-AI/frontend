@@ -53,6 +53,11 @@ export default function LayoutWithNav({ children }, showNavigation = true) {
                             console.log("SW Registered: ", registration)
                         });
 
+                        navigator.serviceWorker.register(`/service-worker.js?firebaseConfig=${JSON.stringify(FIREBASE_CONFIG)}`)
+                            .then((registration) => {
+                            console.log("Firebase SW Registered: ", registration)
+                        });
+
                         // update user record with notification permissions accepted
                         const app = initializeApp(FIREBASE_CONFIG);
                         const messaging = getMessaging(app)
