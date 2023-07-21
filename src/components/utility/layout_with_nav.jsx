@@ -23,7 +23,6 @@ export default function LayoutWithNav({ children }, showNavigation = true) {
     const [navValue, setNavValue] = useState(0)
     const [paymentSnackbar, setPaymentSnackbar] = useState(false)
     const [tokenFound, setTokenFound] = useState(false)
-    const [userId, setUserId] = useState(0)
     const router = useRouter()
 
     useEffect(() => {
@@ -40,7 +39,7 @@ export default function LayoutWithNav({ children }, showNavigation = true) {
         }
 
         getRequest("/profile", (data) => {
-            setUserId(data.id)
+            const user_id = data.id
             if (data.subscribed && !data.is_current) {
                 setPaymentSnackbar(true);
             }
@@ -57,7 +56,7 @@ export default function LayoutWithNav({ children }, showNavigation = true) {
                         // update user record with notification permissions accepted
                         const app = initializeApp(FIREBASE_CONFIG);
                         const messaging = getMessaging(app)
-                        fetchToken(setTokenFound, messaging, userId)
+                        fetchToken(setTokenFound, messaging, user_id)
                         console.log("Messaging service ", messaging)
                         onMessage(messaging, (payload) => {
                             setNotification(payload.notification)
