@@ -1,10 +1,11 @@
 import { initializeApp } from 'firebase/app';
 import { getMessaging, getToken, onMessage } from "firebase/messaging";
 import { genericRequest } from './request_helper';
+import { FIREBASE_KEY } from './firebaseConfig';
 
 export const fetchToken = (setTokenFound, messaging, userId) => {
     return getToken(messaging, { 
-            vapidKey: 'BA4lbbj9vRoTdbUUa1NBklv5jfnCJu4mxa0610mOh5i7ClPZu0KDv7QhhkOsgCt-Siz3VIs6VG9YPePAHJ7YXTU' 
+            vapidKey: FIREBASE_KEY
         }).then((currentToken) => {
         if (currentToken) {
             setTokenFound(true);
