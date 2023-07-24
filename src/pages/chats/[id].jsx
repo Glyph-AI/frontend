@@ -31,6 +31,7 @@ import { theme } from '@/components/utility/theme.jsx';
 import LayoutWithNav from '@/components/utility/layout_with_nav';
 import { useUserContext } from '@/context/user';
 import { Mic, Settings } from '@mui/icons-material';
+import { API_ROOT } from '@/components/utility/apiConfig';
 
 export default function Home() {
   const [newMessage, setNewMessage] = useState("")
@@ -152,7 +153,9 @@ export default function Home() {
       content: dbMessage.content,
       sender: roleFormatter(dbMessage.role),
       sentTime: formatSentTime(dbMessage.created_at),
-      direction: directionFormatter(dbMessage.role)
+      direction: directionFormatter(dbMessage.role),
+      tts: dbMessage.tts,
+      id: dbMessage.id
     })).sort((a, b) => new Date(a.sentTime) - new Date(b.sentTime))
 
     return formattedChats
@@ -176,6 +179,7 @@ export default function Home() {
     // REST pre-work for chats
     getChatById(id, (chatData) => {
       const formattedChatData = formatChatData(chatData.chat_messages)
+      console.log(formattedChatData)
       setChatData(formattedChatData)
       setChat(chatData)
       getBotById(chatData.bot_id, (botData) => {
@@ -199,10 +203,12 @@ export default function Home() {
 
   const handleNewMessage = (overrideContent = null) => {
     const messageContent = overrideContent || newMessage
+    const tts = Boolean(overrideContent)
     const newMessageJson = {
       role: "user",
       content: messageContent,
-      chat_id: chatId
+      chat_id: chatId,
+      tts: tts
     }
     setGlyphTyping(true)
     setTtsActive(false)
@@ -212,8 +218,16 @@ export default function Home() {
 
     genericRequest(`/chats/${chatId}/message`, "POST", JSON.stringify(newMessageJson), (data) => {
       const newChatData = formatChatData(data.chat_messages)
+      const last_message = newChatData[newChatData.length - 1]
+      // get last chat message and see if it's tts or not
       setChatData(newChatData)
       setGlyphTyping(false)
+      console.log(last_message, last_message.tts)
+      if (last_message.tts) {
+        // make api call out to google cloud to generate this.
+        const audio_obj = new Audio(`${API_ROOT}/chats/${chatId}/message/${last_message.id}/tts`)
+        audio_obj.play()
+      }
     })
 
     inputRef.current.focus();
