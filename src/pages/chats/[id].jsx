@@ -30,7 +30,7 @@ import { getCookie } from '@/components/utility/cookie_helper';
 import { theme } from '@/components/utility/theme.jsx';
 import LayoutWithNav from '@/components/utility/layout_with_nav';
 import { useUserContext } from '@/context/user';
-import { Settings } from '@mui/icons-material';
+import { Mic, Settings } from '@mui/icons-material';
 
 export default function Home() {
   const [newMessage, setNewMessage] = useState("")
@@ -44,6 +44,8 @@ export default function Home() {
   const [chat, setChat] = useState("")
   const [bot, setBot] = useState("")
   const [user, setUser] = useState({})
+  const [ttsActive, setTtsActive] = useState(false)
+  const [showTts, setShowTts] = useState(false)
   const inputFile = useRef(null)
   const inputRef = useRef();
   const menuOpen = Boolean(anchorEl);
@@ -184,16 +186,27 @@ export default function Home() {
 
     // getUser()
 
+    if (window) {
+      const speechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition
+      if (typeof speechRecognition === "undefined") {
+        setShowTts(false);
+      } else {
+        setShowTts(true);
+      }
+    }
+
   }, [])
 
-  const handleNewMessage = () => {
+  const handleNewMessage = (overrideContent = null) => {
+    const messageContent = overrideContent || newMessage
     const newMessageJson = {
       role: "user",
-      content: newMessage,
+      content: messageContent,
       chat_id: chatId
     }
     setGlyphTyping(true)
-    const newChatData = [...chatData, { content: newMessage, sender: "You", sentTime: "Just now", direction: "outgoing" }]
+    setTtsActive(false)
+    const newChatData = [...chatData, { content: messageContent, sender: "You", sentTime: "Just now", direction: "outgoing" }]
     setChatData(newChatData)
     setNewMessage("")
 
@@ -271,6 +284,33 @@ export default function Home() {
     }
   }
 
+  const handleTts = () => {
+    const speechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition
+    const recog = new speechRecognition()
+    recog.start()
+    setTtsActive(true)
+
+    const onResult = (e) => {
+      const text = e.results[0][0].transcript
+      handleNewMessage(text)
+    }
+
+    recog.continuous = false
+    recog.addEventListener("result", onResult)
+  }
+
+  const messageInputDisabled = () => {
+    if (user.messages_left <= 0) {
+      return true
+    }
+
+    if (ttsActive) {
+      return true
+    }
+
+    return false
+  }
+
   return (
     <LayoutWithNav showNavigation={false}>
       <div style={{ height: "100%" }}>
@@ -338,7 +378,7 @@ export default function Home() {
                 onChange={(val) => { setNewMessage(val) }}
                 value={newMessage}
                 sendButton={false}
-                disabled={(user.messages_left <= 0)}
+                disabled={messageInputDisabled()}
                 attachButton={false}
                 onSend={handleNewMessage} style={{
                   flexGrow: 1,
@@ -346,12 +386,19 @@ export default function Home() {
                   flexShrink: "initial"
                 }}
               />
-              <SendButton onClick={() => handleNewMessage(newMessage)} disabled={newMessage.length === 0} style={{
+              <SendButton onClick={handleNewMessage} disabled={newMessage.length === 0} style={{
                 fontSize: "1.2em",
                 marginLeft: 0,
                 paddingLeft: "0.2em",
                 paddingRight: "0.2em"
               }} />
+              {
+                showTts && (
+                  <IconButton sx={{ color: ttsActive ? "red" : null }} onClick={handleTts}>
+                    <Mic />
+                  </IconButton>
+                )
+              }
             </div>
           </ChatContainer>
         </MainContainer>
