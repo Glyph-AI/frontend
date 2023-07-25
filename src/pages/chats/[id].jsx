@@ -63,6 +63,7 @@ export default function Home() {
   const getUser = () => {
     getRequest("/profile", (data) => {
       setUser(data)
+      setShowTts(data.conversation_mode)
     })
   }
 
