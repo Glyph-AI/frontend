@@ -18,7 +18,7 @@ import {
   genericRequest,
   getRequest
 } from '@/components/utility/request_helper';
-import { Alert, AlertTitle, Box, IconButton, Link, Snackbar, Typography } from '@mui/material'
+import { Alert, AlertTitle, Box, Icon, IconButton, Link, Snackbar, Typography } from '@mui/material'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import SyntaxHighlighter from 'react-syntax-highlighter';
@@ -30,7 +30,8 @@ import { getCookie } from '@/components/utility/cookie_helper';
 import { theme } from '@/components/utility/theme.jsx';
 import LayoutWithNav from '@/components/utility/layout_with_nav';
 import { useUserContext } from '@/context/user';
-import { Settings } from '@mui/icons-material';
+import { Mic, Phone, Settings } from '@mui/icons-material';
+import { API_ROOT } from '@/components/utility/apiConfig';
 
 export default function Home() {
   const [newMessage, setNewMessage] = useState("")
@@ -44,6 +45,8 @@ export default function Home() {
   const [chat, setChat] = useState("")
   const [bot, setBot] = useState("")
   const [user, setUser] = useState({})
+  const [ttsActive, setTtsActive] = useState(false)
+  const [showTts, setShowTts] = useState(false)
   const inputFile = useRef(null)
   const inputRef = useRef();
   const menuOpen = Boolean(anchorEl);
@@ -60,6 +63,7 @@ export default function Home() {
   const getUser = () => {
     getRequest("/profile", (data) => {
       setUser(data)
+      setShowTts(data.conversation_mode)
     })
   }
 
@@ -150,7 +154,9 @@ export default function Home() {
       content: dbMessage.content,
       sender: roleFormatter(dbMessage.role),
       sentTime: formatSentTime(dbMessage.created_at),
-      direction: directionFormatter(dbMessage.role)
+      direction: directionFormatter(dbMessage.role),
+      tts: dbMessage.tts,
+      id: dbMessage.id
     })).sort((a, b) => new Date(a.sentTime) - new Date(b.sentTime))
 
     return formattedChats
@@ -172,7 +178,7 @@ export default function Home() {
 
 
     // REST pre-work for chats
-    getChatById(id, (chatData) => {
+    getChatById(router.query.id, (chatData) => {
       const formattedChatData = formatChatData(chatData.chat_messages)
       setChatData(formattedChatData)
       setChat(chatData)
@@ -182,25 +188,38 @@ export default function Home() {
       setBotId(chatData.bot_id)
     })
 
-    // getUser()
+    if (user.conversation_mode) {
+      setShowTts(true)
+    }
 
   }, [])
 
-  const handleNewMessage = () => {
+  const handleNewMessage = (overrideContent = null) => {
+    const messageContent = overrideContent || newMessage
+    const tts = Boolean(overrideContent)
     const newMessageJson = {
       role: "user",
-      content: newMessage,
-      chat_id: chatId
+      content: messageContent,
+      chat_id: chatId,
+      tts: tts
     }
     setGlyphTyping(true)
-    const newChatData = [...chatData, { content: newMessage, sender: "You", sentTime: "Just now", direction: "outgoing" }]
+    setTtsActive(false)
+    const newChatData = [...chatData, { content: messageContent, sender: "You", sentTime: "Just now", direction: "outgoing" }]
     setChatData(newChatData)
     setNewMessage("")
 
     genericRequest(`/chats/${chatId}/message`, "POST", JSON.stringify(newMessageJson), (data) => {
       const newChatData = formatChatData(data.chat_messages)
+      const last_message = newChatData[newChatData.length - 1]
+      // get last chat message and see if it's tts or not
       setChatData(newChatData)
       setGlyphTyping(false)
+      if (last_message.tts) {
+        // make api call out to google cloud to generate this.
+        const audio_obj = new Audio(`${API_ROOT}/chats/${chatId}/message/${last_message.id}/tts`)
+        audio_obj.play()
+      }
     })
 
     inputRef.current.focus();
@@ -232,7 +251,6 @@ export default function Home() {
 
     genericRequest(`/bots/${botId}/user_upload?=chat_id${chatId}`, "POST", formData, (data, status) => {
       if (status === 200) {
-        console.log("Upload Successful")
         getChatById(chatId, botId, (data) => {
           const formattedChatData = formatChatData(data.chat_messages)
           setSnackbarMessage(`${file.name} Uploaded`)
@@ -242,15 +260,6 @@ export default function Home() {
       }
     }, {})
   }
-
-  const handleMenuOpen = (ev) => {
-    setAnchorEl(ev.currentTarget)
-  }
-
-  const handleMenuClose = () => {
-    setAnchorEl(null)
-  }
-
   const outOfMessagesError = () => {
     if (user.subscribed && user.messages_left <= 0) {
       return "You are out of messages for the month."
@@ -262,13 +271,20 @@ export default function Home() {
   const renderBotSettings = () => {
     if (user.id === bot.creator_id) {
       return (
-        <ConversationHeader.Actions>
-          <IconButton size="large" onClick={() => { router.push(`/bots/${bot.id}?chat_id=${chatId}`) }}>
-            <Settings fontSize="inherit" />
-          </IconButton>
-        </ConversationHeader.Actions>
+        <IconButton size="large" onClick={() => { router.push(`/bots/${bot.id}?chat_id=${chatId}`) }}>
+          <Settings fontSize="inherit" />
+        </IconButton>
       )
     }
+  }
+
+
+  const messageInputDisabled = () => {
+    if (user.messages_left <= 0) {
+      return true
+    }
+
+    return false
   }
 
   return (
@@ -306,9 +322,19 @@ export default function Home() {
               <ConversationHeader.Back onClick={() => { router.push("/conversations") }} />
               <Avatar src={bot.avatar_location || "/glyph-avatar.png"} name={bot.name} />
               <ConversationHeader.Content userName={<Typography variant="h6">{bot.name}</Typography>} info={chat.name} />
-              {
-                renderBotSettings()
-              }
+              <ConversationHeader.Actions>
+                {
+                  showTts && (
+                    <IconButton onClick={() => { router.push(`/voice/${chatId}`) }}>
+                      <Phone />
+                    </IconButton>
+                  )
+                }
+
+                {
+                  renderBotSettings()
+                }
+              </ConversationHeader.Actions>
 
             </ConversationHeader>
             <MessageList style={{ display: "flex", backgroundColor: theme.palette.background.default }} typingIndicator={typingIndicator()}>
@@ -338,7 +364,7 @@ export default function Home() {
                 onChange={(val) => { setNewMessage(val) }}
                 value={newMessage}
                 sendButton={false}
-                disabled={(user.messages_left <= 0)}
+                disabled={messageInputDisabled()}
                 attachButton={false}
                 onSend={handleNewMessage} style={{
                   flexGrow: 1,
@@ -346,7 +372,7 @@ export default function Home() {
                   flexShrink: "initial"
                 }}
               />
-              <SendButton onClick={() => handleNewMessage(newMessage)} disabled={newMessage.length === 0} style={{
+              <SendButton onClick={handleNewMessage} disabled={newMessage.length === 0} style={{
                 fontSize: "1.2em",
                 marginLeft: 0,
                 paddingLeft: "0.2em",

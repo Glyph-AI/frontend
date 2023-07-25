@@ -27,7 +27,6 @@ export default function SubscriptionOptions() {
             try {
                 window.getDigitalGoodsService('https://play.google.com/billing').then(
                     (service) => {
-                        console.log("SERVICE RETRIEVED")
                         service.getDetails(['glyph']).then(
                             (details) => {
                                 setGpItemDetails(details)
@@ -66,10 +65,10 @@ export default function SubscriptionOptions() {
 
     const formatCurrency = (value) => {
         if (gpItemDetails !== undefined) {
-                const localePrice = new Intl.NumberFormat(navigator.language, {
-                    style: 'currency',
-                    currency: "USD",
-                }).format(value);
+            const localePrice = new Intl.NumberFormat(navigator.language, {
+                style: 'currency',
+                currency: "USD",
+            }).format(value);
 
             return localePrice
         }
@@ -79,48 +78,46 @@ export default function SubscriptionOptions() {
     }
 
     const renderPlatformCheckout = () => {
-        console.log(inGoogle, gpItemDetails)
         if (inGoogle && gpItemDetails) {
             return (
                 <>
-                <Box sx={{ display: "flex", width: "100%", flexWrap: "wrap", marginTop: "16px" }}>
-                    <Card onClick={handleRadioChange} elevation={monthly ? 10 : 3} sx={{ marginBottom: "16px", width: "100%" }}>
-                        <CardHeader
-                            avatar={
-                                <Radio checked={monthly} />
-                            }
-                            title={
-                                <>
-                                    <Typography variant="h5">Monthly</Typography>
-                                </>
-                            }
-                            action={
-                                <Typography variant="subtitle">{formatCurrency(gpPrice)} / Month</Typography>
-                            }
-                        />
-                    </Card>
-                </Box>
-                <Box sx={{ width: "100%", display: "flex", justifyContent: "center", alignItems: "center", marginTop: "16px" }}>
-                    <Button onClick={handleGoogleCheckout} sx={{ width: "80%" }} variant="contained">Subscribe with Google</Button>
-                </Box>
-            </>
+                    <Box sx={{ display: "flex", width: "100%", flexWrap: "wrap", marginTop: "16px" }}>
+                        <Card onClick={handleRadioChange} elevation={monthly ? 10 : 3} sx={{ marginBottom: "16px", width: "100%" }}>
+                            <CardHeader
+                                avatar={
+                                    <Radio checked={monthly} />
+                                }
+                                title={
+                                    <>
+                                        <Typography variant="h5">Monthly</Typography>
+                                    </>
+                                }
+                                action={
+                                    <Typography variant="subtitle">{formatCurrency(gpPrice)} / Month</Typography>
+                                }
+                            />
+                        </Card>
+                    </Box>
+                    <Box sx={{ width: "100%", display: "flex", justifyContent: "center", alignItems: "center", marginTop: "16px" }}>
+                        <Button onClick={handleGoogleCheckout} sx={{ width: "80%" }} variant="contained">Subscribe with Google</Button>
+                    </Box>
+                </>
             )
         } else if (env === 'ios') {
             return renderTwaMessage()
         }
         // return (<CircularProgress/>)
         return renderTwaMessage()
-    
+
     }
 
     const handleGoogleCheckout = () => {
-        console.log("HERE")
         const paymentMethodData = [
             {
-              supportedMethods: 'https://play.google.com/billing',
-              data: {
-                sku: "glyph",
-              },
+                supportedMethods: 'https://play.google.com/billing',
+                data: {
+                    sku: "glyph",
+                },
             },
         ];
 
@@ -129,7 +126,7 @@ export default function SubscriptionOptions() {
             const { purchaseToken } = paymentResponse.details;
 
             let paymentComplete;
-            genericRequest("/google-verification", "POST", JSON.stringify({googleToken: purchaseToken}), (resp) => {
+            genericRequest("/google-verification", "POST", JSON.stringify({ googleToken: purchaseToken }), (resp) => {
                 if (resp.success) {
                     paymentComplete = paymentResponse.complete('success').then(() => {
                         router.push("/profile")

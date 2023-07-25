@@ -29,7 +29,6 @@ export default function Login() {
         genericRequest("/auth/google", "POST", JSON.stringify(auth_data), (data, status) => {
             if (status === 200) {
                 if (env === "production") {
-                    console.log("Initializing Pendo")
                     pendo.initialize(
                         {
                             visitor: {
@@ -48,7 +47,6 @@ export default function Login() {
                         }
                     )
                 }
-                console.log(redirectUrl())
                 router.push(redirectUrl())
             } else if (status === 401) {
                 setErrorContent(data.detail)
@@ -66,7 +64,6 @@ export default function Login() {
         genericRequest("/login", "POST", JSON.stringify(data), (data, status) => {
             if (status === 200) {
                 if (env === "production") {
-                    console.log("Initializing Pendo")
                     pendo.initialize(
                         {
                             visitor: {
@@ -85,10 +82,8 @@ export default function Login() {
                         }
                     )
                 }
-                console.log(redirectUrl())
                 router.push(redirectUrl())
             } else if (status === 401) {
-                console.log(data)
                 setErrorContent(data.detail)
                 setSnackbarOpen(true)
             }
@@ -96,7 +91,6 @@ export default function Login() {
     }
 
     const redirectUrl = () => {
-        console.log("HERE")
         const params = new Proxy(new URLSearchParams(window.location.search), {
             get: (searchParams, prop) => searchParams.get(prop),
         });
@@ -121,7 +115,6 @@ export default function Login() {
         genericRequest("/users", "POST", JSON.stringify(data), (data, status) => {
             if (status === 200) {
                 if (env === "production") {
-                    console.log("Initializing Pendo")
                     pendo.initialize(
                         {
                             visitor: {

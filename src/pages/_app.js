@@ -15,13 +15,6 @@ export default function App({ Component, pageProps }) {
     window.addEventListener("resize", (ev) => {
       document.body.style.height = window.visualViewport.height + "px"
     }, true);
-
-    // if ('serviceWorker' in navigator) {
-    //   console.log("Registering Service Worker")
-    //   navigator.serviceWorker
-    //     .register('/service-worker.js')
-    //     .then((registration) => console.log('scope is: ', registration.scope));
-    // }
   }, [])
 
   return (

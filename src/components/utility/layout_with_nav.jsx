@@ -19,13 +19,14 @@ const variants = {
     exit: { opacity: 0, x: 0, y: -100 },
 }
 
-export default function LayoutWithNav({ children }, showNavigation = true) {
+export default function LayoutWithNav({ showNavigation = true, children }) {
     const [navValue, setNavValue] = useState(0)
     const [paymentSnackbar, setPaymentSnackbar] = useState(false)
     const [tokenFound, setTokenFound] = useState(false)
     const router = useRouter()
 
     useEffect(() => {
+
         if (window !== undefined) {
             if (window.location.href.includes("profile")) {
                 setNavValue(0)
@@ -45,24 +46,23 @@ export default function LayoutWithNav({ children }, showNavigation = true) {
             }
 
             if (typeof (window) !== 'undefined' && window.Notification) {
-                
+
                 Notification.requestPermission(() => {
                     if (Notification.permission === 'granted') {
                         navigator.serviceWorker.register('/service-worker.js')
                             .then((registration) => {
-                            console.log("SW Registered: ", registration)
-                        });
+                                console.log("SW Registered: ", registration)
+                            });
 
                         navigator.serviceWorker.register(`/service-worker.js?firebaseConfig=${JSON.stringify(FIREBASE_CONFIG)}`)
                             .then((registration) => {
-                            console.log("Firebase SW Registered: ", registration)
-                        });
+                                console.log("Firebase SW Registered: ", registration)
+                            });
 
                         // update user record with notification permissions accepted
                         const app = initializeApp(FIREBASE_CONFIG);
                         const messaging = getMessaging(app)
                         fetchToken(setTokenFound, messaging, user_id)
-                        console.log("Messaging service ", messaging)
                         onMessage(messaging, (payload) => {
                             setNotification(payload.notification)
                             setNotificationShow(true)
@@ -71,20 +71,20 @@ export default function LayoutWithNav({ children }, showNavigation = true) {
                             id: data.id,
                             notifications: true
                         }
-                        genericRequest("/profile", "PATCH", JSON.stringify(update_data), () => {})
+                        genericRequest("/profile", "PATCH", JSON.stringify(update_data), () => { })
                     } else if (Notification.permission === 'denied') {
                         const update_data = {
                             id: data.id,
                             notifications: false
                         }
-                        genericRequest("/profile", "PATCH", JSON.stringify(update_data), () => {})
+                        genericRequest("/profile", "PATCH", JSON.stringify(update_data), () => { })
 
                     }
                 });
             }
         })
 
-        
+
 
     }, [])
 
