@@ -18,7 +18,7 @@ import {
   genericRequest,
   getRequest
 } from '@/components/utility/request_helper';
-import { Alert, AlertTitle, Box, IconButton, Link, Snackbar, Typography } from '@mui/material'
+import { Alert, AlertTitle, Box, Icon, IconButton, Link, Snackbar, Typography } from '@mui/material'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import SyntaxHighlighter from 'react-syntax-highlighter';
@@ -30,7 +30,7 @@ import { getCookie } from '@/components/utility/cookie_helper';
 import { theme } from '@/components/utility/theme.jsx';
 import LayoutWithNav from '@/components/utility/layout_with_nav';
 import { useUserContext } from '@/context/user';
-import { Mic, Settings } from '@mui/icons-material';
+import { Mic, Phone, Settings } from '@mui/icons-material';
 import { API_ROOT } from '@/components/utility/apiConfig';
 
 export default function Home() {
@@ -269,15 +269,6 @@ export default function Home() {
       }
     }, {})
   }
-
-  const handleMenuOpen = (ev) => {
-    setAnchorEl(ev.currentTarget)
-  }
-
-  const handleMenuClose = () => {
-    setAnchorEl(null)
-  }
-
   const outOfMessagesError = () => {
     if (user.subscribed && user.messages_left <= 0) {
       return "You are out of messages for the month."
@@ -289,36 +280,16 @@ export default function Home() {
   const renderBotSettings = () => {
     if (user.id === bot.creator_id) {
       return (
-        <ConversationHeader.Actions>
-          <IconButton size="large" onClick={() => { router.push(`/bots/${bot.id}?chat_id=${chatId}`) }}>
-            <Settings fontSize="inherit" />
-          </IconButton>
-        </ConversationHeader.Actions>
+        <IconButton size="large" onClick={() => { router.push(`/bots/${bot.id}?chat_id=${chatId}`) }}>
+          <Settings fontSize="inherit" />
+        </IconButton>
       )
     }
   }
 
-  const handleTts = () => {
-    const speechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition
-    const recog = new speechRecognition()
-    recog.start()
-    setTtsActive(true)
-
-    const onResult = (e) => {
-      const text = e.results[0][0].transcript
-      handleNewMessage(text)
-    }
-
-    recog.continuous = false
-    recog.addEventListener("result", onResult)
-  }
 
   const messageInputDisabled = () => {
     if (user.messages_left <= 0) {
-      return true
-    }
-
-    if (ttsActive) {
       return true
     }
 
@@ -360,9 +331,14 @@ export default function Home() {
               <ConversationHeader.Back onClick={() => { router.push("/conversations") }} />
               <Avatar src={bot.avatar_location || "/glyph-avatar.png"} name={bot.name} />
               <ConversationHeader.Content userName={<Typography variant="h6">{bot.name}</Typography>} info={chat.name} />
-              {
-                renderBotSettings()
-              }
+              <ConversationHeader.Actions>
+                <IconButton onClick={() => { router.push(`/chats/${chatId}/voice`) }}>
+                  <Phone />
+                </IconButton>
+                {
+                  renderBotSettings()
+                }
+              </ConversationHeader.Actions>
 
             </ConversationHeader>
             <MessageList style={{ display: "flex", backgroundColor: theme.palette.background.default }} typingIndicator={typingIndicator()}>
@@ -406,13 +382,6 @@ export default function Home() {
                 paddingLeft: "0.2em",
                 paddingRight: "0.2em"
               }} />
-              {
-                showTts && (
-                  <IconButton sx={{ color: ttsActive ? "red" : null }} onClick={handleTts}>
-                    <Mic />
-                  </IconButton>
-                )
-              }
             </div>
           </ChatContainer>
         </MainContainer>
