@@ -16,7 +16,6 @@ export const getRequest = async (endpoint, callback = () => { }) => {
         });
 
         let bot_code = params.bot_code
-        console.log("HERE")
         if (bot_code !== null) {
             Router.push(`/login?bot_code=${bot_code}`)
         } else {

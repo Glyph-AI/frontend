@@ -16,10 +16,6 @@ export default function Voice() {
     const router = useRouter()
     const { id } = router.query
 
-    const onTtsResult = (e) => {
-
-    }
-
     useEffect(() => {
         getChatById(id, (chatData) => {
             setChat(chatData)

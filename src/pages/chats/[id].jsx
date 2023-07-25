@@ -177,9 +177,8 @@ export default function Home() {
 
 
     // REST pre-work for chats
-    getChatById(id, (chatData) => {
+    getChatById(router.query.id, (chatData) => {
       const formattedChatData = formatChatData(chatData.chat_messages)
-      console.log(formattedChatData)
       setChatData(formattedChatData)
       setChat(chatData)
       getBotById(chatData.bot_id, (botData) => {
@@ -188,15 +187,8 @@ export default function Home() {
       setBotId(chatData.bot_id)
     })
 
-    // getUser()
-
-    if (window) {
-      const speechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition
-      if (typeof speechRecognition === "undefined") {
-        setShowTts(false);
-      } else {
-        setShowTts(true);
-      }
+    if (user.conversation_mode) {
+      setShowTts(true)
     }
 
   }, [])
@@ -222,7 +214,6 @@ export default function Home() {
       // get last chat message and see if it's tts or not
       setChatData(newChatData)
       setGlyphTyping(false)
-      console.log(last_message, last_message.tts)
       if (last_message.tts) {
         // make api call out to google cloud to generate this.
         const audio_obj = new Audio(`${API_ROOT}/chats/${chatId}/message/${last_message.id}/tts`)
@@ -259,7 +250,6 @@ export default function Home() {
 
     genericRequest(`/bots/${botId}/user_upload?=chat_id${chatId}`, "POST", formData, (data, status) => {
       if (status === 200) {
-        console.log("Upload Successful")
         getChatById(chatId, botId, (data) => {
           const formattedChatData = formatChatData(data.chat_messages)
           setSnackbarMessage(`${file.name} Uploaded`)
@@ -332,9 +322,14 @@ export default function Home() {
               <Avatar src={bot.avatar_location || "/glyph-avatar.png"} name={bot.name} />
               <ConversationHeader.Content userName={<Typography variant="h6">{bot.name}</Typography>} info={chat.name} />
               <ConversationHeader.Actions>
-                <IconButton onClick={() => { router.push(`/chats/${chatId}/voice`) }}>
-                  <Phone />
-                </IconButton>
+                {
+                  showTts && (
+                    <IconButton onClick={() => { router.push(`/voice/${chatId}`) }}>
+                      <Phone />
+                    </IconButton>
+                  )
+                }
+
                 {
                   renderBotSettings()
                 }

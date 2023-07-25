@@ -141,7 +141,6 @@ export default function Profile() {
         var first_name = split[0]
         split.splice(0, 1)
         var last_name = split.join(" ")
-        console.log(first_name, last_name)
         if (first_name !== user.first_name || last_name !== user.last_name) {
             const data = {
                 id: user.id,

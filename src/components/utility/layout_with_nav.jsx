@@ -25,8 +25,6 @@ export default function LayoutWithNav({ showNavigation = true, children }) {
     const [tokenFound, setTokenFound] = useState(false)
     const router = useRouter()
 
-    console.log(showNavigation)
-
     useEffect(() => {
 
         if (window !== undefined) {
@@ -65,7 +63,6 @@ export default function LayoutWithNav({ showNavigation = true, children }) {
                         const app = initializeApp(FIREBASE_CONFIG);
                         const messaging = getMessaging(app)
                         fetchToken(setTokenFound, messaging, user_id)
-                        console.log("Messaging service ", messaging)
                         onMessage(messaging, (payload) => {
                             setNotification(payload.notification)
                             setNotificationShow(true)

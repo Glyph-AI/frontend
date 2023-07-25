@@ -94,8 +94,6 @@ export default function NewBotModal({ open, handleClose }) {
 
         getUser()
 
-        console.log(user)
-
 
     }, [])
 
