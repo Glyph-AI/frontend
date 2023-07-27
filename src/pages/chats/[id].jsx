@@ -64,8 +64,8 @@ export default function Home() {
     getRequest("/profile", (data) => {
       setUser(data)
       // Temporarily entitle all users to conversation mode, disable this at a point in the future
-      // setShowTts(data.conversation_mode) 
-      setShowTts(true)
+      setShowTts(data.conversation_mode) 
+      // setShowTts(true)
     })
   }
 
