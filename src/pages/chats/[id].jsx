@@ -201,7 +201,7 @@ export default function Home() {
       role: "user",
       content: messageContent,
       chat_id: chatId,
-      tts: tts
+      tts: false
     }
     setGlyphTyping(true)
     setTtsActive(false)
