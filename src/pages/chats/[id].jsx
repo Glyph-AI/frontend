@@ -63,7 +63,9 @@ export default function Home() {
   const getUser = () => {
     getRequest("/profile", (data) => {
       setUser(data)
-      setShowTts(data.conversation_mode)
+      // Temporarily entitle all users to conversation mode, disable this at a point in the future
+      // setShowTts(data.conversation_mode) 
+      setShowTts(true)
     })
   }
 
@@ -194,18 +196,16 @@ export default function Home() {
 
   }, [])
 
-  const handleNewMessage = (overrideContent = null) => {
-    const messageContent = overrideContent || newMessage
-    const tts = Boolean(overrideContent)
+  const handleNewMessage = () => {
     const newMessageJson = {
       role: "user",
-      content: messageContent,
+      content: newMessage,
       chat_id: chatId,
       tts: false
     }
     setGlyphTyping(true)
     setTtsActive(false)
-    const newChatData = [...chatData, { content: messageContent, sender: "You", sentTime: "Just now", direction: "outgoing" }]
+    const newChatData = [...chatData, { content: newMessage, sender: "You", sentTime: "Just now", direction: "outgoing" }]
     setChatData(newChatData)
     setNewMessage("")
 
