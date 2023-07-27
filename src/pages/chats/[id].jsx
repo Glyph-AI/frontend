@@ -211,15 +211,8 @@ export default function Home() {
 
     genericRequest(`/chats/${chatId}/message`, "POST", JSON.stringify(newMessageJson), (data) => {
       const newChatData = formatChatData(data.chat_messages)
-      const last_message = newChatData[newChatData.length - 1]
-      // get last chat message and see if it's tts or not
       setChatData(newChatData)
       setGlyphTyping(false)
-      if (last_message.tts) {
-        // make api call out to google cloud to generate this.
-        const audio_obj = new Audio(`${API_ROOT}/chats/${chatId}/message/${last_message.id}/tts`)
-        audio_obj.play()
-      }
     })
 
     inputRef.current.focus();
