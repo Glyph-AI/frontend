@@ -318,7 +318,7 @@ export default function Home() {
               <ConversationHeader.Actions>
                 {
                   showTts && (
-                    <IconButton onClick={() => { router.push(`/voice/${chatId}`) }}>
+                    <IconButton id="conversation-mode-button" onClick={() => { router.push(`/voice/${chatId}`) }}>
                       <Phone />
                     </IconButton>
                   )
