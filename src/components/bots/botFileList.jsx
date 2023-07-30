@@ -1,5 +1,6 @@
-import { Add, Delete, ExpandLess, ExpandMore, Folder } from "@mui/icons-material";
-import { Collapse, List, TableRow, ListItem, IconButton, ListItemIcon, ListItemAvatar, Checkbox, ListItemText, Avatar, Divider, Snackbar, Dialog, DialogTitle, DialogContentText, DialogActions, Button } from "@mui/material";
+import { Add, Cancel, Delete, ExpandLess, ExpandMore, Folder, Upload } from "@mui/icons-material";
+import { LoadingButton } from "@mui/lab";
+import { Collapse, List, TableRow, ListItem, IconButton, ListItemIcon, ListItemAvatar, Checkbox, ListItemText, Avatar, Divider, Snackbar, Dialog, DialogTitle, DialogContentText, DialogActions, Button, TextField, Box, DialogContent, Typography } from "@mui/material";
 import { useEffect, useRef, useState } from "react";
 import { genericRequest, getRequest } from "../utility/request_helper";
 
@@ -10,6 +11,11 @@ export default function BotFileList({ name, bot_id, user, bot, setBot }) {
     const [snackbarOpen, setSnackbarOpen] = useState(false)
     const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false)
     const [deleteTarget, setDeleteTarget] = useState(null)
+    const [newFileOpen, setNewFileOpen] = useState(false)
+    const [archiveUrl, setArchiveUrl] = useState("")
+    const [fileName, setFileName] = useState(null)
+    const [file, setFile] = useState(null)
+    const [loading, setLoading] = useState(false)
     const inputFile = useRef(null)
     const inputRef = useRef();
 
@@ -61,28 +67,62 @@ export default function BotFileList({ name, bot_id, user, bot, setBot }) {
         return false
     }
 
-    const handleUpload = (ev) => {
+    const handleFileSelect = (ev) => {
         ev.preventDefault()
         const file = ev.target.files[0]
-        const formData = new FormData()
-        formData.append('file', file)
-
         if (file.size / 1024 / 1024 > 50) {
             setSnackbarMessage("File size too large.")
             setSnackbarOpen(true)
             return false
         }
+        setFileName(file.name)
+        setFile(file)
+    }
 
-        genericRequest(`/bots/${bot_id}/user_upload`, "POST", formData, (data, status) => {
-            if (status === 200) {
-                setSnackbarMessage(`${file.name} Uploaded. File will appear in list once processing is completed.`)
-                setSnackbarOpen(true)
+    const handleNewFileSubmit = () => {
+        setLoading(true)
+        if (fileName) {
+            const formData = new FormData()
+            formData.append('file', file)
+
+            genericRequest(`/bots/${bot_id}/user_upload`, "POST", formData, (data, status) => {
+                if (status === 200) {
+                    setSnackbarMessage(`${file.name} Uploaded. File will appear in list once processing is completed.`)
+                    setSnackbarOpen(true)
+                    setNewFileOpen(false)
+                    setLoading(false)
+                } else {
+                    setSnackbarMessage(`${file.name} Upload Unsuccessful.`)
+                    setSnackbarOpen(true)
+                    setNewFileOpen(false)
+                    setLoading(false)
+                }
+            }, {})
+            
+        } else if (archiveUrl) {
+            const urlData = {
+                url: archiveUrl
             }
-        }, {})
+
+            genericRequest(`/bots/${bot_id}/archive_url`, "POST", JSON.stringify(urlData), (data) => {
+                if (data.success) {
+                    setSnackbarMessage(`${archiveUrl} Successfully Stored.`)
+                    setSnackbarOpen(true)
+                    setNewFileOpen(false)
+                    setArchiveUrl("")
+                    setLoading(false)
+                } else {
+                    setSnackbarMessage(data.message)
+                    setSnackbarOpen(true)
+                    setArchiveUrl("")
+                    setLoading(false)
+                }
+            }, {"Content-Type": "application/json"})
+        }
     }
 
     const handleUploadClick = (ev) => {
-        inputFile.current.click()
+        setNewFileOpen(true)
     }
 
 
@@ -140,14 +180,14 @@ export default function BotFileList({ name, bot_id, user, bot, setBot }) {
                                     <ListItemIcon>
                                         <Add />
                                     </ListItemIcon>
-                                    <ListItemText primary={<b>Upload New File</b>} />
+                                    <ListItemText primary={<b>Add New File or URL</b>} />
                                 </ListItem>
                             )
                         }
                     </List>
                 </Collapse>
                 <input
-                    onChange={(ev) => { handleUpload(ev) }}
+                    onChange={(ev) => { handleFileSelect(ev) }}
                     accept="text/*,application/csv,application/pdf,image/*,.mp3,audio/mp3,.yaml,.json"
                     type='file'
                     id='file'
@@ -169,6 +209,49 @@ export default function BotFileList({ name, bot_id, user, bot, setBot }) {
                 <DialogActions>
                     <Button onClick={() => { setDeleteConfirmOpen(false) }}>Cancel</Button>
                     <Button onClick={handleUploadDelete}>Delete</Button>
+                </DialogActions>
+            </Dialog>
+            <Dialog
+                open={newFileOpen}
+                onClose={() => setNewFileOpen(false)}
+            >
+                <DialogTitle>
+                    Add File or URL
+                </DialogTitle>
+                <DialogContent>
+                    <Box sx={{width: "100%", display: "flex", alignItems: "center", justifyContent: "center", flexWrap: "wrap"}}>
+                        <Box sx={{width: "100%"}}>
+                            {
+                                fileName && (
+                                    <List>
+                                        <ListItem
+                                            secondaryAction={
+                                                <IconButton edge="end" aria-label="delete" onClick={() => {setFile(null); setFileName(null)}} >
+                                                  <Cancel />
+                                                </IconButton>
+                                              }
+                                        >
+                                            <ListItemText>
+                                                <Typography>{fileName}</Typography>
+                                            </ListItemText>
+                                        </ListItem>
+                                    </List>
+
+                                )
+                            }
+                            <Button disabled={fileName || archiveUrl}variant="contained" sx={{width: "100%"}} onClick={() => {inputFile.current.click()}}>
+                                <Upload/> Upload File
+                            </Button>
+                        </Box>
+                        <Divider sx={{marginTop: "8px", marginBottom: "8px", width: "100%"}}/>
+                        <Box sx={{width: "100%"}}>
+                            <TextField disabled={fileName} placeholder="URL" fullWidth value={archiveUrl} onChange={(e) => {setArchiveUrl(e.target.value)}}/>
+                        </Box>
+                    </Box>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={() => { setNewFileOpen(false)}}>Cancel</Button>
+                    <LoadingButton loading={loading} disabled={!archiveUrl && !fileName} variant="contained" onClick={() => { handleNewFileSubmit()}}>Submit</LoadingButton>
                 </DialogActions>
             </Dialog>
         </>
