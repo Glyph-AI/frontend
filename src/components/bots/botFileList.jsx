@@ -91,11 +91,13 @@ export default function BotFileList({ name, bot_id, user, bot, setBot }) {
                     setSnackbarOpen(true)
                     setNewFileOpen(false)
                     setLoading(false)
+                    getAvailableTexts()
                 } else {
                     setSnackbarMessage(`${file.name} Upload Unsuccessful.`)
                     setSnackbarOpen(true)
                     setNewFileOpen(false)
                     setLoading(false)
+                    getAvailableTexts()
                 }
             }, {})
             
@@ -111,11 +113,13 @@ export default function BotFileList({ name, bot_id, user, bot, setBot }) {
                     setNewFileOpen(false)
                     setArchiveUrl("")
                     setLoading(false)
+                    getAvailableTexts()
                 } else {
                     setSnackbarMessage(data.message)
                     setSnackbarOpen(true)
                     setArchiveUrl("")
                     setLoading(false)
+                    getAvailableTexts()
                 }
             }, {"Content-Type": "application/json"})
         }
