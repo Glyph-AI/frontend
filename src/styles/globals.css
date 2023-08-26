@@ -26,3 +26,7 @@ body {
 .cs-search__input {
   font-size: 16px !important
 }
+
+.MuiOutlinedInput-notchedOutline {
+  border: none !important;
+}

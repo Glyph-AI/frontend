@@ -5,15 +5,15 @@ const withPWA = require('next-pwa')({
 const removeImports = require('next-remove-imports')();
 
 module.exports = removeImports(withPWA({
-  async redirects() {
-    return [
-      {
-        source: '/',
-        destination: '/conversations',
-        permanent: true,
-      },
-    ]
-  },
+  // async redirects() {
+  //   return [
+  //     {
+  //       source: '/',
+  //       destination: '/conversations',
+  //       permanent: true,
+  //     },
+  //   ]
+  // },
   pwa: {
     register: true,
     skipWaiting: true

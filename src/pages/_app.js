@@ -37,9 +37,7 @@ export default function App({ Component, pageProps }) {
         )
       }
       <AnimatePresence mode="wait" initial={false}>
-        <UserProvider>
           <Component {...pageProps} />
-        </UserProvider>
       </AnimatePresence>
     </>
 

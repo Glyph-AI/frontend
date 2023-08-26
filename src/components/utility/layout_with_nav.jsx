@@ -1,5 +1,5 @@
 import { theme, darkTheme } from './theme.jsx'
-import { ThemeProvider, CssBaseline, BottomNavigation, BottomNavigationAction, Paper, Snackbar, Alert, AlertTitle } from '@mui/material';
+import { ThemeProvider, CssBaseline, BottomNavigation, BottomNavigationAction, Paper, Snackbar, Alert, AlertTitle, Box } from '@mui/material';
 import Layout from './layout';
 import { useState } from 'react';
 import { Message, Note, Person, SmartToy } from '@mui/icons-material';
@@ -11,6 +11,7 @@ import { initializeApp } from 'firebase/app';
 import { getMessaging, onMessage } from "firebase/messaging";
 import { fetchToken } from '@/components/utility/firebase';
 import { FIREBASE_CONFIG } from '@/components/utility/firebaseConfig';
+import Navbar from '../navbar/navbar.jsx';
 
 
 const variants = {
@@ -25,64 +26,74 @@ export default function LayoutWithNav({ showNavigation = true, children }) {
     const [tokenFound, setTokenFound] = useState(false)
     const router = useRouter()
 
-    useEffect(() => {
-
-        if (window !== undefined) {
-            if (window.location.href.includes("profile")) {
-                setNavValue(0)
-            } else if (window.location.href.includes("conversation")) {
-                setNavValue(1)
-            } else if (window.location.href.includes("bots")) {
-                setNavValue(2)
-            } else {
-                setNavValue(3)
+    const childHeight = () => {
+        if (typeof(document) !== "undefined") {
+            if (showNavigation) {
+                return document.body.style.height = (window.visualViewport.height - 56) + "px"
             }
         }
 
-        getRequest("/profile", (data) => {
-            const user_id = data.id
-            if (data.subscribed && !data.is_current) {
-                setPaymentSnackbar(true);
-            }
+        return "100%"
+    }
 
-            if (typeof (window) !== 'undefined' && window.Notification) {
+    useEffect(() => {
 
-                Notification.requestPermission(() => {
-                    if (Notification.permission === 'granted') {
-                        navigator.serviceWorker.register('/service-worker.js')
-                            .then((registration) => {
-                                console.log("SW Registered: ", registration)
-                            });
+        // // if (window !== undefined) {
+        // //     if (window.location.href.includes("profile")) {
+        // //         setNavValue(0)
+        // //     } else if (window.location.href.includes("conversation")) {
+        // //         setNavValue(1)
+        // //     } else if (window.location.href.includes("bots")) {
+        // //         setNavValue(2)
+        // //     } else {
+        // //         setNavValue(3)
+        // //     }
+        // // }
 
-                        navigator.serviceWorker.register(`/service-worker.js?firebaseConfig=${JSON.stringify(FIREBASE_CONFIG)}`)
-                            .then((registration) => {
-                                console.log("Firebase SW Registered: ", registration)
-                            });
+        // // getRequest("/profile", (data) => {
+        // //     const user_id = data.id
+        // //     if (data.subscribed && !data.is_current) {
+        // //         setPaymentSnackbar(true);
+        // //     }
 
-                        // update user record with notification permissions accepted
-                        const app = initializeApp(FIREBASE_CONFIG);
-                        const messaging = getMessaging(app)
-                        fetchToken(setTokenFound, messaging, user_id)
-                        onMessage(messaging, (payload) => {
-                            setNotification(payload.notification)
-                            setNotificationShow(true)
-                        })
-                        const update_data = {
-                            id: data.id,
-                            notifications: true
-                        }
-                        genericRequest("/profile", "PATCH", JSON.stringify(update_data), () => { })
-                    } else if (Notification.permission === 'denied') {
-                        const update_data = {
-                            id: data.id,
-                            notifications: false
-                        }
-                        genericRequest("/profile", "PATCH", JSON.stringify(update_data), () => { })
+        // //     if (typeof (window) !== 'undefined' && window.Notification) {
 
-                    }
-                });
-            }
-        })
+        // //         Notification.requestPermission(() => {
+        // //             if (Notification.permission === 'granted') {
+        // //                 navigator.serviceWorker.register('/service-worker.js')
+        // //                     .then((registration) => {
+        // //                         console.log("SW Registered: ", registration)
+        // //                     });
+
+        // //                 navigator.serviceWorker.register(`/service-worker.js?firebaseConfig=${JSON.stringify(FIREBASE_CONFIG)}`)
+        // //                     .then((registration) => {
+        // //                         console.log("Firebase SW Registered: ", registration)
+        // //                     });
+
+        // //                 // update user record with notification permissions accepted
+        // //                 const app = initializeApp(FIREBASE_CONFIG);
+        // //                 const messaging = getMessaging(app)
+        // //                 fetchToken(setTokenFound, messaging, user_id)
+        // //                 onMessage(messaging, (payload) => {
+        // //                     setNotification(payload.notification)
+        // //                     setNotificationShow(true)
+        // //                 })
+        // //                 const update_data = {
+        // //                     id: data.id,
+        // //                     notifications: true
+        // //                 }
+        // //                 genericRequest("/profile", "PATCH", JSON.stringify(update_data), () => { })
+        // //             } else if (Notification.permission === 'denied') {
+        // //                 const update_data = {
+        // //                     id: data.id,
+        // //                     notifications: false
+        // //                 }
+        // //                 genericRequest("/profile", "PATCH", JSON.stringify(update_data), () => { })
+
+        // //             }
+        // //         });
+        // //     }
+        // })
 
 
 
@@ -111,30 +122,35 @@ export default function LayoutWithNav({ showNavigation = true, children }) {
                 className=""
                 style={{ height: "100%", overflow: "hidden", width: "100%" }}
             >
-                {children}
+                <Box className="child-container" sx={{height: childHeight()}}>
+                    {children}
+                </Box>
+
             </motion.div>
             {
                 showNavigation && (
-                    <Paper sx={{ position: 'fixed', bottom: 0, left: 0, right: 0 }} elevation={3}>
-                        <BottomNavigation
-                            showLabels
-                            value={navValue}
-                            onChange={(event, newValue) => {
-                                setNavValue(newValue);
-                            }}
-                            sx={{
-                                "& .Mui-selected, .Mui-selected > svg": {
-                                    color: theme.palette.secondary.main
-                                }
-                            }}
-                        >
-                            <BottomNavigationAction onClick={() => { router.push("/profile") }} value={0} label="Profile" icon={<Person />} />
-                            <BottomNavigationAction onClick={() => { router.push("/conversations") }} value={1} label="Chats" icon={<Message />} />
-                            <BottomNavigationAction onClick={() => { router.push("/bots") }} value={2} label="Bots" icon={<SmartToy />} />
-                            <BottomNavigationAction onClick={() => { router.push("/notes") }} value={3} label="Notes" icon={<Note />} />
-                        </BottomNavigation>
-                    </Paper>
+                //     <Paper sx={{ position: 'fixed', bottom: 0, left: 0, right: 0 }} elevation={3}>
+                //         <BottomNavigation
+                //             showLabels
+                //             value={navValue}
+                //             onChange={(event, newValue) => {
+                //                 setNavValue(newValue);
+                //             }}
+                //             sx={{
+                //                 "& .Mui-selected, .Mui-selected > svg": {
+                //                     color: theme.palette.secondary.main
+                //                 }
+                //             }}
+                //         >
+                //             <BottomNavigationAction onClick={() => { router.push("/profile") }} value={0} label="Profile" icon={<Person />} />
+                //             <BottomNavigationAction onClick={() => { router.push("/conversations") }} value={1} label="Chats" icon={<Message />} />
+                //             <BottomNavigationAction onClick={() => { router.push("/bots") }} value={2} label="Bots" icon={<SmartToy />} />
+                //             <BottomNavigationAction onClick={() => { router.push("/notes") }} value={3} label="Notes" icon={<Note />} />
+                //         </BottomNavigation>
+                //     </Paper>
+                <Navbar/>
                 )
+
             }
         </ThemeProvider>
     )
