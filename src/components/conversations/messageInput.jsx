@@ -1,41 +1,50 @@
 import { Mic, Send } from "@mui/icons-material";
 import { Box, Divider, IconButton, TextField, useTheme } from "@mui/material";
 
-export default function MessageInput() {
+export default function MessageInput({ user, inputProps, sendProps, onSubmit }) {
     const theme = useTheme()
     return (
-        <Box 
+        <Box
             component="form"
             sx={{
-                height: "56px", 
-                fontSize: "16px", 
-                display: "flex", 
+                height: "56px",
+                fontSize: "16px",
+                display: "flex",
                 alignItems: "center",
-                padding: "0px 8px 0px 8px",
+                padding: "0px 8px 0px 0px",
                 width: "100%",
                 backgroundColor: "white",
                 '& .MuiTextField-root': { m: 1, width: '35ch' }
             }}
+            onSubmit={onSubmit}
         >
-            <Divider/>
-            <TextField 
-                size="small" 
-                placeholder="Write a message..." 
+            <Divider />
+            <TextField
+                size="small"
+                name="message"
+                placeholder="Write a message..."
                 multilline
                 sx={{
-                    width: "75%",
+                    flex: 1,
                     input: {
                         color: theme.palette.common.darkBlue,
-                        fontWeight: 400
+                        fontWeight: 400,
+                        pl: "8px"
                     }
                 }}
+                {...inputProps}
             />
-            <IconButton sx={{marginRight: "8px"}}>
-                <Send/>
+            <IconButton name="submit" type="submit" {...sendProps} sx={{ marginRight: "8px" }}>
+                <Send />
             </IconButton>
-            <IconButton sx={{backgroundColor: theme.palette.common.blue}}>
-                <Mic sx={{color: "white"}}/>
-            </IconButton>
+            {
+                user.conversation_mode && (
+                    <IconButton sx={{ backgroundColor: theme.palette.common.blue }}>
+                        <Mic sx={{ color: "white" }} />
+                    </IconButton>
+                )
+            }
+
         </Box>
     )
 }

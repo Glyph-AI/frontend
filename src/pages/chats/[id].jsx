@@ -11,14 +11,13 @@ import {
   ChatContainer,
   MessageList,
   Message,
-  MessageInput,
   ConversationHeader
 } from '@chatscope/chat-ui-kit-react';
 import {
   genericRequest,
   getRequest
 } from '@/components/utility/request_helper';
-import { Alert, AlertTitle, Box, Icon, IconButton, Link, Snackbar, Typography } from '@mui/material'
+import { Alert, AlertTitle, Box, Divider, Icon, IconButton, Link, Paper, Snackbar, Typography } from '@mui/material'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import SyntaxHighlighter from 'react-syntax-highlighter';
@@ -32,8 +31,15 @@ import LayoutWithNav from '@/components/utility/layout_with_nav';
 import { useUserContext } from '@/context/user';
 import { Mic, Phone, Settings } from '@mui/icons-material';
 import { API_ROOT } from '@/components/utility/apiConfig';
+import ToolDrawer from '@/components/conversations/toolDrawer';
+import OutgoingMessage from '@/components/conversations/outgoingMessage';
+import IncomingMessage from '@/components/conversations/incomingMessage';
+import MessageContainer from '@/components/conversations/messageContainer';
+import ChatHeader from '@/components/utility/headers/chatHeader';
+import MessageInput from '@/components/conversations/messageInput';
 
 export default function Home() {
+  const [toolsExt, setToolsExt] = useState(false)
   const [newMessage, setNewMessage] = useState("")
   const [botId, setBotId] = useState()
   const [chatId, setChatId] = useState()
@@ -141,13 +147,13 @@ export default function Home() {
     if (message.sender === "system") {
       return (<MessageSeparator>{message.content}</MessageSeparator>)
     } else if (message.sender == "You") {
-      return (<Message model={message} key={index} style={{ fontSize: "16px" }} >
+      return (<OutgoingMessage >
         {customMessageContent(message)}
-      </Message>)
+      </OutgoingMessage>)
     } else {
-      return (<Message className="TestClass2" model={message} key={index} style={{ fontSize: "16px" }}>
+      return (<IncomingMessage >
         {customMessageContent(message)}
-      </Message>)
+      </IncomingMessage>)
     }
   }
 
@@ -196,7 +202,8 @@ export default function Home() {
 
   }, [])
 
-  const handleNewMessage = () => {
+  const handleNewMessage = (ev) => {
+    ev.preventDefault()
     const newMessageJson = {
       role: "user",
       content: newMessage,
@@ -216,14 +223,6 @@ export default function Home() {
     })
 
     inputRef.current.focus();
-  }
-
-  const typingIndicator = () => {
-    if (glyphTyping) {
-      return <TypingIndicator style={{ backgroundColor: theme.palette.background.default }} content="Glyph is typing" />
-    } else {
-      return null
-    }
   }
 
   const handleUploadClick = (ev) => {
@@ -309,71 +308,36 @@ export default function Home() {
           ref={inputFile}
           style={{ display: 'none' }}
         />
-        <MainContainer>
-          <ChatContainer>
-            <ConversationHeader >
-              <ConversationHeader.Back onClick={() => { router.push("/conversations") }} />
-              <Avatar src={bot.avatar_location || "/glyph-avatar.png"} name={bot.name} />
-              <ConversationHeader.Content userName={<Typography variant="h6">{bot.name}</Typography>} info={chat.name} />
-              <ConversationHeader.Actions>
+        <Box sx={{ height: "100%" }}>
+          <ChatHeader bot={bot} user={user} />
+          <MessageContainer messageArray={chatData} typingIndicator={glyphTyping} toolsExt={toolsExt} renderSettings={renderBotSettings()} />
+          <Paper elevation={5} sx={{ position: "absolute", bottom: "0px", width: "100%", backgroundColor: "white" }}>
+            {
+              renderBotSettings() && (
+                <ToolDrawer bot={bot} setBot={setBot} setToolsExt={setToolsExt} toolsExt={toolsExt} user={user} />
+              )
+            }
+            <Divider sx={{ width: "100%" }} />
+            <MessageInput
+              user={user}
+              onSubmit={handleNewMessage}
+              inputProps={
                 {
-                  showTts && (
-                    <IconButton id="conversation-mode-button" onClick={() => { router.push(`/voice/${chatId}`) }}>
-                      <Phone />
-                    </IconButton>
-                  )
+                  disabled: messageInputDisabled(),
+                  onChange: (ev) => { setNewMessage(ev.target.value) },
+                  value: newMessage,
+                  ref: inputRef
+                }
+              }
+              sendProps={
+                {
+                  disabled: messageInputDisabled()
                 }
 
-                {
-                  renderBotSettings()
-                }
-              </ConversationHeader.Actions>
-
-            </ConversationHeader>
-            <MessageList style={{ display: "flex", backgroundColor: theme.palette.background.default }} typingIndicator={typingIndicator()}>
-              {
-                chatData && chatData.map((obj, index) => {
-                  return customMessage(obj, index)
-                })
               }
-            </MessageList>
-            <div as={MessageInput} style={{
-              display: "flex",
-              flexDirection: "row",
-              borderTop: "1px solid #d1dbe4"
-            }}>
-              {
-                (user.id === bot.creator_id && Math.abs(user.files_left) > 0) && <AttachmentButton
-                  style={{
-                    fontSize: "1.2em",
-                    paddingLeft: "0.2em",
-                    paddingRight: "0.2em"
-                  }}
-                  onClick={handleUploadClick}
-                />
-              }
-              <MessageInput
-                ref={inputRef}
-                onChange={(val) => { setNewMessage(val) }}
-                value={newMessage}
-                sendButton={false}
-                disabled={messageInputDisabled()}
-                attachButton={false}
-                onSend={handleNewMessage} style={{
-                  flexGrow: 1,
-                  borderTop: 0,
-                  flexShrink: "initial"
-                }}
-              />
-              <SendButton onClick={handleNewMessage} disabled={newMessage.length === 0} style={{
-                fontSize: "1.2em",
-                marginLeft: 0,
-                paddingLeft: "0.2em",
-                paddingRight: "0.2em"
-              }} />
-            </div>
-          </ChatContainer>
-        </MainContainer>
+            />
+          </Paper>
+        </Box>
       </div >
     </LayoutWithNav>
   )

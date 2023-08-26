@@ -5,7 +5,7 @@ import OutgoingMessage from "@/components/conversations/outgoingMessage";
 import ToolDrawer from "@/components/conversations/toolDrawer";
 import ChatHeader from "@/components/utility/headers/chatHeader";
 import LayoutWithNav from "@/components/utility/layout_with_nav";
-import { Box, Divider } from "@mui/material";
+import { Box, Divider, Paper } from "@mui/material";
 import { useState } from "react";
 
 const content = "Can you check this chart and review Game Master notes to see if Kim can Level up tonight: https://5thsrd.org/rules/leveling_up/"
@@ -88,14 +88,14 @@ export default function Index() {
     const [toolsExt, setToolsExt] = useState(false)
     return (
         <LayoutWithNav showNavigation={false}>
-            <Box sx={{height: "100%"}}>
-            <ChatHeader/>
-            <MessageContainer messageArray={messageArray} typingIndicator={true} toolsExt={toolsExt}/>
-            <Box sx={{position: "absolute", bottom: "0px", width: "100%", backgroundColor: "white"}}>
-                <ToolDrawer bot={null} setToolsExt={setToolsExt} toolsExt={toolsExt}/>
-                <Divider sx={{width: "100%"}}/>
-                <MessageInput/>
-            </Box>
+            <Box sx={{ height: "100%" }}>
+                <ChatHeader />
+                <MessageContainer messageArray={messageArray} typingIndicator={true} toolsExt={toolsExt} />
+                <Paper elevation={5} sx={{ position: "absolute", bottom: "0px", width: "100%", backgroundColor: "white" }}>
+                    <ToolDrawer bot={null} setToolsExt={setToolsExt} toolsExt={toolsExt} />
+                    <Divider sx={{ width: "100%" }} />
+                    <MessageInput />
+                </Paper>
             </Box>
         </LayoutWithNav>
     )

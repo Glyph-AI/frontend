@@ -22,14 +22,14 @@ export const darkTheme = createTheme({
 export const theme = createTheme({
   typography: {
     fontFamily: [
-      "Kumbh Sans-Medium", 
+      "Kumbh Sans-Medium",
       "Helvetica"
     ],
     body: {
       fontSize: "18px"
     },
     body2: {
-      fontSize: "12px"
+      fontSize: "14px"
     }
   },
   palette: {
