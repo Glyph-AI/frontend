@@ -29,7 +29,7 @@ export const TransitionTextField = styled(TextField)(() => ({
     transition: "all .3s ease-out"
 }))
 
-export default function BaseHeader({ title, searchFunction }) {
+export default function BaseHeader({ title, searchFunction, showSearch }) {
     const [searchActive, setSearchActive] = useState(false)
     const theme = useTheme()
     const inputRef = useRef(null)
@@ -44,7 +44,7 @@ export default function BaseHeader({ title, searchFunction }) {
                 position="sticky"
                 elevation={0}
             >
-                <StyledToolbar sx={{ display: "flex", paddingLeft: "8px" }}>
+                <StyledToolbar sx={{ display: "flex", paddingLeft: "16px" }}>
                     <Box sx={{ flex: 1 }} onClick={() => { setSearchActive(!searchActive) }}>
                         <Typography
                             sx={
@@ -75,9 +75,13 @@ export default function BaseHeader({ title, searchFunction }) {
                         />
 
                     </Box>
-                    <IconButton edge="end">
-                        <Search onClick={() => { setSearchActive(!searchActive) }} />
-                    </IconButton>
+                    {
+                        showSearch && (
+                            <IconButton edge="end">
+                                <Search onClick={() => { setSearchActive(!searchActive) }} />
+                            </IconButton>
+                        )
+                    }
                 </StyledToolbar>
             </StyledAppBar>
         </>

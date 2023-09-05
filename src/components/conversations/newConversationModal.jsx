@@ -20,14 +20,14 @@ import { ItemCreate, StyledList } from '../utility/common/dataSelectTabs';
 import { Add } from '@mui/icons-material';
 import { createChat } from '../api/chats';
 
-export const StyledBox = styled(Box)(({ theme }) => {
+export const StyledBox = styled(Box)(() => {
     const theme = useTheme()
     return ({
         backgroundColor: theme.palette.mode === 'light' ? '#fff' : grey[800],
     })
 });
 
-export const Puller = styled(Box)(({ theme }) => {
+export const Puller = styled(Box)(() => {
     const theme = useTheme()
     return ({
         width: 30,

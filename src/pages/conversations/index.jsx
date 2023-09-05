@@ -23,13 +23,10 @@ export default function Conversations() {
     const searchParams = useSearchParams()
 
     useEffect(() => {
-        console.log(searchParams)
         let create = searchParams.get("create")
-        if (create !== undefined) {
+        if (create !== undefined && create !== null) {
             setModalVisible(true)
         }
-
-        console.log("HERE", create)
 
         const activeSession = getCookie("active_session")
         if (activeSession !== "true") {
@@ -65,12 +62,14 @@ export default function Conversations() {
             setUserChats(data);
             setDisplayChats(data);
             setModalVisible(false)
+            router.push("/conversations")
         })
+
     }
 
     return (
         <LayoutWithNav>
-            <BaseHeader title="All Chats" searchFunction={handleSearchValueChange} />
+            <BaseHeader title="All Chats" searchFunction={handleSearchValueChange} showSearch={true} />
             <Box sx={{ padding: "8px" }}>
                 <ConversationList chats={displayChats} />
             </Box>

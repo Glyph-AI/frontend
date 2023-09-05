@@ -15,29 +15,23 @@ import LayoutWithNav from "@/components/utility/layout_with_nav";
 import { Masonry } from "@mui/lab";
 import { useUserContext } from "@/context/user";
 import { theme } from "@/components/utility/theme";
+import BaseHeader from "@/components/utility/headers/baseHeader";
+import BotCard from "@/components/bots/botCard";
+import { getUserBots } from "@/components/api/bots";
+import { getCurrentUser } from "@/components/api/users";
+import BotStoreModal from "@/components/bots/botStoreModal";
+import { Global } from "@emotion/react";
+import { useSearchParams } from "next/navigation";
 
 export default function Bots() {
     const [userBots, setUserBots] = useState([])
-    const [displayUserBots, setDisplayUserBots] = useState([])
-    const [searchValue, setSearchValue] = useState("")
     const [user, setUser] = useState({})
+    const [storeModalOpen, setStoreModalOpen] = useState(false)
     const [modalVisible, setModalVisible] = useState(false)
     const [urlBotCode, setUrlBotCode] = useState(null)
     const smallScreen = useMediaQuery(theme.breakpoints.down("md"))
     const router = useRouter()
-
-    const getUserBots = () => {
-        getRequest("/bots", (data) => {
-            setUserBots(sortItems(data))
-            setDisplayUserBots(sortItems(data))
-        })
-    }
-
-    const getUser = () => {
-        getRequest("/profile", (data) => {
-            setUser(data)
-        })
-    }
+    const searchParams = useSearchParams()
 
     const sortItems = (data) => {
         const sorted = data.sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
@@ -48,12 +42,7 @@ export default function Bots() {
     useEffect(() => {
         const activeSession = getCookie("active_session")
         if (activeSession !== "true") {
-            const params = new Proxy(new URLSearchParams(window.location.search), {
-                get: (searchParams, prop) => searchParams.get(prop),
-            });
-
-            let bot_code = params.bot_code
-            console.log("HERE")
+            let bot_code = searchParams.get("bot_code")
             if (bot_code !== null) {
                 router.push(`/login?bot_code=${bot_code}`)
             } else {
@@ -63,24 +52,32 @@ export default function Bots() {
             router.push("/login")
         }
 
-        getUser()
-
-        getUserBots()
-
-        const params = new Proxy(new URLSearchParams(window.location.search), {
-            get: (searchParams, prop) => searchParams.get(prop),
-        });
-
-        let bot_code = params.bot_code
-        if (bot_code !== null) {
-            setUrlBotCode(bot_code)
+        let create = searchParams.get("create")
+        if (create !== undefined && create !== null) {
             setModalVisible(true)
         }
-    }, [])
+
+        console.log("HERE", create)
+
+        getCurrentUser(setUser)
+
+        getUserBots((data) => { setUserBots(sortItems(data)) })
+
+        // const params = new Proxy(new URLSearchParams(window.location.search), {
+        //     get: (searchParams, prop) => searchParams.get(prop),
+        // });
+
+        // let bot_code = params.bot_code
+        // if (bot_code !== null) {
+        //     setUrlBotCode(bot_code)
+        //     setModalVisible(true)
+        // }
+    }, [searchParams])
 
     const handleModalClose = () => {
         setModalVisible(false);
-        getUserBots()
+        getUserBots(setUserBots)
+        router.push("/bots")
     }
 
     const searchFunction = (searchTerm, array) => {
@@ -104,50 +101,46 @@ export default function Bots() {
     }
 
     return (
-        <LayoutWithNav>
-            <Box sx={{ padding: "8px", height: 60, display: "flex", marginBottom: "16px", alignContent: "center" }}>
-                <Search placeholder="Search..." style={{ flex: 1, fontSize: 16 }} value={searchValue} onChange={handleSearchValueChange} />
-                <Avatar
-                    onMouseEnter={(e) => { e.target.style.cursor = "pointer" }}
-                    sx={{ marginLeft: "16px", width: 40, height: 40 }}
-                    alt={user.first_name}
-                    src={user.profile_picture_location}
-                    onClick={() => { router.push("/profile") }}
-                />
-            </Box>
-            <Box
-                sx={{
-                    padding: "8px",
-                    width: "100%",
-                    height: "95%",
-                    overflowY: "scroll",
-                    display: "flex",
-                    justifyContent: "center",
-                    boxSizing: smallScreen ? "inherit" : "content-box"
+        <>
+            <Global
+                styles={{
+                    '.MuiDrawer-root > .MuiPaper-root': {
+                        height: `calc(50% - ${128}px)`,
+                        overflow: 'visible',
+                    },
                 }}
-            >
-                <Masonry
-                    columns={1}
-                    spacing={2}
-                    sx={{ minHeight: "90%", pb: "50px" }}
+            />
+            <LayoutWithNav>
+                <BaseHeader title="Bot Library" searchFunction={() => { }} showSearch={true} />
+                <Box
+                    sx={{
+                        padding: "8px",
+                        width: "100%",
+                        height: "95%",
+                        overflowY: "scroll",
+                        display: "flex",
+                        justifyContent: "center",
+                        boxSizing: smallScreen ? "inherit" : "content-box"
+                    }}
                 >
-                    {
-                        displayUserBots && displayUserBots.map((item) => (
-                            <BotListItem bot={item} displayLink={item.creator_id == user.id} />
-                        ))
-                    }
-                </Masonry>
-            </Box>
+                    <Masonry columns={2} spacing={2} sx={{ display: "-webkit-box", minHeight: "90%", pb: "50px" }}>
+                        {
+                            userBots.map((item) => {
+                                return (<BotCard bot={item} isStore={false} />)
+                            })
+                        }
+                    </Masonry>
+                    <BotStoreModal
+                        open={storeModalOpen}
+                        handleClose={() => setStoreModalOpen(false)}
+                        handleOpen={() => setStoreModalOpen(true)}
+                    />
+                    <NewBotModal open={modalVisible} handleClose={handleModalClose} user={user} />
+                </Box>
 
-            {
-                showCreation() && (
-                    <Fab onClick={() => { setModalVisible(true) }} sx={{ position: 'absolute', bottom: 64, right: 16 }} >
-                        <Add />
-                    </Fab>
-                )
-            }
+            </LayoutWithNav >
+        </>
 
-            <NewBotModal urlBotCode={urlBotCode} open={modalVisible} handleClose={handleModalClose} />
-        </LayoutWithNav>
+
     )
 }

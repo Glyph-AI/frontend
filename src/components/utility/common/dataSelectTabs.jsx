@@ -96,7 +96,7 @@ function LinkListItem({ id, redirectUrl, primaryText, secondaryText }) {
     )
 }
 
-export default function DataSelectTabs({ isSelectable, bot, setBot, user }) {
+export default function DataSelectTabs({ isSelectable, bot, setBot, user, contentHeight }) {
     const [tabValue, setTabValue] = useState(0)
     const [availableTexts, setAvailableTexts] = useState([])
     const [availableTools, setAvailableTools] = useState([])
@@ -194,7 +194,7 @@ export default function DataSelectTabs({ isSelectable, bot, setBot, user }) {
                     label={<Typography sx={{ fontWeight: 500 }} variant="body2">Tools</Typography>}
                 />
             </StyledTabs>
-            <Box sx={{ height: "90%", overflowY: "scroll" }}>
+            <Box sx={{ maxHeight: contentHeight || "90%", overflowY: "scroll" }}>
                 <SwipeableViews
                     axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
                     index={tabValue}

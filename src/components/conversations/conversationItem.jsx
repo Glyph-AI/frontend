@@ -1,23 +1,16 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState } from 'react';
 import {
     Conversation,
     Avatar
 } from '@chatscope/chat-ui-kit-react'
 import {
-    List,
-    ListItem,
     ListItemText,
-    Divider,
-    Collapse,
-    Popover,
     IconButton,
     Menu,
     MenuItem,
     ListItemIcon
 } from '@mui/material'
 
-import ExpandMore from '@mui/icons-material/ExpandMore';
-import ExpandLess from '@mui/icons-material/ExpandLess';
 import { useRouter } from 'next/router';
 import { Delete, MoreVert } from '@mui/icons-material';
 import { genericRequest } from '../utility/request_helper';

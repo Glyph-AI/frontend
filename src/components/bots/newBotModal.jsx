@@ -1,24 +1,23 @@
-import { Dialog, DialogContent, DialogTitle, TextField, Box, Divider, Typography, DialogActions, Button, Select, MenuItem, InputLabel, Alert, AlertTitle, Drawer, List, ListItem, ListItemAvatar, Checkbox, ListItemText, useMediaQuery, Backdrop } from "@mui/material";
+import { Dialog, DialogContent, DialogTitle, TextField, Box, Divider, Typography, DialogActions, Button, Select, MenuItem, InputLabel, Alert, AlertTitle, Drawer, List, ListItem, ListItemAvatar, Checkbox, ListItemText, useMediaQuery, Backdrop, SwipeableDrawer, ListItemButton } from "@mui/material";
 import { useEffect, useState } from "react";
 import { genericRequest, getRequest } from "../utility/request_helper";
 import { useRouter } from "next/router";
 import { useUserContext } from "@/context/user";
 import { Note } from "@mui/icons-material";
 import { theme } from "../utility/theme";
+import { Puller, StyledBox } from "../conversations/newConversationModal";
+import DataSelectTabs, { StyledList } from "../utility/common/dataSelectTabs";
+import { StyledListItem } from "../conversations/conversationList";
+import { getPerosonas } from "../api/personas";
 
-export default function NewBotModal({ open, handleClose }) {
+export default function NewBotModal({ open, handleClose, user }) {
     const [name, setName] = useState("")
-    const [personas, setPersonas] = useState([])
     const [botPersona, setBotPersona] = useState(null)
-    const [availableTexts, setAvailableTexts] = useState([])
-    const [availableTools, setAvailableTools] = useState([])
+    const [selectedPersonaId, setSelectedPersonaId] = useState(null)
     const [texts, setTexts] = useState([])
     const [tools, setTools] = useState([])
     const [botCode, setBotCode] = useState("")
-    const [user, setUser] = useState({})
-    const [showCreation, setShowCreation] = useState(false)
-    const smallScreen = useMediaQuery(theme.breakpoints.down("md"))
-    const router = useRouter()
+    const [personas, setPersonas] = useState([])
 
     const onAdd = () => {
         if (botCode !== "") {
@@ -49,25 +48,18 @@ export default function NewBotModal({ open, handleClose }) {
         }
     }
 
-    const getUser = () => {
-        getRequest("/profile", (data) => {
-            setUser(data)
-            if (data.allowed_bots == -1) {
-                setShowCreation(true)
-            } else if (data.bots_left <= 0) {
-                setShowCreation(false)
-            } else {
-                setShowCreation(true)
-            }
-
-            return true
-        })
-    }
-
     const sortItems = (data) => {
         const sorted = data.sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
 
         return sorted
+    }
+
+    const buttonDisabled = () => {
+        if (selectedPersonaId && name) {
+            return false
+        }
+
+        return true
     }
 
     useEffect(() => {
@@ -80,166 +72,8 @@ export default function NewBotModal({ open, handleClose }) {
             setBotCode(bot_code || "")
         }
 
-        getRequest("/personas", (data) => {
-            setPersonas(data)
-        })
-
-        getRequest("/texts", (data) => {
-            setAvailableTexts(sortItems(data))
-        })
-
-        getRequest("/tools", (data) => {
-            setAvailableTools(sortItems(data))
-        })
-
-        getUser()
-
-
+        getPerosonas(setPersonas)
     }, [])
-
-    const addDisabled = () => {
-        if (botCode !== "") {
-            return false
-        } else if (name !== "" && botPersona !== null) {
-            return false
-        } else if (!showCreation) {
-            return false
-        }
-
-        return true
-    }
-
-    const isEnabledForBot = (targetList, id) => {
-        if (targetList !== undefined) {
-            var item = targetList.find(i => i.id === id)
-            if (item === undefined) {
-                return false
-            } else {
-                return true
-            }
-        }
-        return false
-    }
-
-    const handleCheck = (stateFunc, stateObj, item) => {
-        var newStateObj = stateObj
-        if (newStateObj.includes(item)) {
-            var filtered = newStateObj.filter(i => i.id !== item.id)
-            stateFunc(filtered)
-        } else {
-            stateFunc([...newStateObj, item])
-        }
-    }
-
-
-    const renderBotCreation = () => {
-        if (showCreation) {
-            return (
-                <Box sx={{ position: "relative" }}>
-                    <Backdrop sx={{ position: "absolute" }} open={botCode !== "" && botCode !== null} />
-                    <Box sx={{ display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "center" }}>
-                        <Typography sx={{ width: "100%", textAlign: "center", fontSize: 20, marginBottom: "8px" }}>Create New Bot</Typography>
-                        <TextField disabled={botCode !== "" && botCode !== null} fullWidth label="Name" value={name} onChange={(e) => { setName(e.target.value) }} />
-                    </Box>
-                    <Box sx={{ marginTop: "8px", display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "center" }}>
-                        <TextField select onChange={(e) => { setBotPersona(e.target.value) }} fullWidth label="Persona">
-                            {
-                                personas && personas.map((p, idx) => {
-                                    return (
-                                        <MenuItem key={idx} value={p.id}>{p.name}</MenuItem>
-                                    )
-                                })
-                            }
-                        </TextField>
-                    </Box>
-                    <Box sx={{ mt: "8px", display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "center" }}>
-                        <Typography variant="h6">Files & Notes</Typography>
-                    </Box>
-                    <Box sx={{ maxHeight: "150px", overflowY: "scroll", marginTop: "8px", display: "flex", flexWrap: "wrap", backgroundColor: "#f6f6f6" }}>
-                        <List>
-                            {
-                                availableTexts && availableTexts.map((item, idx) => {
-                                    return (
-                                        <>
-                                            <ListItem>
-                                                <ListItemAvatar>
-                                                    <Checkbox
-                                                        tabIndex={-1}
-                                                        disabledRipple
-                                                        onClick={() => { handleCheck(setTexts, texts, item) }}
-                                                        edge="start"
-                                                        checked={isEnabledForBot(texts, item.id)}
-                                                    />
-                                                </ListItemAvatar>
-                                                <ListItemText>
-                                                    {item.name || item.id}
-                                                </ListItemText>
-                                            </ListItem>
-                                            <Divider variant="inset" component="li" />
-                                        </>
-                                    )
-                                })
-
-                            }
-                        </List>
-                    </Box>
-                    <Box sx={{ mt: "8px", display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "center" }}>
-                        <Typography variant="h6">Tools</Typography>
-                    </Box>
-                    <Box sx={{ maxHeight: "150px", overflowY: "scroll", marginTop: "8px", display: "flex", flexWrap: "wrap", backgroundColor: "#f6f6f6" }}>
-                        <List>
-                            {
-                                availableTools && availableTools.map((item, idx) => {
-                                    if (item.user_configurable) {
-                                        return (
-                                            <>
-                                                <ListItem>
-                                                    <ListItemAvatar>
-                                                        <Checkbox
-                                                            tabIndex={-1}
-                                                            disabledRipple
-                                                            onClick={() => { handleCheck(setTools, tools, item) }}
-                                                            edge="start"
-                                                            checked={isEnabledForBot(tools, item.id)}
-                                                        />
-                                                    </ListItemAvatar>
-                                                    <ListItemText>
-                                                        {item.name}
-                                                    </ListItemText>
-                                                </ListItem>
-                                                <Divider variant="inset" component="li" />
-                                            </>
-                                        )
-                                    }
-                                })
-
-                            }
-                        </List>
-                    </Box>
-                    <Divider sx={{ mt: "8px", mb: "8px" }} flexItem >OR</Divider>
-                    <Box sx={{ position: "relative", display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "center" }}>
-                        <Backdrop sx={{ position: "absolute" }} open={name !== "" && name !== null} />
-                        <Typography sx={{ width: "100%", textAlign: "center", fontSize: 20, marginBottom: "8px" }}>Sharing Code</Typography>
-                        <TextField disabled={name !== "" && name !== null} fullWidth label="Code" value={botCode} onChange={(e) => { setBotCode(e.target.value) }} />
-                    </Box>
-                </Box>
-            )
-        } else {
-            return (
-                <>
-                    <Box sx={{ display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "center" }}>
-                        <Typography sx={{ width: "100%", textAlign: "center", fontSize: 20, marginBottom: "8px" }}>Create New Bot</Typography>
-                    </Box>
-                    <Alert severity="info" onClick={() => { router.push("/profile") }}>
-                        <AlertTitle>User Not Subscribed</AlertTitle>
-                        You cannot create new bots unless you are subscribed! Click Here!
-                    </Alert>
-                </>
-            )
-        }
-
-        return null
-    }
 
     return (
         <SwipeableDrawer
@@ -266,30 +100,57 @@ export default function NewBotModal({ open, handleClose }) {
             >
                 <Puller />
             </StyledBox>
+            <Box
+                sx={{ padding: "16px" }}
+            >
+                <Box sx={{ marginTop: "24px" }}>
+                    <Typography variant="h5">Create Bot</Typography>
+                </Box>
+                <Box sx={{ width: "100%", display: "flex", marginTop: "32px" }}>
+                    <Box sx={{ width: "75%", marginRight: "24px" }}>
+                        <TextField
+                            value={name}
+                            onChange={(ev) => { setName(ev.target.value) }}
+                            fullWidth variant="standard"
+                            placeholder="Name this chat"
+                        />
+                    </Box>
+                    <Box width={{ width: "10%", "& .MuiButtonBase-root": { padding: "4px 8px" } }}>
+                        <Button
+                            disabled={buttonDisabled()}
+                            variant="contained"
+                        // onClick={handleCreate}
+                        >
+                            Create
+                        </Button>
+                    </Box>
+                </Box>
+                <Box sx={{ overflowY: "scroll", height: "75%", pb: 4 }}>
+                    <Box sx={{ mt: "30px", mb: "16px" }}>
+                        <Typography sx={{ fontWeight: 700, }} color={theme.palette.common.textSecondary} variant="body2">Enable Notes, Tools & Files</Typography>
+                    </Box>
+                    <DataSelectTabs contentHeight={"50%"} isSelectable={true} bot={{ enabled_texts: [], enabledTools: [] }} user={user} />
+                    <Box sx={{ mt: "30px", mb: "16px" }}>
+                        <Typography sx={{ fontWeight: 700, }} color={theme.palette.common.textSecondary} variant="body2">Select Persona</Typography>
+                    </Box>
+                    <StyledList>
+                        {
+                            personas && personas.map((item) => (
+                                <StyledListItem
+                                    onClick={() => { console.log(item); setSelectedPersonaId(item.id) }}
+                                    sx={{ backgroundColor: item.id === selectedPersonaId ? theme.palette.common.selectedBackground : null }}
+                                >
+                                    <ListItemButton disableRipple>
+                                        <ListItemText>
+                                            {item.name}
+                                        </ListItemText>
+                                    </ListItemButton>
+                                </StyledListItem>
+                            ))
+                        }
+                    </StyledList>
+                </Box>
+            </Box>
         </SwipeableDrawer>
-        // <Drawer
-        //     anchor={"bottom"}
-        //     open={open}
-        //     onClose={handleClose}
-        // >
-        //     <Box sx={{ display: "flex", alignItems: "center", justifyContent: "center", padding: "8px", flexWrap: "wrap", width: "100%" }}>
-        //         <Box sx={{ width: "100%", display: "flex", alignItems: "center", justifyContent: "center" }}>
-        //             <Typography variant="h5">Add Bot</Typography>
-        //         </Box>
-        //         <Box sx={{ marginBottom: "16px" }}>
-        //             {
-        //                 renderBotCreation()
-        //             }
-        //         </Box>
-        //         <Box sx={{ width: "100%", display: "flex" }}>
-        //             <Box sx={{ display: "flex", justifyContent: "flex-start", width: "50%", padding: "0 0 8px 24px" }}>
-        //                 <Button varient="conteint" onClick={() => { handleClose() }}>Cancel</Button>
-        //             </Box>
-        //             <Box sx={{ display: "flex", justifyContent: "flex-end", width: "50%", padding: "0 24px 8px 0" }}>
-        //                 <Button variant="contained" disabled={addDisabled()} onClick={() => { onAdd() }}>Add</Button>
-        //             </Box>
-        //         </Box>
-        //     </Box>
-        // </Drawer>
     )
 }
