@@ -242,29 +242,54 @@ export default function NewBotModal({ open, handleClose }) {
     }
 
     return (
-        <Drawer
-            anchor={"bottom"}
+        <SwipeableDrawer
+            anchor="bottom"
             open={open}
             onClose={handleClose}
+            onOpen={() => { }}
+            ModalProps={{
+                keepMounted: true
+            }}
+            sx={{ "& .MuiPaper-root": { height: "100%" } }}
         >
-            <Box sx={{ display: "flex", alignItems: "center", justifyContent: "center", padding: "8px", flexWrap: "wrap", width: "100%" }}>
-                <Box sx={{ width: "100%", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                    <Typography variant="h5">Add Bot</Typography>
-                </Box>
-                <Box sx={{ marginBottom: "16px" }}>
-                    {
-                        renderBotCreation()
-                    }
-                </Box>
-                <Box sx={{ width: "100%", display: "flex" }}>
-                    <Box sx={{ display: "flex", justifyContent: "flex-start", width: "50%", padding: "0 0 8px 24px" }}>
-                        <Button varient="conteint" onClick={() => { handleClose() }}>Cancel</Button>
-                    </Box>
-                    <Box sx={{ display: "flex", justifyContent: "flex-end", width: "50%", padding: "0 24px 8px 0" }}>
-                        <Button variant="contained" disabled={addDisabled()} onClick={() => { onAdd() }}>Add</Button>
-                    </Box>
-                </Box>
-            </Box>
-        </Drawer>
+            <StyledBox
+                sx={{
+                    position: 'absolute',
+                    top: 10,
+                    borderTopLeftRadius: 8,
+                    borderTopRightRadius: 8,
+                    visibility: 'visible',
+                    right: 0,
+                    left: 0,
+                    marginBottom: "8px"
+                }}
+            >
+                <Puller />
+            </StyledBox>
+        </SwipeableDrawer>
+        // <Drawer
+        //     anchor={"bottom"}
+        //     open={open}
+        //     onClose={handleClose}
+        // >
+        //     <Box sx={{ display: "flex", alignItems: "center", justifyContent: "center", padding: "8px", flexWrap: "wrap", width: "100%" }}>
+        //         <Box sx={{ width: "100%", display: "flex", alignItems: "center", justifyContent: "center" }}>
+        //             <Typography variant="h5">Add Bot</Typography>
+        //         </Box>
+        //         <Box sx={{ marginBottom: "16px" }}>
+        //             {
+        //                 renderBotCreation()
+        //             }
+        //         </Box>
+        //         <Box sx={{ width: "100%", display: "flex" }}>
+        //             <Box sx={{ display: "flex", justifyContent: "flex-start", width: "50%", padding: "0 0 8px 24px" }}>
+        //                 <Button varient="conteint" onClick={() => { handleClose() }}>Cancel</Button>
+        //             </Box>
+        //             <Box sx={{ display: "flex", justifyContent: "flex-end", width: "50%", padding: "0 24px 8px 0" }}>
+        //                 <Button variant="contained" disabled={addDisabled()} onClick={() => { onAdd() }}>Add</Button>
+        //             </Box>
+        //         </Box>
+        //     </Box>
+        // </Drawer>
     )
 }

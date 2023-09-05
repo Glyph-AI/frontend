@@ -1,138 +1,160 @@
 import React, { useState, useEFfect } from 'react';
 import {
     Box,
-    Dialog,
-    DialogActions,
-    DialogContent,
-    DialogContextText,
-    DialogTitle,
-    Autocomplete,
-    createFilterOptions,
     TextField,
-    Slide,
-    Button
+    Button,
+    Typography,
+    SwipeableDrawer,
+    useTheme,
+    styled,
+    ListItemIcon,
+    Avatar,
+    ListItemText,
+    IconButton
 } from '@mui/material'
-import { genericRequest, getRequest } from '../utility/request_helper';
 import { useEffect } from 'react';
-import { useUserContext } from '@/context/user';
+import { grey } from '@mui/material/colors';
+import { getUserBots } from '../api/bots';
+import { StyledListItem } from './conversationList';
+import { ItemCreate, StyledList } from '../utility/common/dataSelectTabs';
+import { Add } from '@mui/icons-material';
+import { createChat } from '../api/chats';
 
-const filter = createFilterOptions()
+export const StyledBox = styled(Box)(({ theme }) => {
+    const theme = useTheme()
+    return ({
+        backgroundColor: theme.palette.mode === 'light' ? '#fff' : grey[800],
+    })
+});
 
-export default function NewConversationModal({ open, handleClose }) {
+export const Puller = styled(Box)(({ theme }) => {
+    const theme = useTheme()
+    return ({
+        width: 30,
+        height: 6,
+        backgroundColor: theme.palette.mode === 'light' ? grey[300] : grey[900],
+        borderRadius: 3,
+        position: 'absolute',
+        top: 8,
+        left: 'calc(50% - 15px)',
+    })
+});
+
+export default function NewConversationModal({ open, handleClose, updateUserFunc, user }) {
     const [bot, setBot] = useState(null)
     const [userBots, setUserBots] = useState([])
     const [conversationName, setConversationName] = useState("")
-    const [user, setUser] = useState({})
     const [showCreation, setShowCreation] = useState(false)
+    const theme = useTheme()
 
-    const getUser = () => {
-        getRequest("/profile", (data) => {
-            setUser(data)
-            setShowCreation(data.subscribed && data.is_current)
-        })
-    }
-
-    const createNewBot = (obj) => {
+    const createNewChat = () => {
         const data = {
-            name: obj.inputValue
-        }
-
-        genericRequest("/bots", "POST", JSON.stringify(data), (data) => {
-            setUserBots([...userBots, data])
-            setBot(data)
-        }, { "Content-Type": "application/json" })
-    }
-
-    const createNewChat = (name) => {
-        const data = {
-            name: name,
+            name: conversationName,
             bot_id: bot.id,
             bot: bot
         }
 
-        genericRequest("/chats", "POST", JSON.stringify(data), () => {
-            handleClose();
-        }, { "Content-Type": "application/json" })
-    }
-
-    const getUserBots = () => {
-        getRequest("/bots", (data) => {
-            setUserBots(data)
-        })
+        createChat(data, handleClose)
     }
 
     const handleCreate = () => {
-        createNewChat(conversationName);
+        createNewChat();
+        updateUserFunc()
+    }
+
+    const buttonDisabled = () => {
+        if (conversationName !== null && bot !== null) {
+            return false
+        }
+
+        return true
     }
 
     useEffect(() => {
-        getUser()
-        getUserBots()
+        getUserBots(setUserBots)
     }, [])
 
     return (
-        <Dialog
+        <SwipeableDrawer
+            anchor="bottom"
             open={open}
             onClose={handleClose}
+            onOpen={() => { }}
+            ModalProps={{
+                keepMounted: true
+            }}
+            sx={{ "& .MuiPaper-root": { height: "100%" } }}
         >
-            <DialogTitle>New Chat</DialogTitle>
-            <DialogContent>
-                <Box sx={{ padding: "8px 0 8px 0", width: "100%" }}>
-                    <TextField value={conversationName} onChange={(e) => { setConversationName(e.target.value) }} fullWidth label="Conversation Name" />
+            <StyledBox
+                sx={{
+                    position: 'absolute',
+                    top: 10,
+                    borderTopLeftRadius: 8,
+                    borderTopRightRadius: 8,
+                    visibility: 'visible',
+                    right: 0,
+                    left: 0,
+                    marginBottom: "8px"
+                }}
+            >
+                <Puller />
+            </StyledBox>
+            <Box sx={{ padding: "16px" }}>
+                <Box sx={{ marginTop: "24px" }}>
+                    <Typography variant="h5">Create Chat</Typography>
                 </Box>
-                <Box sx={{ padding: "8px 0 8px 0" }}>
-
-                    <Autocomplete
-                        value={bot}
-                        onChange={(event, newValue) => {
-                            if (typeof newValue === 'string') {
-                                createNewBot(newValue)
-                            } else if (newValue && newValue.inputValue) {
-                                // Create a new value from the user input
-                                createNewBot(newValue)
-                            } else {
-                                setBot(newValue);
-                            }
-                        }}
-                        filterOptions={(options, params) => {
-                            const filtered = filter(options, params);
-
-                            const { inputValue } = params;
-                            // Suggest the creation of a new value
-
-                            return filtered;
-                        }}
-                        selectOnFocus
-                        clearOnBlur
-                        handleHomeEndKeys
-                        id="free-solo-with-text-demo"
-                        options={userBots}
-                        getOptionLabel={(option) => {
-                            // Value selected with enter, right from the input
-                            if (typeof option === 'string') {
-                                return option;
-                            }
-                            // Add "xxx" option created dynamically
-                            if (option.inputValue) {
-                                return option.inputValue;
-                            }
-                            // Regular option
-                            return option.name;
-                        }}
-                        renderOption={(props, option) => <li {...props}>{option.name}</li>}
-                        sx={{ width: 300 }}
-                        freeSolo
-                        renderInput={(params) => (
-                            <TextField {...params} label="Bot" />
-                        )}
-                    />
+                <Box sx={{ width: "100%", display: "flex", marginTop: "32px" }}>
+                    <Box sx={{ width: "75%", marginRight: "24px" }}>
+                        <TextField
+                            value={conversationName}
+                            onChange={(ev) => { setConversationName(ev.target.value) }}
+                            fullWidth variant="standard"
+                            placeholder="Name this chat"
+                        />
+                    </Box>
+                    <Box width={{ width: "10%", "& .MuiButtonBase-root": { padding: "4px 8px" } }}>
+                        <Button
+                            disabled={buttonDisabled()}
+                            variant="contained"
+                            onClick={handleCreate}
+                        >
+                            Create
+                        </Button>
+                    </Box>
                 </Box>
+                <Box sx={{ mt: "30px", mb: "16px" }}>
+                    <Typography sx={{ fontWeight: 700, }} color={theme.palette.common.textSecondary} variant="body2">Select Bot to Chat With</Typography>
+                </Box>
+                {
+                    Math.abs(user.bots_left) > 0 && (
+                        <ItemCreate>
+                            <Box className="text-container" sx={{}}>
+                                <Typography variant="body2">Create New</Typography>
+                            </Box>
+                            <IconButton className="button-container">
+                                <Add />
+                            </IconButton>
+                        </ItemCreate>
+                    )
+                }
 
-            </DialogContent>
-            <DialogActions>
-                <Button onClick={() => { handleClose() }}>Cancel</Button>
-                <Button onClick={() => { handleCreate() }}>Create</Button>
-            </DialogActions>
-        </Dialog>
+                <StyledList>
+                    {
+                        userBots.map((el) => {
+                            var bgColor = el === bot ? "rgba(47, 128, 237, 0.1)" : null
+                            return (
+                                <StyledListItem sx={{ backgroundColor: bgColor }} onClick={() => { setBot(el) }} >
+                                    <ListItemIcon>
+                                        <Avatar src={el.avatar_location || "/glyph-avatar.png"} />
+                                    </ListItemIcon>
+                                    <ListItemText primary={el.name} />
+                                </StyledListItem>
+                            )
+                        })
+                    }
+                </StyledList>
+            </Box>
+
+        </SwipeableDrawer>
     )
 }

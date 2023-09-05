@@ -8,12 +8,42 @@ import { useEffect } from "react"
 import { getAvailableTexts, handleTextHide } from "@/components/api/texts"
 import { getTools, handleToolDisable } from "@/components/api/tools"
 
-const StyledListItem = styled(ListItem)(() => ({
+export const StyledListItem = styled(ListItem)(() => ({
     borderRadius: "8px",
     "& .MuiListItemButton-root": {
         padding: "4px 4px 4px 4px"
     }
 }))
+
+export const StyledList = styled(List)(() => ({
+    display: "flex",
+    gap: "4px",
+    flexWrap: "wrap"
+}))
+
+
+export const ItemCreate = styled(Box)(() => {
+    const theme = useTheme()
+    return ({
+        // border: "1px solid" + theme.palette.primary.main,
+        padding: "8px",
+        borderRadius: "8px",
+        display: "flex",
+        // marginBottom: "8px",
+        alignItems: "center",
+        width: "100%",
+        "& .text-container": {
+            flex: 1,
+            color: theme.palette.primary.main
+        },
+        "& .button-container": {
+            color: "white",
+            padding: 0,
+            borderRadius: "2px",
+            backgroundColor: theme.palette.primary.main
+        }
+    })
+})
 
 function SelectableListItem({ id, isSelected, onSelectionChange, primaryText, secondaryText }) {
     const selectionBackground = "rgba(47, 128, 237, 0.1)"
@@ -103,32 +133,6 @@ export default function DataSelectTabs({ isSelectable, bot, setBot, user }) {
         height: "28px",
         padding: 0,
         minWidth: "0px"
-    }))
-
-    const StyledList = styled(List)(({ theme }) => ({
-        display: "flex",
-        gap: "4px",
-        flexWrap: "wrap"
-    }))
-
-    const ItemCreate = styled(Box)(({ theme }) => ({
-        // border: "1px solid" + theme.palette.primary.main,
-        padding: "8px",
-        borderRadius: "8px",
-        display: "flex",
-        // marginBottom: "8px",
-        alignItems: "center",
-        width: "100%",
-        "& .text-container": {
-            flex: 1,
-            color: theme.palette.primary.main
-        },
-        "& .button-container": {
-            color: "white",
-            padding: 0,
-            borderRadius: "2px",
-            backgroundColor: theme.palette.primary.main
-        }
     }))
 
     const handleTabChange = (idx) => {

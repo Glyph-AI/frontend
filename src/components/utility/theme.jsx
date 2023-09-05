@@ -39,6 +39,7 @@ export const theme = createTheme({
       darkBlue: "#1b1a57",
       subtitleBlue: "#4e5d7b",
       offWhite: "#e3e3e3",
+      textSecondary: "#4F5E7B"
     },
     primary: {
       main: "#2f80ed",

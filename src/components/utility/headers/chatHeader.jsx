@@ -2,6 +2,8 @@
 import { ArrowBack, MoreVert } from "@mui/icons-material";
 import { AppBar, Avatar, Box, Divider, IconButton, Toolbar, Typography, styled, useTheme } from "@mui/material";
 import { useRouter } from "next/router";
+import { StyledAppBar, StyledToolbar } from "./baseHeader";
+
 
 export default function ChatHeader({ bot, user }) {
     const theme = useTheme()
@@ -45,7 +47,7 @@ export default function ChatHeader({ bot, user }) {
 
     return (
         <>
-            <AppBar
+            <StyledAppBar
                 position="sticky"
                 elevation={5}
                 sx={{
@@ -54,7 +56,7 @@ export default function ChatHeader({ bot, user }) {
                     fontWeight: 500
                 }}
             >
-                <Toolbar sx={{ pl: 0, mb: "4px", mt: "4px" }}>
+                <StyledToolbar>
                     <IconButton
                         onClick={() => { router.push("/conversations") }}
                         sx={{ color: theme.palette.common.darkBlue }}
@@ -69,9 +71,9 @@ export default function ChatHeader({ bot, user }) {
                     <IconButton edge="end">
                         <MoreVert />
                     </IconButton>
-                </Toolbar>
+                </StyledToolbar>
                 <Divider sx={{ width: "100%" }} />
-            </AppBar>
+            </StyledAppBar>
 
         </>
     )
