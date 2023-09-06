@@ -2,7 +2,8 @@ import { genericRequest, getRequest } from "../utility/request_helper"
 
 export const getTools = (setter) => {
     getRequest("/tools", (data) => {
-        setter(data)
+        const tools = data.filter((item) => item.user_configurable)
+        setter(tools)
     })
 }
 

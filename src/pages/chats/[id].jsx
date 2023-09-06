@@ -23,14 +23,10 @@ import remarkGfm from 'remark-gfm'
 import SyntaxHighlighter from 'react-syntax-highlighter';
 import { atomOneDark } from 'react-syntax-highlighter/dist/cjs/styles/hljs';
 import { useRouter } from 'next/router';
-import Layout from '@/components/utility/layout';
-import { motion } from "framer-motion";
 import { getCookie } from '@/components/utility/cookie_helper';
 import { theme } from '@/components/utility/theme.jsx';
 import LayoutWithNav from '@/components/utility/layout_with_nav';
-import { useUserContext } from '@/context/user';
 import { Mic, Phone, Settings } from '@mui/icons-material';
-import { API_ROOT } from '@/components/utility/apiConfig';
 import ToolDrawer from '@/components/conversations/toolDrawer';
 import OutgoingMessage from '@/components/conversations/outgoingMessage';
 import IncomingMessage from '@/components/conversations/incomingMessage';

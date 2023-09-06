@@ -1,79 +1,63 @@
-import { Dialog, DialogContent, DialogTitle, TextField, Box, Divider, Typography, DialogActions, Button, Select, MenuItem, InputLabel, Alert, AlertTitle, Drawer, List, ListItem, ListItemAvatar, Checkbox, ListItemText, useMediaQuery, Backdrop, SwipeableDrawer, ListItemButton } from "@mui/material";
+import { TextField, Box, Divider, Typography, Button, ListItemText, SwipeableDrawer, ListItemButton } from "@mui/material";
 import { useEffect, useState } from "react";
-import { genericRequest, getRequest } from "../utility/request_helper";
-import { useRouter } from "next/router";
-import { useUserContext } from "@/context/user";
-import { Note } from "@mui/icons-material";
+import { genericRequest } from "../utility/request_helper";
 import { theme } from "../utility/theme";
 import { Puller, StyledBox } from "../conversations/newConversationModal";
 import DataSelectTabs, { StyledList } from "../utility/common/dataSelectTabs";
 import { StyledListItem } from "../conversations/conversationList";
 import { getPerosonas } from "../api/personas";
+import { createBot, getBot } from "../api/bots";
+import { useSearchParams } from "next/navigation";
 
-export default function NewBotModal({ open, handleClose, user }) {
+const emptyBot = {
+    id: null,
+    name: null,
+    persona_id: {},
+    enabled_tools: [],
+    enabled_texts: [],
+    sharing_enabled: false,
+    sharing_code: null,
+}
+
+export default function NewBotModal({ open, handleClose, user, editMode }) {
     const [name, setName] = useState("")
-    const [botPersona, setBotPersona] = useState(null)
+    const [bot, setBot] = useState(null)
     const [selectedPersonaId, setSelectedPersonaId] = useState(null)
-    const [texts, setTexts] = useState([])
-    const [tools, setTools] = useState([])
-    const [botCode, setBotCode] = useState("")
     const [personas, setPersonas] = useState([])
+    const [headerText, setHeaderText] = useState("Create Bot")
+    const searchParams = useSearchParams()
+    const buttonDisabled = !(selectedPersonaId && name)
 
-    const onAdd = () => {
-        if (botCode !== "") {
-            // we're adding a shared bot
-            const data = {
-                sharing_code: botCode
-            }
-            genericRequest("/bots/add-shared", "POST", JSON.stringify(data), () => {
-                setBotCode("")
-                handleClose()
-            }, { "Content-Type": "application/json" })
-        } else {
-            const data = {
-                name: name,
-                sharing_enabled: false,
-                persona_id: botPersona,
-                enabled_texts: texts,
-                enabled_tools: tools
-            }
-
-            genericRequest("/bots", "POST", JSON.stringify(data), () => {
-                setName("")
-                setBotPersona(null)
-                setTexts([])
-                setTools([])
-                handleClose()
-            }, { "Content-Type": "application/json" })
-        }
+    const handleCreate = () => {
+        bot.name = name
+        bot.persona_id = selectedPersonaId
+        createBot(bot, (data) => {
+            setName("")
+            setSelectedPersonaId(null)
+            setBot(emptyBot)
+            handleClose()
+        })
     }
 
-    const sortItems = (data) => {
-        const sorted = data.sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
-
-        return sorted
-    }
-
-    const buttonDisabled = () => {
-        if (selectedPersonaId && name) {
-            return false
-        }
-
-        return true
-    }
 
     useEffect(() => {
-        const params = new Proxy(new URLSearchParams(window.location.search), {
-            get: (searchParams, prop) => searchParams.get(prop),
-        });
-
-        let bot_code = params.bot_code
-        if (bot_code !== undefined || bot_code !== null) {
-            setBotCode(bot_code || "")
-        }
-
+        // let bot_code = params.bot_code
+        // if (bot_code !== undefined || bot_code !== null) {
+        //     setBotCode(bot_code || "")
+        // }
+        setBot(emptyBot)
         getPerosonas(setPersonas)
-    }, [])
+
+        let bot_id = searchParams.get("bot_id")
+        if (editMode && bot_id) {
+            getBot(bot_id, (data) => {
+                setBot(data);
+                setName(data.name);
+                setHeaderText(data.name);
+                setSelectedPersonaId(data.persona.id)
+            })
+        }
+    }, [searchParams])
 
     return (
         <SwipeableDrawer
@@ -81,9 +65,6 @@ export default function NewBotModal({ open, handleClose, user }) {
             open={open}
             onClose={handleClose}
             onOpen={() => { }}
-            ModalProps={{
-                keepMounted: true
-            }}
             sx={{ "& .MuiPaper-root": { height: "100%" } }}
         >
             <StyledBox
@@ -104,7 +85,7 @@ export default function NewBotModal({ open, handleClose, user }) {
                 sx={{ padding: "16px" }}
             >
                 <Box sx={{ marginTop: "24px" }}>
-                    <Typography variant="h5">Create Bot</Typography>
+                    <Typography variant="h5">{headerText}</Typography>
                 </Box>
                 <Box sx={{ width: "100%", display: "flex", marginTop: "32px" }}>
                     <Box sx={{ width: "75%", marginRight: "24px" }}>
@@ -112,12 +93,12 @@ export default function NewBotModal({ open, handleClose, user }) {
                             value={name}
                             onChange={(ev) => { setName(ev.target.value) }}
                             fullWidth variant="standard"
-                            placeholder="Name this chat"
+                            placeholder="Name this bot"
                         />
                     </Box>
                     <Box width={{ width: "10%", "& .MuiButtonBase-root": { padding: "4px 8px" } }}>
                         <Button
-                            disabled={buttonDisabled()}
+                            disabled={buttonDisabled}
                             variant="contained"
                         // onClick={handleCreate}
                         >
@@ -125,11 +106,7 @@ export default function NewBotModal({ open, handleClose, user }) {
                         </Button>
                     </Box>
                 </Box>
-                <Box sx={{ overflowY: "scroll", height: "75%", pb: 4 }}>
-                    <Box sx={{ mt: "30px", mb: "16px" }}>
-                        <Typography sx={{ fontWeight: 700, }} color={theme.palette.common.textSecondary} variant="body2">Enable Notes, Tools & Files</Typography>
-                    </Box>
-                    <DataSelectTabs contentHeight={"50%"} isSelectable={true} bot={{ enabled_texts: [], enabledTools: [] }} user={user} />
+                <Box sx={{ height: "75%", pb: 4 }}>
                     <Box sx={{ mt: "30px", mb: "16px" }}>
                         <Typography sx={{ fontWeight: 700, }} color={theme.palette.common.textSecondary} variant="body2">Select Persona</Typography>
                     </Box>
@@ -137,7 +114,7 @@ export default function NewBotModal({ open, handleClose, user }) {
                         {
                             personas && personas.map((item) => (
                                 <StyledListItem
-                                    onClick={() => { console.log(item); setSelectedPersonaId(item.id) }}
+                                    onClick={() => { setSelectedPersonaId(item.id) }}
                                     sx={{ backgroundColor: item.id === selectedPersonaId ? theme.palette.common.selectedBackground : null }}
                                 >
                                     <ListItemButton disableRipple>
@@ -149,6 +126,17 @@ export default function NewBotModal({ open, handleClose, user }) {
                             ))
                         }
                     </StyledList>
+                    <Box sx={{ mt: "30px", mb: "16px" }}>
+                        <Typography sx={{ fontWeight: 700, }} color={theme.palette.common.textSecondary} variant="body2">Enable Notes, Tools & Files</Typography>
+                    </Box>
+                    <DataSelectTabs
+                        contentHeight={"50%"}
+                        setBot={setBot}
+                        isSelectable={true}
+                        bot={bot}
+                        user={user}
+                        createMode={!editMode}
+                    />
                 </Box>
             </Box>
         </SwipeableDrawer>

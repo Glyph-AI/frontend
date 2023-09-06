@@ -27,7 +27,7 @@ export default function LayoutWithNav({ showNavigation = true, children }) {
     const router = useRouter()
 
     const childHeight = () => {
-        if (typeof(document) !== "undefined") {
+        if (typeof (document) !== "undefined") {
             if (showNavigation) {
                 return document.body.style.height = (window.visualViewport.height - 56) + "px"
             }
@@ -122,33 +122,33 @@ export default function LayoutWithNav({ showNavigation = true, children }) {
                 className=""
                 style={{ height: "100%", overflow: "hidden", width: "100%" }}
             >
-                <Box className="child-container" sx={{height: childHeight()}}>
+                <Box className="child-container" sx={{ height: childHeight() }}>
                     {children}
                 </Box>
 
             </motion.div>
             {
                 showNavigation && (
-                //     <Paper sx={{ position: 'fixed', bottom: 0, left: 0, right: 0 }} elevation={3}>
-                //         <BottomNavigation
-                //             showLabels
-                //             value={navValue}
-                //             onChange={(event, newValue) => {
-                //                 setNavValue(newValue);
-                //             }}
-                //             sx={{
-                //                 "& .Mui-selected, .Mui-selected > svg": {
-                //                     color: theme.palette.secondary.main
-                //                 }
-                //             }}
-                //         >
-                //             <BottomNavigationAction onClick={() => { router.push("/profile") }} value={0} label="Profile" icon={<Person />} />
-                //             <BottomNavigationAction onClick={() => { router.push("/conversations") }} value={1} label="Chats" icon={<Message />} />
-                //             <BottomNavigationAction onClick={() => { router.push("/bots") }} value={2} label="Bots" icon={<SmartToy />} />
-                //             <BottomNavigationAction onClick={() => { router.push("/notes") }} value={3} label="Notes" icon={<Note />} />
-                //         </BottomNavigation>
-                //     </Paper>
-                <Navbar/>
+                    //     <Paper sx={{ position: 'fixed', bottom: 0, left: 0, right: 0 }} elevation={3}>
+                    //         <BottomNavigation
+                    //             showLabels
+                    //             value={navValue}
+                    //             onChange={(event, newValue) => {
+                    //                 setNavValue(newValue);
+                    //             }}
+                    //             sx={{
+                    //                 "& .Mui-selected, .Mui-selected > svg": {
+                    //                     color: theme.palette.secondary.main
+                    //                 }
+                    //             }}
+                    //         >
+                    //             <BottomNavigationAction onClick={() => { router.push("/profile") }} value={0} label="Profile" icon={<Person />} />
+                    //             <BottomNavigationAction onClick={() => { router.push("/conversations") }} value={1} label="Chats" icon={<Message />} />
+                    //             <BottomNavigationAction onClick={() => { router.push("/bots") }} value={2} label="Bots" icon={<SmartToy />} />
+                    //             <BottomNavigationAction onClick={() => { router.push("/notes") }} value={3} label="Notes" icon={<Note />} />
+                    //         </BottomNavigation>
+                    //     </Paper>
+                    <Navbar />
                 )
 
             }

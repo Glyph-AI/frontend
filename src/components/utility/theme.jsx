@@ -40,7 +40,8 @@ export const theme = createTheme({
       subtitleBlue: "#4e5d7b",
       offWhite: "#e3e3e3",
       textSecondary: "#4F5E7B",
-      selectedBackground: "rgba(47, 128, 237, 0.1)"
+      selectedBackground: "rgba(47, 128, 237, 0.1)",
+      backgroundGradient: "linear-gradient(180deg, rgb(255, 255, 255) 0%, rgb(244, 244, 244) 100%)"
     },
     primary: {
       main: "#2f80ed",

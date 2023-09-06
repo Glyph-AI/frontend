@@ -20,7 +20,6 @@ export default function ConversationItem({ name, info, id, bot, getChats }) {
     const [chatsVisible, setChatsVisible] = useState(false)
     const [anchorEl, setAnchorEl] = React.useState(null);
     const router = useRouter()
-    console.log(bot)
 
     const contextHandler = (e) => {
         e.preventDefault()

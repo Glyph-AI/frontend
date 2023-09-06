@@ -7,7 +7,6 @@ export function UserProvider({ children }) {
     const [user, setUser] = useState({})
 
     useEffect(() => {
-        console.log("HELLO")
         getRequest("/profile", (data) => {
             setUser(data)
         })

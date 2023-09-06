@@ -2,12 +2,12 @@ import { useTheme } from "@emotion/react";
 import { Star } from "@mui/icons-material";
 import { Avatar, Box, Button, Typography } from "@mui/material";
 
-export default function BotCard({ bot, isStore }) {
+export default function BotCard({ bot, isStore, CardProps }) {
     const ownedBackground = "rgba(47, 128, 237, 0.1)"
     const theme = useTheme()
 
     return (
-        <Box sx={{ width: "50%", backgroundColor: isStore ? theme.palette.background.main : ownedBackground, borderRadius: "8px", padding: "16px" }}>
+        <Box {...CardProps} sx={{ width: "50%", backgroundColor: isStore ? theme.palette.background.main : ownedBackground, borderRadius: "8px", padding: "16px" }}>
             <Box sx={{ width: "100%", display: "flex" }}>
                 <Box sx={{ marginRight: "8px" }}>
                     <Avatar src={bot.avatar_location || "/glyph-avatar.png"} sx={{ height: "36px", width: "36px" }} />

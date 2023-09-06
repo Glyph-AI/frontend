@@ -2,14 +2,11 @@ import { useTheme } from "@emotion/react";
 import { Build, ExpandLess, ExpandMore, InsertDriveFile, MoreVert, Star } from "@mui/icons-material";
 import { Box, Checkbox, Collapse, Divider, Drawer, Icon, IconButton, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Skeleton, Slide, SwipeableDrawer, Tab, Tabs, Typography, styled } from "@mui/material";
 import { useRef, useState } from "react";
-import SwipeableViews from "react-swipeable-views";
-import TabPanel from "../utility/tabPanel";
 import DataSelectTabs from "../utility/common/dataSelectTabs";
 
 export default function ToolDrawer({ bot, setToolsExt, toolsExt, user, setBot }) {
     const [tabValue, setTabValue] = useState(0)
     const containerRef = useRef(null);
-    console.log(toolsExt)
 
     const theme = useTheme()
 
@@ -52,7 +49,12 @@ export default function ToolDrawer({ bot, setToolsExt, toolsExt, user, setBot })
                         transition: "all .3s ease-out"
                     }}
                 >
-                    <DataSelectTabs isSelectable={true} bot={bot} user={user} setBot={setBot} />
+                    <DataSelectTabs
+                        isSelectable={true}
+                        bot={bot}
+                        user={user}
+                        setBot={setBot}
+                    />
                 </Box>
 
             </Box>

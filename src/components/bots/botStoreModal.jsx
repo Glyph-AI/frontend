@@ -62,6 +62,7 @@ export default function BotStoreModal({ open, handleClose, handleOpen }) {
                         px: 1,
                         overflow: 'auto',
                         pt: 8,
+                        pb: 8
                     }}
                 >
                     <Box
@@ -76,26 +77,6 @@ export default function BotStoreModal({ open, handleClose, handleOpen }) {
                         }}
                     >
                         <Masonry columns={2} spacing={2} sx={{ display: "-webkit-box", minHeight: "90%", pb: "50px" }}>
-                            {
-                                userBots.map((item) => {
-                                    return (<BotCard bot={item} isStore={true} />)
-                                })
-                            }
-                            {
-                                userBots.map((item) => {
-                                    return (<BotCard bot={item} isStore={true} />)
-                                })
-                            }
-                            {
-                                userBots.map((item) => {
-                                    return (<BotCard bot={item} isStore={true} />)
-                                })
-                            }
-                            {
-                                userBots.map((item) => {
-                                    return (<BotCard bot={item} isStore={true} />)
-                                })
-                            }
                             {
                                 userBots.map((item) => {
                                     return (<BotCard bot={item} isStore={true} />)

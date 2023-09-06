@@ -12,6 +12,7 @@ import { getCurrentUser } from '@/components/api/users';
 import { getChats } from '@/components/api/chats';
 import ConversationList from '@/components/conversations/conversationList';
 import { useSearchParams } from 'next/navigation'
+import { theme, darkTheme } from '@/components/utility/theme.jsx'
 
 export default function Conversations() {
     const [modalVisible, setModalVisible] = useState(false)
@@ -70,7 +71,7 @@ export default function Conversations() {
     return (
         <LayoutWithNav>
             <BaseHeader title="All Chats" searchFunction={handleSearchValueChange} showSearch={true} />
-            <Box sx={{ padding: "8px" }}>
+            <Box sx={{ height: "calc(100% - 56px)", padding: "8px", background: theme.palette.common.backgroundGradient }}>
                 <ConversationList chats={displayChats} />
             </Box>
             <NewConversationModal open={modalVisible} handleClose={handleModalClose} user={user} updateUserFunc={() => { getCurrentUser(setUser) }} />

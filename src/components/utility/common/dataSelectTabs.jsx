@@ -11,7 +11,7 @@ import { getTools, handleToolDisable } from "@/components/api/tools"
 export const StyledListItem = styled(ListItem)(() => ({
     borderRadius: "8px",
     "& .MuiListItemButton-root": {
-        padding: "4px 4px 4px 4px"
+        padding: "4px 8px"
     }
 }))
 
@@ -47,23 +47,13 @@ export const ItemCreate = styled(Box)(() => {
 
 function SelectableListItem({ id, isSelected, onSelectionChange, primaryText, secondaryText }) {
     const selectionBackground = "rgba(47, 128, 237, 0.1)"
-    console.log(isSelected)
     return (
         <StyledListItem
             disablePadding
             sx={{ backgroundColor: isSelected ? selectionBackground : null, width: "100%" }}
             onClick={onSelectionChange}
         >
-            <ListItemButton>
-                <ListItemIcon>
-                    <Checkbox
-                        edge="start"
-                        checked={isSelected}
-                        tabIndex={-1}
-                        disableRipple
-                        id={`${id}-checkbox`}
-                    />
-                </ListItemIcon>
+            <ListItemButton disableRipple>
                 <ListItemText
                     primary={primaryText}
                     secondary={secondaryText}
@@ -96,7 +86,7 @@ function LinkListItem({ id, redirectUrl, primaryText, secondaryText }) {
     )
 }
 
-export default function DataSelectTabs({ isSelectable, bot, setBot, user, contentHeight }) {
+export default function DataSelectTabs({ isSelectable, bot, setBot, user, contentHeight, createMode }) {
     const [tabValue, setTabValue] = useState(0)
     const [availableTexts, setAvailableTexts] = useState([])
     const [availableTools, setAvailableTools] = useState([])
@@ -136,7 +126,6 @@ export default function DataSelectTabs({ isSelectable, bot, setBot, user, conten
     }))
 
     const handleTabChange = (idx) => {
-        console.log(idx, tabValue)
         setTabValue(idx)
     }
 
@@ -159,6 +148,31 @@ export default function DataSelectTabs({ isSelectable, bot, setBot, user, conten
         getAvailableTexts(setAvailableTexts)
         getTools(setAvailableTools)
     }, [])
+
+    const handleTextClick = (el) => {
+        if (createMode) {
+            if (bot.enabled_texts.includes(el)) {
+                setBot({ ...bot, enabled_texts: bot.enabled_texts.filter((i) => i !== el) })
+            } else {
+                setBot({ ...bot, enabled_texts: [...bot.enabled_texts, el] })
+            }
+        } else {
+            handleTextHide(bot, el, setBot)
+        }
+
+    }
+
+    const handleToolClick = (el) => {
+        if (createMode) {
+            if (bot.enabled_tools.includes(el)) {
+                setBot({ ...bot, enabled_tools: bot.enabled_tools.filter((i) => i !== el) })
+            } else {
+                setBot({ ...bot, enabled_tools: [...bot.enabled_tools, el] })
+            }
+        } else {
+            handleToolDisable(bot, el, setBot)
+        }
+    }
 
     return (
         <>
@@ -194,13 +208,22 @@ export default function DataSelectTabs({ isSelectable, bot, setBot, user, conten
                     label={<Typography sx={{ fontWeight: 500 }} variant="body2">Tools</Typography>}
                 />
             </StyledTabs>
-            <Box sx={{ maxHeight: contentHeight || "90%", overflowY: "scroll" }}>
+            <Box className="test" sx={{ maxHeight: contentHeight || "90%", overflowY: "scroll" }}>
                 <SwipeableViews
                     axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
                     index={tabValue}
                     onChangeIndex={handleTabChange}
                 >
-                    <TabPanel value={tabValue} index={0} dir={theme.direction}>
+                    <TabPanel
+                        sx={{
+                            "& .MuiBox-root": {
+                                padding: "14px"
+                            }
+                        }}
+                        value={tabValue}
+                        index={0}
+                        dir={theme.direction}
+                    >
                         {
                             Math.abs(user.files_left) > 0 && (
                                 <ItemCreate>
@@ -221,7 +244,7 @@ export default function DataSelectTabs({ isSelectable, bot, setBot, user, conten
                                         isSelected={checkSelection(bot.enabled_texts, el)}
                                         primaryText={el.name}
                                         secondaryText={el.content.slice(0, 20) + "..."}
-                                        onSelectionChange={() => { handleTextHide(bot, el, setBot) }}
+                                        onSelectionChange={() => { handleTextClick(el) }}
                                     />
                                 ))
                             }
@@ -249,7 +272,7 @@ export default function DataSelectTabs({ isSelectable, bot, setBot, user, conten
                                         id={el.id}
                                         isSelected={checkSelection(bot.enabled_texts, el)}
                                         primaryText={el.name}
-                                        onSelectionChange={() => { handleTextHide(bot, el, setBot) }}
+                                        onSelectionChange={() => { handleTextClick(el) }}
                                     />
                                 ))
                             }
@@ -264,7 +287,7 @@ export default function DataSelectTabs({ isSelectable, bot, setBot, user, conten
                                         isSelected={checkSelection(bot.enabled_tools, el)}
                                         primaryText={el.name}
                                         secondaryText={el.description}
-                                        onSelectionChange={() => { handleToolDisable(bot, el, setBot) }}
+                                        onSelectionChange={() => { handleToolClick(el) }}
                                     />
                                 ))
                             }

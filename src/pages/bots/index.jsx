@@ -1,20 +1,11 @@
-import Layout from "@/components/utility/layout";
 import { useRouter } from "next/router";
-import { motion } from "framer-motion";
-import {
-    ConversationHeader, Search
-} from '@chatscope/chat-ui-kit-react'
-import { Divider, List, Fab, Box, Select, TextField, Typography, Avatar, useMediaQuery } from "@mui/material";
-import BotListItem from "@/components/bots/botListItem";
-import { getRequest } from "@/components/utility/request_helper";
+import { Box, useMediaQuery } from "@mui/material";
 import { useEffect, useState } from "react";
-import { Add } from "@mui/icons-material";
 import NewBotModal from "@/components/bots/newBotModal";
 import { getCookie } from "@/components/utility/cookie_helper";
 import LayoutWithNav from "@/components/utility/layout_with_nav";
 import { Masonry } from "@mui/lab";
-import { useUserContext } from "@/context/user";
-import { theme } from "@/components/utility/theme";
+import { theme, darkTheme } from "@/components/utility/theme";
 import BaseHeader from "@/components/utility/headers/baseHeader";
 import BotCard from "@/components/bots/botCard";
 import { getUserBots } from "@/components/api/bots";
@@ -22,13 +13,16 @@ import { getCurrentUser } from "@/components/api/users";
 import BotStoreModal from "@/components/bots/botStoreModal";
 import { Global } from "@emotion/react";
 import { useSearchParams } from "next/navigation";
+import BotProfile from "@/components/bots/botProfile";
 
 export default function Bots() {
     const [userBots, setUserBots] = useState([])
     const [user, setUser] = useState({})
     const [storeModalOpen, setStoreModalOpen] = useState(false)
     const [modalVisible, setModalVisible] = useState(false)
+    const [botProfileOpen, setBotProfileOpen] = useState(false)
     const [urlBotCode, setUrlBotCode] = useState(null)
+    const [selectedBot, setSelectedBot] = useState({})
     const smallScreen = useMediaQuery(theme.breakpoints.down("md"))
     const router = useRouter()
     const searchParams = useSearchParams()
@@ -57,7 +51,10 @@ export default function Bots() {
             setModalVisible(true)
         }
 
-        console.log("HERE", create)
+        let bot_id = searchParams.get("bot_id")
+        if (bot_id !== undefined && bot_id !== null) {
+            setBotProfileOpen(true)
+        }
 
         getCurrentUser(setUser)
 
@@ -76,6 +73,12 @@ export default function Bots() {
 
     const handleModalClose = () => {
         setModalVisible(false);
+        getUserBots(setUserBots)
+        router.push("/bots")
+    }
+
+    const handleBotProfileClose = () => {
+        setBotProfileOpen(false)
         getUserBots(setUserBots)
         router.push("/bots")
     }
@@ -120,13 +123,25 @@ export default function Bots() {
                         overflowY: "scroll",
                         display: "flex",
                         justifyContent: "center",
-                        boxSizing: smallScreen ? "inherit" : "content-box"
+                        boxSizing: smallScreen ? "inherit" : "content-box",
+                        background: theme.palette.common.backgroundGradient
                     }}
                 >
                     <Masonry columns={2} spacing={2} sx={{ display: "-webkit-box", minHeight: "90%", pb: "50px" }}>
                         {
                             userBots.map((item) => {
-                                return (<BotCard bot={item} isStore={false} />)
+                                return (
+                                    <BotCard
+                                        CardProps={{
+                                            onClick: () => {
+                                                router.push(`/bots?bot_id=${item.id}`)
+                                            }
+                                        }
+                                        }
+                                        bot={item}
+                                        isStore={false}
+                                    />
+                                )
                             })
                         }
                     </Masonry>
@@ -135,7 +150,17 @@ export default function Bots() {
                         handleClose={() => setStoreModalOpen(false)}
                         handleOpen={() => setStoreModalOpen(true)}
                     />
-                    <NewBotModal open={modalVisible} handleClose={handleModalClose} user={user} />
+                    <NewBotModal
+                        open={modalVisible}
+                        handleClose={handleModalClose}
+                        user={user}
+                    />
+                    <NewBotModal
+                        open={botProfileOpen}
+                        handleClose={handleBotProfileClose}
+                        user={user}
+                        editMode={true}
+                    />
                 </Box>
 
             </LayoutWithNav >
