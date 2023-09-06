@@ -51,8 +51,6 @@ export default function ChatHeader({ bot, user }) {
                 position="sticky"
                 elevation={5}
                 sx={{
-                    backgroundColor: theme.palette.background.main,
-                    color: theme.palette.common.darkBlue,
                     fontWeight: 500
                 }}
             >

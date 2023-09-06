@@ -9,8 +9,8 @@ export const StyledAppBar = styled(AppBar)(() => {
     const theme = useTheme()
 
     return ({
-        backgroundColor: "#ffffff",
-        color: theme.palette.common.darkBlue,
+        backgroundColor: theme.palette.background.main,
+        color: theme.palette.primary.main,
         fontWeight: 500
     })
 })

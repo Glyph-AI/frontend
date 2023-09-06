@@ -33,6 +33,7 @@ import IncomingMessage from '@/components/conversations/incomingMessage';
 import MessageContainer from '@/components/conversations/messageContainer';
 import ChatHeader from '@/components/utility/headers/chatHeader';
 import MessageInput from '@/components/conversations/messageInput';
+import BackgroundBox from '@/components/utility/common/backgroundBox';
 
 export default function Home() {
   const [toolsExt, setToolsExt] = useState(false)
@@ -304,7 +305,7 @@ export default function Home() {
           ref={inputFile}
           style={{ display: 'none' }}
         />
-        <Box sx={{ height: "100%" }}>
+        <BackgroundBox sx={{ height: "100%" }}>
           <ChatHeader bot={bot} user={user} />
           <MessageContainer messageArray={chatData} typingIndicator={glyphTyping} toolsExt={toolsExt} renderSettings={renderBotSettings()} />
           <Paper elevation={5} sx={{ position: "absolute", bottom: "0px", width: "100%", backgroundColor: "white" }}>
@@ -333,7 +334,7 @@ export default function Home() {
               }
             />
           </Paper>
-        </Box>
+        </BackgroundBox>
       </div >
     </LayoutWithNav>
   )

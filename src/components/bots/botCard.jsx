@@ -7,7 +7,7 @@ export default function BotCard({ bot, isStore, CardProps }) {
     const theme = useTheme()
 
     return (
-        <Box {...CardProps} sx={{ width: "50%", backgroundColor: isStore ? theme.palette.background.main : ownedBackground, borderRadius: "8px", padding: "16px" }}>
+        <Box {...CardProps} sx={{ width: "50%", backgroundColor: isStore ? theme.palette.background.secondary : ownedBackground, borderRadius: "8px", padding: "16px" }}>
             <Box sx={{ width: "100%", display: "flex" }}>
                 <Box sx={{ marginRight: "8px" }}>
                     <Avatar src={bot.avatar_location || "/glyph-avatar.png"} sx={{ height: "36px", width: "36px" }} />

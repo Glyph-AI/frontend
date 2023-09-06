@@ -13,7 +13,7 @@ export default function MessageInput({ user, inputProps, sendProps, onSubmit }) 
                 alignItems: "center",
                 padding: "0px 8px 0px 0px",
                 width: "100%",
-                backgroundColor: "white",
+                backgroundColor: theme.palette.background.main,
                 '& .MuiTextField-root': { m: 1, width: '35ch' }
             }}
             onSubmit={onSubmit}

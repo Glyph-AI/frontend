@@ -1,5 +1,5 @@
 import { theme, darkTheme } from './theme.jsx'
-import { ThemeProvider, CssBaseline, BottomNavigation, BottomNavigationAction, Paper, Snackbar, Alert, AlertTitle, Box } from '@mui/material';
+import { ThemeProvider, CssBaseline, BottomNavigation, BottomNavigationAction, Paper, Snackbar, Alert, AlertTitle, Box, useMediaQuery } from '@mui/material';
 import Layout from './layout';
 import { useState } from 'react';
 import { Message, Note, Person, SmartToy } from '@mui/icons-material';
@@ -25,6 +25,7 @@ export default function LayoutWithNav({ showNavigation = true, children }) {
     const [paymentSnackbar, setPaymentSnackbar] = useState(false)
     const [tokenFound, setTokenFound] = useState(false)
     const router = useRouter()
+    const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
 
     const childHeight = () => {
         if (typeof (document) !== "undefined") {
@@ -100,7 +101,7 @@ export default function LayoutWithNav({ showNavigation = true, children }) {
     }, [])
 
     return (
-        <ThemeProvider theme={theme}>
+        <ThemeProvider theme={prefersDarkMode ? theme : theme}>
             <CssBaseline />
             <Snackbar
                 anchorOrigin={{ vertical: "top", horizontal: "right" }}

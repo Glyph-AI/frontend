@@ -1,4 +1,4 @@
-import { Box } from "@mui/material";
+import { Box, useTheme } from "@mui/material";
 import OutgoingMessage from "./outgoingMessage";
 import IncomingMessage from "./incomingMessage";
 import TypingIndicator from "./typingIndicator";
@@ -9,6 +9,7 @@ import { useState } from "react";
 export default function MessageContainer({ messageArray, toolsExt, renderSettings, typingIndicator = false }) {
     const messagesEndRef = createRef()
     const settingsPadding = renderSettings ? 47 : 0
+    const theme = useTheme()
 
     const scrollToBottom = () => {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
@@ -23,7 +24,7 @@ export default function MessageContainer({ messageArray, toolsExt, renderSetting
             className="message-container"
             sx={{
                 padding: "8px",
-                backgroundColor: "#f7f7f7",
+                backgroundColor: theme.palette.background.main,
                 display: "flex",
                 gap: "14px",
                 flexDirection: "column",

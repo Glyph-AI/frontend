@@ -6,7 +6,7 @@ import {
 import { useRouter } from "next/router";
 import { Avatar, Badge, Box, ListItem, ListItemText, List, ListItemAvatar, Divider, IconButton, Typography, Button, LinearProgress, useMediaQuery, Link, TextField, ListItemIcon, Switch } from "@mui/material";
 import { styled } from '@mui/material/styles';
-import { theme } from "@/components/utility/theme";
+import { theme, darkTheme } from "@/components/utility/theme";
 import FileUploadIcon from '@mui/icons-material/FileUpload';
 import { AccountBox, ChevronRight, DarkMode, Edit, EmailOutlined, Info, Lock, Logout, MonetizationOnOutlined, Notifications, Person, SmartToyOutlined, Upload } from "@mui/icons-material";
 import { useEffect, useState } from "react";
@@ -18,6 +18,7 @@ import { useUserContext } from "@/context/user";
 import FileUploadModal from "@/components/utility/fileUploadModal";
 import BaseHeader from "@/components/utility/headers/baseHeader";
 import { getCurrentUser } from "@/components/api/users";
+import BackgroundBox from "@/components/utility/common/backgroundBox";
 
 const StyledSwitch = styled(Switch)(() => {
     return ({
@@ -40,13 +41,14 @@ const StyledSwitch = styled(Switch)(() => {
 })
 
 
-function SettingsListItem({ icon, text, secondaryAction }) {
+function SettingsListItem({ icon, text, secondaryAction, itemProps }) {
     return (
         <ListItem
             secondaryAction={
                 secondaryAction
             }
             sx={{ padding: "16px 24px" }}
+            {...itemProps}
         >
             <ListItemIcon>
                 {icon}
@@ -92,6 +94,7 @@ export default function Profile() {
     const [isNameFocused, setIsNamedFocused] = useState(false);
     const [inGoogle, setInGoogle] = useState(false);
     const smallScreen = useMediaQuery(theme.breakpoints.down("md"))
+    const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
 
     useEffect(() => {
         const activeSession = getCookie("active_session")
@@ -211,8 +214,8 @@ export default function Profile() {
     return (
         <LayoutWithNav>
             <BaseHeader title={"Settings"} showSearch={false} user={user} showProfile={true} />
-            <Box sx={{ background: theme.palette.common.backgroundGradient, height: "calc(100% - 56px)" }}>
-                <Box sx={{ width: "100%", display: "flex", pb: 3 }}>
+            <BackgroundBox sx={{ background: theme.palette.common.backgroundGradient, height: "calc(100% - 56px)" }}>
+                <Box sx={{ width: "100%", display: "flex" }}>
                     <Box sx={{ display: "flex", flexWrap: "wrap", pl: 3, pt: 1, width: "20%" }}>
                         <Badge
                             overlap="circular"
@@ -256,35 +259,80 @@ export default function Profile() {
                         </Box>
                     </Box>
                 </Box>
+                <Box sx={{ flexWrap: "wrap", display: "flex", gap: "3%", alignContent: "center", justifyContent: "center", padding: "8px", pb: 3 }}>
+                    <Box sx={{ width: progressBarWidth }}>
+                        <Box sx={{ alignContent: "center", jusfityContent: "center", textAlign: "center" }}>
+                            <Typography variant="h6">Bots</Typography>
+                        </Box>
+                        <LinearProgressWithLabel
+                            variant="determinate"
+                            color="primary"
+                            sx={{ width: "100%" }}
+                            value={calculateBotValue()}
+                            labelValue={user.bot_count}
+                            maxValue={user.allowed_bots}
+                        />
+                    </Box>
+                    <Box sx={{ width: progressBarWidth }}>
+                        <Box sx={{ alignContent: "center", jusfityContent: "center", textAlign: "center" }}>
+                            <Typography variant="h6">Messages</Typography>
+                        </Box>
+                        <LinearProgressWithLabel
+                            variant="determinate"
+                            color="primary"
+                            value={calculateMessageValue()}
+                            labelValue={user.message_count}
+                            maxValue={user.allowed_messages}
+                        />
+                    </Box>
+                    <Box sx={{ width: progressBarWidth }}>
+                        <Box sx={{ alignContent: "center", jusfityContent: "center", textAlign: "center" }}>
+                            <Typography variant="h6">Files & Notes</Typography>
+                        </Box>
+                        <LinearProgressWithLabel
+                            variant="determinate"
+                            color="primary"
+                            value={calculateFileValue()}
+                            labelValue={user.file_count}
+                            maxValue={user.allowed_files}
+                        />
+                    </Box>
+                </Box>
                 <Divider sx={{ width: "100%" }} />
                 <List sx={{ p: 1, pt: 2 }}>
-                    <SettingsListItem
+                    {/* <SettingsListItem
                         secondaryAction={<StyledSwitch />}
                         icon={<DarkMode sx={{ color: theme.palette.common.blue }} />}
                         text={"Dark Mode"}
-                    />
+                    /> */}
                     <SettingsListItem
                         secondaryAction={<ChevronRight />}
                         icon={<AccountBox sx={{ color: theme.palette.common.blue }} />}
                         text={"Account & Subscription"}
+                        itemProps={{
+                            onClick: () => { subscriptionManageClick() }
+                        }}
                     />
                     <SettingsListItem
                         secondaryAction={<ChevronRight />}
                         icon={<Notifications sx={{ color: theme.palette.common.blue }} />}
                         text={"Notification"}
                     />
-                    <SettingsListItem
+                    {/* <SettingsListItem
                         secondaryAction={<ChevronRight />}
                         icon={<Lock sx={{ color: theme.palette.common.blue }} />}
                         text={"Privacy and Security"}
-                    />
+                    /> */}
                     <SettingsListItem
                         secondaryAction={null}
                         icon={<Info sx={{ color: theme.palette.common.blue }} />}
                         text={"Discord"}
+                        itemProps={{
+                            onClick: () => { router.push("https://discord.com/channels/1103348778104279110/1107050513696030871/1126965614930571356") }
+                        }}
                     />
                 </List>
-            </Box>
+            </BackgroundBox>
             {/* <ConversationHeader >
                 <ConversationHeader.Content userName={<Typography variant="h6">Profile</Typography>} />
             </ConversationHeader>
