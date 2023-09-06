@@ -1,13 +1,14 @@
-import { TextField, Box, Divider, Typography, Button, ListItemText, SwipeableDrawer, ListItemButton } from "@mui/material";
+import { TextField, Box, Divider, Typography, Button, ListItemText, SwipeableDrawer, ListItemButton, IconButton, useTheme } from "@mui/material";
 import { useEffect, useState } from "react";
 import { genericRequest } from "../utility/request_helper";
 import { theme } from "../utility/theme";
 import { Puller, StyledBox } from "../conversations/newConversationModal";
-import DataSelectTabs, { StyledList } from "../utility/common/dataSelectTabs";
+import DataSelectTabs, { ItemCreate, StyledList } from "../utility/common/dataSelectTabs";
 import { StyledListItem } from "../conversations/conversationList";
 import { getPerosonas } from "../api/personas";
 import { createBot, getBot } from "../api/bots";
 import { useSearchParams } from "next/navigation";
+import { Add, CopyAll } from "@mui/icons-material";
 
 const emptyBot = {
     id: null,
@@ -27,6 +28,7 @@ export default function NewBotModal({ open, handleClose, user, editMode }) {
     const [headerText, setHeaderText] = useState("Create Bot")
     const searchParams = useSearchParams()
     const buttonDisabled = !(selectedPersonaId && name)
+    const theme = useTheme()
 
     const handleCreate = () => {
         bot.name = name
@@ -58,6 +60,79 @@ export default function NewBotModal({ open, handleClose, user, editMode }) {
             })
         }
     }, [searchParams])
+
+    const renderSharing = () => {
+        if (editMode) {
+            return (
+                <>
+                    <Box sx={{ mt: "30px", mb: "16px" }}>
+                        <Typography sx={{ fontWeight: 700, }} color={theme.palette.common.textSecondary} variant="body2">Sharing Settings</Typography>
+                    </Box>
+                    <Box sx={{ display: "flex", alignItems: "center", width: "100%" }}>
+                        <Box sx={{ flex: 1, pl: 1 }}>
+                            <Typography sx={{ fontWeight: 500, fontSize: "16px" }} variant="body2">Sharing</Typography>
+                        </Box>
+                        <Button variant="text">
+                            Enable Code
+                        </Button>
+                    </Box>
+                    {
+                        true && (
+                            <>
+                                <Box sx={{ display: "flex", alignItems: "center", width: "100%" }}>
+                                    <Box sx={{ flex: 1, pl: 1 }}>
+                                        <Typography color={theme.palette.common.textSecondary} variant="body2">Code: {"code here"}<CopyAll sx={{ ml: "4px", fontSize: "14px" }} /></Typography>
+                                    </Box>
+                                </Box>
+                                <Box sx={{ display: "flex", alignItems: "center", width: "100%" }}>
+                                    <Box sx={{ flex: 1, pl: 1, pt: 1, pb: 1 }}>
+                                        <Typography color={theme.palette.common.textSecondary} variant="body2">Sharing URL: {"glyphassistant.com/bots?bot_code=code"}<CopyAll sx={{ ml: "4px", fontSize: "14px" }} /></Typography>
+                                    </Box>
+                                </Box>
+                            </>
+                        )
+                    }
+                    <Box sx={{ display: "flex", alignItems: "center", width: "100%" }}>
+                        <Box sx={{ flex: 1, pl: 1 }}>
+                            <Typography sx={{ fontWeight: 500, fontSize: "16px" }} variant="body2">Bot Store</Typography>
+                        </Box>
+                        <Button variant="text">
+                            Add to Bot Store
+                        </Button>
+                    </Box>
+                </>
+            )
+        }
+    }
+
+    const renderPersonas = () => {
+        if (!editMode) {
+            return (
+                <>
+                    <Box sx={{ mt: "30px", mb: "16px" }}>
+                        <Typography sx={{ fontWeight: 700, }} color={theme.palette.common.textSecondary} variant="body2">Select Persona</Typography>
+                    </Box>
+                    <StyledList>
+                        {
+                            personas && personas.map((item) => (
+                                <StyledListItem
+                                    onClick={() => { setSelectedPersonaId(item.id) }}
+                                    sx={{ backgroundColor: item.id === selectedPersonaId ? theme.palette.common.selectedBackground : null }}
+                                >
+                                    <ListItemButton disableRipple>
+                                        <ListItemText>
+                                            {item.name}
+                                        </ListItemText>
+                                    </ListItemButton>
+                                </StyledListItem>
+                            ))
+                        }
+                    </StyledList>
+                </>
+            )
+        }
+
+    }
 
     return (
         <SwipeableDrawer
@@ -107,25 +182,12 @@ export default function NewBotModal({ open, handleClose, user, editMode }) {
                     </Box>
                 </Box>
                 <Box sx={{ height: "75%", pb: 4 }}>
-                    <Box sx={{ mt: "30px", mb: "16px" }}>
-                        <Typography sx={{ fontWeight: 700, }} color={theme.palette.common.textSecondary} variant="body2">Select Persona</Typography>
-                    </Box>
-                    <StyledList>
-                        {
-                            personas && personas.map((item) => (
-                                <StyledListItem
-                                    onClick={() => { setSelectedPersonaId(item.id) }}
-                                    sx={{ backgroundColor: item.id === selectedPersonaId ? theme.palette.common.selectedBackground : null }}
-                                >
-                                    <ListItemButton disableRipple>
-                                        <ListItemText>
-                                            {item.name}
-                                        </ListItemText>
-                                    </ListItemButton>
-                                </StyledListItem>
-                            ))
-                        }
-                    </StyledList>
+                    {
+                        renderSharing()
+                    }
+                    {
+                        renderPersonas()
+                    }
                     <Box sx={{ mt: "30px", mb: "16px" }}>
                         <Typography sx={{ fontWeight: 700, }} color={theme.palette.common.textSecondary} variant="body2">Enable Notes, Tools & Files</Typography>
                     </Box>

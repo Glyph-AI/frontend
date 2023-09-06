@@ -13,7 +13,6 @@ import { getCurrentUser } from "@/components/api/users";
 import BotStoreModal from "@/components/bots/botStoreModal";
 import { Global } from "@emotion/react";
 import { useSearchParams } from "next/navigation";
-import BotProfile from "@/components/bots/botProfile";
 
 export default function Bots() {
     const [userBots, setUserBots] = useState([])
