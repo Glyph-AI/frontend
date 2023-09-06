@@ -113,7 +113,7 @@ export default function Bots() {
                 }}
             />
             <LayoutWithNav>
-                <BaseHeader title="Bot Library" searchFunction={() => { }} showSearch={true} />
+                <BaseHeader title="Bot Library" searchFunction={() => { }} showSearch={true} showProfile={true} user={user} />
                 <Box
                     sx={{
                         padding: "8px",

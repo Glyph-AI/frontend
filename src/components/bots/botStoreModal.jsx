@@ -53,7 +53,7 @@ export default function BotStoreModal({ open, handleClose, handleOpen }) {
                         <Puller />
                     </Box>
                     <Box sx={{ width: "100%" }}>
-                        <BaseHeader title="Bot Store" showSearch={open} />
+                        <BaseHeader title="Bot Store" showSearch={open} showProfile={false} />
                     </Box>
                 </Box>
                 <Box

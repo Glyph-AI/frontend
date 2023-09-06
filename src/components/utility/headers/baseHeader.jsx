@@ -1,5 +1,6 @@
 import { Search } from "@mui/icons-material";
-import { AppBar, Box, Divider, IconButton, styled, TextField, Toolbar, Typography, useTheme } from "@mui/material";
+import { AppBar, Avatar, Box, Divider, IconButton, styled, TextField, Toolbar, Typography, useTheme } from "@mui/material";
+import { useRouter } from "next/router";
 import { useEffect } from "react";
 import { useRef } from "react";
 import { useState } from "react";
@@ -29,9 +30,10 @@ export const TransitionTextField = styled(TextField)(() => ({
     transition: "all .3s ease-out"
 }))
 
-export default function BaseHeader({ title, searchFunction, showSearch }) {
+export default function BaseHeader({ title, searchFunction, showSearch, showProfile, user }) {
     const [searchActive, setSearchActive] = useState(false)
     const theme = useTheme()
+    const router = useRouter()
     const inputRef = useRef(null)
 
     useEffect(() => {
@@ -82,6 +84,18 @@ export default function BaseHeader({ title, searchFunction, showSearch }) {
                             </IconButton>
                         )
                     }
+                    {
+                        showProfile && (
+                            <IconButton edge="end">
+                                <Avatar
+                                    src={user && user.profile_picture_location}
+                                    sx={{ height: "24px", width: "24px" }}
+                                    onClick={() => { router.push("/profile") }}
+                                />
+                            </IconButton>
+                        )
+                    }
+
                 </StyledToolbar>
             </StyledAppBar>
         </>

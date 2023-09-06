@@ -70,7 +70,7 @@ export default function Conversations() {
 
     return (
         <LayoutWithNav>
-            <BaseHeader title="All Chats" searchFunction={handleSearchValueChange} showSearch={true} />
+            <BaseHeader title="All Chats" searchFunction={handleSearchValueChange} showSearch={true} showProfile={true} user={user} />
             <Box sx={{ height: "calc(100% - 56px)", padding: "8px", background: theme.palette.common.backgroundGradient }}>
                 <ConversationList chats={displayChats} />
             </Box>

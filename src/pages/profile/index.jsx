@@ -4,11 +4,11 @@ import {
     ConversationHeader
 } from '@chatscope/chat-ui-kit-react'
 import { useRouter } from "next/router";
-import { Avatar, Badge, Box, ListItem, ListItemText, List, ListItemAvatar, Divider, IconButton, Typography, Button, LinearProgress, useMediaQuery, Link, TextField } from "@mui/material";
+import { Avatar, Badge, Box, ListItem, ListItemText, List, ListItemAvatar, Divider, IconButton, Typography, Button, LinearProgress, useMediaQuery, Link, TextField, ListItemIcon, Switch } from "@mui/material";
 import { styled } from '@mui/material/styles';
 import { theme } from "@/components/utility/theme";
 import FileUploadIcon from '@mui/icons-material/FileUpload';
-import { ChevronRight, Edit, EmailOutlined, Logout, MonetizationOnOutlined, Person, SmartToyOutlined, Upload } from "@mui/icons-material";
+import { AccountBox, ChevronRight, DarkMode, Edit, EmailOutlined, Info, Lock, Logout, MonetizationOnOutlined, Notifications, Person, SmartToyOutlined, Upload } from "@mui/icons-material";
 import { useEffect, useState } from "react";
 import { genericRequest, getRequest } from "@/components/utility/request_helper";
 import { getCookie } from "@/components/utility/cookie_helper";
@@ -16,6 +16,47 @@ import LayoutWithNav from "@/components/utility/layout_with_nav";
 import { SocialIcon } from "react-social-icons";
 import { useUserContext } from "@/context/user";
 import FileUploadModal from "@/components/utility/fileUploadModal";
+import BaseHeader from "@/components/utility/headers/baseHeader";
+import { getCurrentUser } from "@/components/api/users";
+
+const StyledSwitch = styled(Switch)(() => {
+    return ({
+        "& .Mui-checked": {
+            "& .MuiSwitch-thumb": {
+                backgroundColor: theme.palette.common.blue
+
+            }
+        },
+        "& .MuiSwitch-thumb": {
+            backgroundColor: "rgba(79, 94, 123, 0.4)",
+            opacity: 1
+
+        },
+        "& .MuiSwitch-track": {
+            backgroundColor: "rgba(79, 94, 123, 0.2)"
+        }
+    })
+
+})
+
+
+function SettingsListItem({ icon, text, secondaryAction }) {
+    return (
+        <ListItem
+            secondaryAction={
+                secondaryAction
+            }
+            sx={{ padding: "16px 24px" }}
+        >
+            <ListItemIcon>
+                {icon}
+            </ListItemIcon>
+            <ListItemText>
+                {text}
+            </ListItemText>
+        </ListItem>
+    )
+}
 
 const SmallAvatar = styled(Avatar)(({ theme }) => ({
     width: 32,
@@ -52,13 +93,6 @@ export default function Profile() {
     const [inGoogle, setInGoogle] = useState(false);
     const smallScreen = useMediaQuery(theme.breakpoints.down("md"))
 
-    const getUser = () => {
-        getRequest("/profile", (data) => {
-            setUser(data)
-            setName(`${data.first_name} ${data.last_name}`)
-        })
-    }
-
     useEffect(() => {
         const activeSession = getCookie("active_session")
         if (activeSession !== "true") {
@@ -72,7 +106,10 @@ export default function Profile() {
             setStripeUrl(data.url)
         })
         // reset profile if the user is coming from subscription
-        getUser()
+        getCurrentUser((data) => {
+            setUser(data)
+            setName(`${data.first_name} ${data.last_name}`)
+        })
 
 
         if (window && 'getDigitalGoodsService' in window) {
@@ -173,7 +210,82 @@ export default function Profile() {
 
     return (
         <LayoutWithNav>
-            <ConversationHeader >
+            <BaseHeader title={"Settings"} showSearch={false} user={user} showProfile={true} />
+            <Box sx={{ background: theme.palette.common.backgroundGradient, height: "calc(100% - 56px)" }}>
+                <Box sx={{ width: "100%", display: "flex", pb: 3 }}>
+                    <Box sx={{ display: "flex", flexWrap: "wrap", pl: 3, pt: 1, width: "20%" }}>
+                        <Badge
+                            overlap="circular"
+                            sx={{ padding: "-8px" }}
+                            onClick={() => { setUploadModalOpen(true) }}
+                            badgeContent={
+                                <SmallAvatar>
+                                    <FileUploadIcon />
+                                </SmallAvatar>
+                            }
+                            anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+                        >
+                            <Avatar
+                                src={
+                                    user.profile_picture_location
+                                }
+                                sx={{ height: 64, width: 64, fontSize: 90, backgroundColor: "#fff" }}
+                                alt={user.first_name}
+                            />
+                        </Badge>
+                    </Box>
+                    <Box sx={{ width: "80%", flex: 1, pl: 3, pt: 1 }}>
+                        <Box sx={{ marginTop: "8px", display: "flex", flexWrap: "wrap", alignItems: "center", width: "100%" }}>
+                            <Box sx={{ fontWeight: 500, width: "100%" }}>
+                                {
+                                    !isNameFocused ? (
+                                        <Typography variant="body" onClick={() => { setIsNamedFocused(true) }}>{name}<Edit sx={{ color: "gray", fontSize: 16, ml: "4px" }} /></Typography>
+                                    ) : (
+                                        <TextField
+                                            autoFocus
+                                            variant="standard"
+                                            placeholder={name}
+                                            onChange={(e) => { handleNameChange(e.target.value) }}
+                                            onBlur={(e) => { handleNameSubmit() }}
+                                        />
+                                    )
+                                }
+
+                            </Box>
+                            <Typography color={theme.palette.common.subtitleBlue} variant="body2">Glyph Lite / 10.01.23</Typography>
+                        </Box>
+                    </Box>
+                </Box>
+                <Divider sx={{ width: "100%" }} />
+                <List sx={{ p: 1, pt: 2 }}>
+                    <SettingsListItem
+                        secondaryAction={<StyledSwitch />}
+                        icon={<DarkMode sx={{ color: theme.palette.common.blue }} />}
+                        text={"Dark Mode"}
+                    />
+                    <SettingsListItem
+                        secondaryAction={<ChevronRight />}
+                        icon={<AccountBox sx={{ color: theme.palette.common.blue }} />}
+                        text={"Account & Subscription"}
+                    />
+                    <SettingsListItem
+                        secondaryAction={<ChevronRight />}
+                        icon={<Notifications sx={{ color: theme.palette.common.blue }} />}
+                        text={"Notification"}
+                    />
+                    <SettingsListItem
+                        secondaryAction={<ChevronRight />}
+                        icon={<Lock sx={{ color: theme.palette.common.blue }} />}
+                        text={"Privacy and Security"}
+                    />
+                    <SettingsListItem
+                        secondaryAction={null}
+                        icon={<Info sx={{ color: theme.palette.common.blue }} />}
+                        text={"Discord"}
+                    />
+                </List>
+            </Box>
+            {/* <ConversationHeader >
                 <ConversationHeader.Content userName={<Typography variant="h6">Profile</Typography>} />
             </ConversationHeader>
             <Box sx={{ display: "flex", flexWrap: "wrap", alignContent: "center", justifyContent: "center", padding: "8px" }}>
@@ -307,7 +419,7 @@ export default function Profile() {
                 </Link>
                 <SocialIcon url="https://discord.com/channels/1103348778104279110/1107050513696030871/1126965614930571356" style={{ marginTop: "2px", height: 25, width: 25 }} />
             </Box>
-            <FileUploadModal setRecord={setUser} open={uploadModalOpen} handleClose={handleUploadClose} uploadUrl={"/profile/picture"} />
+            <FileUploadModal setRecord={setUser} open={uploadModalOpen} handleClose={handleUploadClose} uploadUrl={"/profile/picture"} /> */}
         </LayoutWithNav >
     )
 }
