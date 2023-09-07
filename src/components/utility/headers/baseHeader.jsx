@@ -4,33 +4,14 @@ import { useRouter } from "next/router";
 import { useEffect } from "react";
 import { useRef } from "react";
 import { useState } from "react";
-
-export const StyledAppBar = styled(AppBar)(() => {
-    const theme = useTheme()
-
-    return ({
-        backgroundColor: theme.palette.background.main,
-        color: theme.palette.primary.main,
-        fontWeight: 500
-    })
-})
-
-export const StyledToolbar = styled(Toolbar)(({ theme }) => {
-    return (
-        {
-            paddingLeft: 0,
-            marginBottom: "4px",
-            marginTop: "4px"
-        }
-    )
-
-})
+import { StyledAppBar } from "../styled/styledAppBar";
+import { StyledToolbar } from "../styled/styledToolbar";
 
 export const TransitionTextField = styled(TextField)(() => ({
     transition: "all .3s ease-out"
 }))
 
-export default function BaseHeader({ title, searchFunction, showSearch, showProfile, user }) {
+export default function BaseHeader({ title, searchFunction, showSearch, searchValue, showProfile, user }) {
     const [searchActive, setSearchActive] = useState(false)
     const theme = useTheme()
     const router = useRouter()
@@ -73,6 +54,7 @@ export default function BaseHeader({ title, searchFunction, showSearch, showProf
                             }
                             size="small"
                             placeholder="Search..."
+                            value={searchValue}
                             onChange={(ev) => { searchFunction(ev.target.value) }}
                         />
 

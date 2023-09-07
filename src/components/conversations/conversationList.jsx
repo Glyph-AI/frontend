@@ -1,28 +1,36 @@
 import { Avatar, Box, ListItem, ListItemButton, ListItemIcon, ListItemText, styled, Typography, useTheme } from "@mui/material"
 import { useRouter } from "next/router"
 import { StyledList } from "../utility/common/dataSelectTabs"
+import { useEffect, useState } from "react"
+import { Delete } from "@mui/icons-material"
+import { StyledListItem } from "../utility/styled/styledListItem"
 
-
-export const StyledListItem = styled(ListItem)(() => ({
-    borderRadius: "8px",
-    width: "100%",
-    paddingLeft: "8px",
-    "& .MuiListItemButton-root": {
-        padding: "0"
-    },
-    "& .MuiListItemSecondaryAction-root": {
-        right: "0px",
-        height: "100%",
-        paddingTop: "8px",
-        paddingRight: "4px"
-    }
-}))
 
 function ChatListItem({ chat }) {
+    const [secondaryAction, setSecondaryAction] = useState(null)
+    const [inContext, setInContext] = useState(false)
     const theme = useTheme()
     const unreadBackground = "rgba(47, 128, 237, 0.1)"
     const unread = chat.last_message.role !== "user"
     const router = useRouter()
+
+    useEffect(() => {
+        setSecondaryAction(defaultSecondaryAction())
+    }, [])
+
+    const defaultSecondaryAction = () => {
+        return (
+            <Box sx={{ display: "flex", justifyContent: "center", flexWrap: "wrap" }}>
+                <Typography variant="body2" sx={{ opacity: 0.6, pt: "2px", textAlign: "center", width: "100%", paddingRight: "8px" }}>{formatTime()}</Typography>
+            </Box>
+        )
+    }
+
+    const contextSecondaryAction = () => {
+        return (
+            <Delete />
+        )
+    }
 
     const formatLastMessage = (message, bot_name) => {
         if (message === null) {
@@ -51,20 +59,40 @@ function ChatListItem({ chat }) {
         }
     }
 
+    const handleRightClick = (ev) => {
+        ev.preventDefault()
+        if (inContext) {
+            setInContext(false)
+            setSecondaryAction(defaultSecondaryAction())
+        } else {
+            setInContext(true)
+            setSecondaryAction(contextSecondaryAction())
+        }
+
+    }
+
+    const backgroundColor = () => {
+        if (inContext) {
+            return "rgba(256, 0, 0, 0.2)"
+        } else if (unread) {
+            return unreadBackground
+        }
+    }
+
     return (
         <StyledListItem
             sx={
                 {
-                    backgroundColor: unread ? unreadBackground : null,
+                    backgroundColor: backgroundColor,
+                    transition: "all 0.3s ease-out"
                 }
             }
             secondaryAction={
-                <Box sx={{ display: "flex", justifyContent: "center", flexWrap: "wrap" }}>
-                    <Typography variant="body2" sx={{ opacity: 0.6, pt: "2px", textAlign: "center", width: "100%", paddingRight: "8px" }}>{formatTime()}</Typography>
-                </Box>
-
+                secondaryAction
             }
             onClick={() => router.push(`/chats/${chat.id}`)}
+            onContextMenu={handleRightClick}
+            inContext={inContext}
         >
             <ListItemButton disableRipple>
                 <ListItemIcon>

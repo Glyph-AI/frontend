@@ -1,9 +1,6 @@
 import { theme, darkTheme } from './theme.jsx'
-import { ThemeProvider, CssBaseline, BottomNavigation, BottomNavigationAction, Paper, Snackbar, Alert, AlertTitle, Box, useMediaQuery } from '@mui/material';
-import Layout from './layout';
-import { useState } from 'react';
-import { Message, Note, Person, SmartToy } from '@mui/icons-material';
-import { useEffect } from 'react';
+import { ThemeProvider, CssBaseline, Snackbar, Alert, AlertTitle, Box, useMediaQuery } from '@mui/material';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router'
 import { motion } from "framer-motion";
 import { genericRequest, getRequest } from './request_helper.jsx';
@@ -12,6 +9,7 @@ import { getMessaging, onMessage } from "firebase/messaging";
 import { fetchToken } from '@/components/utility/firebase';
 import { FIREBASE_CONFIG } from '@/components/utility/firebaseConfig';
 import Navbar from '../navbar/navbar.jsx';
+import { getCurrentUser } from '../api/users.jsx';
 
 
 const variants = {
@@ -37,67 +35,53 @@ export default function LayoutWithNav({ showNavigation = true, children }) {
         return "100%"
     }
 
+    const handleUserInfo = (data) => {
+        const user_id = data.id
+        if (data.subscribed && !data.is_current) {
+            setPaymentSnackbar(true);
+        }
+
+        if (typeof (window) !== 'undefined' && window.Notification) {
+
+            Notification.requestPermission(() => {
+                if (Notification.permission === 'granted') {
+                    navigator.serviceWorker.register('/service-worker.js')
+                        .then((registration) => {
+                            console.log("SW Registered: ", registration)
+                        });
+
+                    navigator.serviceWorker.register(`/service-worker.js?firebaseConfig=${JSON.stringify(FIREBASE_CONFIG)}`)
+                        .then((registration) => {
+                            console.log("Firebase SW Registered: ", registration)
+                        });
+
+                    // update user record with notification permissions accepted
+                    const app = initializeApp(FIREBASE_CONFIG);
+                    const messaging = getMessaging(app)
+                    fetchToken(setTokenFound, messaging, user_id)
+                    onMessage(messaging, (payload) => {
+                        setNotification(payload.notification)
+                        setNotificationShow(true)
+                    })
+                    const update_data = {
+                        id: data.id,
+                        notifications: true
+                    }
+                    genericRequest("/profile", "PATCH", JSON.stringify(update_data), () => { })
+                } else if (Notification.permission === 'denied') {
+                    const update_data = {
+                        id: data.id,
+                        notifications: false
+                    }
+                    genericRequest("/profile", "PATCH", JSON.stringify(update_data), () => { })
+
+                }
+            });
+        }
+    }
+
     useEffect(() => {
-
-        // // if (window !== undefined) {
-        // //     if (window.location.href.includes("profile")) {
-        // //         setNavValue(0)
-        // //     } else if (window.location.href.includes("conversation")) {
-        // //         setNavValue(1)
-        // //     } else if (window.location.href.includes("bots")) {
-        // //         setNavValue(2)
-        // //     } else {
-        // //         setNavValue(3)
-        // //     }
-        // // }
-
-        // // getRequest("/profile", (data) => {
-        // //     const user_id = data.id
-        // //     if (data.subscribed && !data.is_current) {
-        // //         setPaymentSnackbar(true);
-        // //     }
-
-        // //     if (typeof (window) !== 'undefined' && window.Notification) {
-
-        // //         Notification.requestPermission(() => {
-        // //             if (Notification.permission === 'granted') {
-        // //                 navigator.serviceWorker.register('/service-worker.js')
-        // //                     .then((registration) => {
-        // //                         console.log("SW Registered: ", registration)
-        // //                     });
-
-        // //                 navigator.serviceWorker.register(`/service-worker.js?firebaseConfig=${JSON.stringify(FIREBASE_CONFIG)}`)
-        // //                     .then((registration) => {
-        // //                         console.log("Firebase SW Registered: ", registration)
-        // //                     });
-
-        // //                 // update user record with notification permissions accepted
-        // //                 const app = initializeApp(FIREBASE_CONFIG);
-        // //                 const messaging = getMessaging(app)
-        // //                 fetchToken(setTokenFound, messaging, user_id)
-        // //                 onMessage(messaging, (payload) => {
-        // //                     setNotification(payload.notification)
-        // //                     setNotificationShow(true)
-        // //                 })
-        // //                 const update_data = {
-        // //                     id: data.id,
-        // //                     notifications: true
-        // //                 }
-        // //                 genericRequest("/profile", "PATCH", JSON.stringify(update_data), () => { })
-        // //             } else if (Notification.permission === 'denied') {
-        // //                 const update_data = {
-        // //                     id: data.id,
-        // //                     notifications: false
-        // //                 }
-        // //                 genericRequest("/profile", "PATCH", JSON.stringify(update_data), () => { })
-
-        // //             }
-        // //         });
-        // //     }
-        // })
-
-
-
+        getCurrentUser(handleUserInfo)
     }, [])
 
     return (
@@ -130,28 +114,8 @@ export default function LayoutWithNav({ showNavigation = true, children }) {
             </motion.div>
             {
                 showNavigation && (
-                    //     <Paper sx={{ position: 'fixed', bottom: 0, left: 0, right: 0 }} elevation={3}>
-                    //         <BottomNavigation
-                    //             showLabels
-                    //             value={navValue}
-                    //             onChange={(event, newValue) => {
-                    //                 setNavValue(newValue);
-                    //             }}
-                    //             sx={{
-                    //                 "& .Mui-selected, .Mui-selected > svg": {
-                    //                     color: theme.palette.secondary.main
-                    //                 }
-                    //             }}
-                    //         >
-                    //             <BottomNavigationAction onClick={() => { router.push("/profile") }} value={0} label="Profile" icon={<Person />} />
-                    //             <BottomNavigationAction onClick={() => { router.push("/conversations") }} value={1} label="Chats" icon={<Message />} />
-                    //             <BottomNavigationAction onClick={() => { router.push("/bots") }} value={2} label="Bots" icon={<SmartToy />} />
-                    //             <BottomNavigationAction onClick={() => { router.push("/notes") }} value={3} label="Notes" icon={<Note />} />
-                    //         </BottomNavigation>
-                    //     </Paper>
                     <Navbar />
                 )
-
             }
         </ThemeProvider>
     )

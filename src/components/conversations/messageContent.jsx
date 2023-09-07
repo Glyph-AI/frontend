@@ -1,13 +1,25 @@
-import { useTheme } from "@mui/material";
+import { styled, useTheme } from "@mui/material";
 import { Box } from "@mui/system"
 import { ReactMarkdown } from "react-markdown/lib/react-markdown"
 import SyntaxHighlighter from 'react-syntax-highlighter';
 import remarkGfm from 'remark-gfm'
 
+const StyledBox = styled(Box)(({ theme }) => {
+    return (
+        {
+            fontSize: theme.typography.body2.fontSize,
+            overflowWrap: "break-word",
+            "& p": {
+                margin: 0
+            }
+        }
+    )
+})
+
 export default function MessageContent({ content }) {
     const theme = useTheme()
     return (
-        <Box className="messageContent" sx={{ fontSize: theme.typography.body2.fontSize, overflowWrap: "break-word" }}>
+        <StyledBox theme={theme}>
             <ReactMarkdown
                 children={content}
                 remarkPlugins={[remarkGfm]}
@@ -32,6 +44,6 @@ export default function MessageContent({ content }) {
                     }
                 }}
             />
-        </Box>
+        </StyledBox>
     )
 }

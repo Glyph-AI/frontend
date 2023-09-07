@@ -4,11 +4,11 @@ import { genericRequest } from "../utility/request_helper";
 import { theme } from "../utility/theme";
 import { Puller, StyledBox } from "../conversations/newConversationModal";
 import DataSelectTabs, { ItemCreate, StyledList } from "../utility/common/dataSelectTabs";
-import { StyledListItem } from "../conversations/conversationList";
 import { getPerosonas } from "../api/personas";
 import { createBot, getBot } from "../api/bots";
 import { useSearchParams } from "next/navigation";
 import { Add, CopyAll } from "@mui/icons-material";
+import { StyledListItem } from "../utility/styled/styledListItem";
 
 const emptyBot = {
     id: null,

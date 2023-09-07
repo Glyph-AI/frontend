@@ -1,8 +1,5 @@
 'use client'
 import React, { useState, useEffect } from 'react';
-import {
-    Box
-} from '@mui/material'
 import { getCookie } from '@/components/utility/cookie_helper';
 import NewConversationModal from '@/components/conversations/newConversationModal';
 import { useRouter } from 'next/router';
@@ -12,7 +9,6 @@ import { getCurrentUser } from '@/components/api/users';
 import { getChats } from '@/components/api/chats';
 import ConversationList from '@/components/conversations/conversationList';
 import { useSearchParams } from 'next/navigation'
-import { theme, darkTheme } from '@/components/utility/theme.jsx'
 import BackgroundBox from '@/components/utility/common/backgroundBox';
 
 export default function Conversations() {
@@ -71,7 +67,7 @@ export default function Conversations() {
 
     return (
         <LayoutWithNav>
-            <BaseHeader title="All Chats" searchFunction={handleSearchValueChange} showSearch={true} showProfile={true} user={user} />
+            <BaseHeader title="All Chats" searchFunction={handleSearchValueChange} searchValue={searchValue} showSearch={true} showProfile={true} user={user} />
             <BackgroundBox sx={{ padding: "8px" }}>
                 <ConversationList chats={displayChats} />
             </BackgroundBox>

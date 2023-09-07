@@ -43,6 +43,9 @@ export const theme = createTheme({
       "Kumbh Sans-Medium",
       "Helvetica"
     ],
+    h6: {
+      fontSize: "20px"
+    },
     body: {
       color: "#1b1a57",
       fontSize: "18px"

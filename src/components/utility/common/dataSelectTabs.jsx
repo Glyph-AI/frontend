@@ -1,5 +1,5 @@
 import { useTheme } from "@emotion/react"
-import { Box, Checkbox, Divider, IconButton, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Select, Tab, Tabs, Typography, styled } from "@mui/material"
+import { Box, Button, Checkbox, Divider, IconButton, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Select, Tab, Tabs, Typography, styled, useThemeProps } from "@mui/material"
 import SwipeableViews from "react-swipeable-views"
 import TabPanel from "../tabPanel"
 import { Add, Build, CheckBox, ChevronRight, InsertDriveFile, Star, Upload } from "@mui/icons-material"
@@ -7,20 +7,14 @@ import { useState } from "react"
 import { useEffect } from "react"
 import { getAvailableTexts, handleTextHide } from "@/components/api/texts"
 import { getTools, handleToolDisable } from "@/components/api/tools"
+import { StyledList } from "../styled/styledList"
 
-export const StyledListItem = styled(ListItem)(() => ({
+const DataTabsListItem = styled(ListItem)(() => ({
     borderRadius: "8px",
     "& .MuiListItemButton-root": {
         padding: "4px 8px"
     }
 }))
-
-export const StyledList = styled(List)(() => ({
-    display: "flex",
-    gap: "4px",
-    flexWrap: "wrap"
-}))
-
 
 export const ItemCreate = styled(Box)(() => {
     const theme = useTheme()
@@ -45,10 +39,30 @@ export const ItemCreate = styled(Box)(() => {
     })
 })
 
+function SeeMoreButton() {
+    const theme = useTheme()
+    return (
+        <Box sx={{ p: 2, width: "100%" }}>
+            <Button
+                fullWidth
+                variant="outlined"
+                sx={{
+                    textTransform: "none",
+                    border: "none",
+                    borderRadius: "8px",
+                    backgroundColor: theme.palette.background.secondary
+                }}
+            >
+                <Typography variant="body2">See more</Typography>
+            </Button>
+        </Box>
+    )
+}
+
 function SelectableListItem({ id, isSelected, onSelectionChange, primaryText, secondaryText }) {
     const selectionBackground = "rgba(47, 128, 237, 0.1)"
     return (
-        <StyledListItem
+        <DataTabsListItem
             disablePadding
             sx={{ backgroundColor: isSelected ? selectionBackground : null, width: "100%" }}
             onClick={onSelectionChange}
@@ -59,20 +73,22 @@ function SelectableListItem({ id, isSelected, onSelectionChange, primaryText, se
                     secondary={secondaryText}
                 />
             </ListItemButton>
-        </StyledListItem>
+        </DataTabsListItem>
     )
 }
 
-function LinkListItem({ id, redirectUrl, primaryText, secondaryText }) {
+function LinkListItem({ id, redirectUrl, primaryText, secondaryText, isTool }) {
     return (
         <>
-            <StyledListItem
+            <DataTabsListItem
                 disablePadding
                 sx={{ paddingLeft: "16px", width: "100%" }}
                 secondaryAction={
-                    <IconButton>
-                        <ChevronRight />
-                    </IconButton>
+                    !isTool && (
+                        <IconButton>
+                            <ChevronRight />
+                        </IconButton>
+                    )
                 }
             >
                 <ListItemButton>
@@ -81,12 +97,12 @@ function LinkListItem({ id, redirectUrl, primaryText, secondaryText }) {
                         secondary={secondaryText}
                     />
                 </ListItemButton>
-            </StyledListItem>
+            </DataTabsListItem>
         </>
     )
 }
 
-export default function DataSelectTabs({ isSelectable, bot, setBot, user, contentHeight, createMode }) {
+export default function DataSelectTabs({ isSelectable, bot, setBot, user, contentHeight, createMode, seeMore }) {
     const [tabValue, setTabValue] = useState(0)
     const [availableTexts, setAvailableTexts] = useState([])
     const [availableTools, setAvailableTools] = useState([])
@@ -241,7 +257,7 @@ export default function DataSelectTabs({ isSelectable, bot, setBot, user, conten
                                 notes.map((el) => (
                                     <ListComponent
                                         id={el.id}
-                                        isSelected={checkSelection(bot.enabled_texts, el)}
+                                        isSelected={bot ? checkSelection(bot.enabled_texts, el) : false}
                                         primaryText={el.name}
                                         secondaryText={el.content.slice(0, 20) + "..."}
                                         onSelectionChange={() => { handleTextClick(el) }}
@@ -250,6 +266,7 @@ export default function DataSelectTabs({ isSelectable, bot, setBot, user, conten
                             }
 
                         </StyledList>
+                        {seeMore && <SeeMoreButton />}
                     </TabPanel>
                     <TabPanel value={tabValue} index={1} dir={theme.direction}>
                         {
@@ -270,12 +287,13 @@ export default function DataSelectTabs({ isSelectable, bot, setBot, user, conten
                                 files.map((el) => (
                                     <ListComponent
                                         id={el.id}
-                                        isSelected={checkSelection(bot.enabled_texts, el)}
+                                        isSelected={bot ? checkSelection(bot.enabled_texts, el) : false}
                                         primaryText={el.name}
                                         onSelectionChange={() => { handleTextClick(el) }}
                                     />
                                 ))
                             }
+                            {seeMore && <SeeMoreButton />}
                         </StyledList>
                     </TabPanel>
                     <TabPanel value={tabValue} index={2} dir={theme.direction}>
@@ -284,13 +302,15 @@ export default function DataSelectTabs({ isSelectable, bot, setBot, user, conten
                                 availableTools.map((el) => (
                                     <ListComponent
                                         id={el.id}
-                                        isSelected={checkSelection(bot.enabled_tools, el)}
+                                        isSelected={bot ? checkSelection(bot.enabled_tools, el) : false}
                                         primaryText={el.name}
                                         secondaryText={el.description}
                                         onSelectionChange={() => { handleToolClick(el) }}
+                                        isTool={true}
                                     />
                                 ))
                             }
+                            {seeMore && <SeeMoreButton />}
                         </StyledList>
                     </TabPanel>
                 </SwipeableViews>

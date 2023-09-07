@@ -4,7 +4,6 @@ import IncomingMessage from "./incomingMessage";
 import TypingIndicator from "./typingIndicator";
 import { createRef } from "react";
 import { useEffect } from "react";
-import { useState } from "react";
 
 export default function MessageContainer({ messageArray, toolsExt, renderSettings, typingIndicator = false }) {
     const messagesEndRef = createRef()

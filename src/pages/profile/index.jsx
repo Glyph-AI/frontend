@@ -20,26 +20,6 @@ import BaseHeader from "@/components/utility/headers/baseHeader";
 import { getCurrentUser } from "@/components/api/users";
 import BackgroundBox from "@/components/utility/common/backgroundBox";
 
-const StyledSwitch = styled(Switch)(() => {
-    return ({
-        "& .Mui-checked": {
-            "& .MuiSwitch-thumb": {
-                backgroundColor: theme.palette.common.blue
-
-            }
-        },
-        "& .MuiSwitch-thumb": {
-            backgroundColor: "rgba(79, 94, 123, 0.4)",
-            opacity: 1
-
-        },
-        "& .MuiSwitch-track": {
-            backgroundColor: "rgba(79, 94, 123, 0.2)"
-        }
-    })
-
-})
-
 
 function SettingsListItem({ icon, text, secondaryAction, itemProps }) {
     return (
@@ -262,7 +242,7 @@ export default function Profile() {
                 <Box sx={{ flexWrap: "wrap", display: "flex", gap: "3%", alignContent: "center", justifyContent: "center", padding: "8px", pb: 3 }}>
                     <Box sx={{ width: progressBarWidth }}>
                         <Box sx={{ alignContent: "center", jusfityContent: "center", textAlign: "center" }}>
-                            <Typography variant="h6">Bots</Typography>
+                            <Typography variant="body2">Bots</Typography>
                         </Box>
                         <LinearProgressWithLabel
                             variant="determinate"
@@ -275,7 +255,7 @@ export default function Profile() {
                     </Box>
                     <Box sx={{ width: progressBarWidth }}>
                         <Box sx={{ alignContent: "center", jusfityContent: "center", textAlign: "center" }}>
-                            <Typography variant="h6">Messages</Typography>
+                            <Typography variant="body2">Messages</Typography>
                         </Box>
                         <LinearProgressWithLabel
                             variant="determinate"
@@ -287,7 +267,7 @@ export default function Profile() {
                     </Box>
                     <Box sx={{ width: progressBarWidth }}>
                         <Box sx={{ alignContent: "center", jusfityContent: "center", textAlign: "center" }}>
-                            <Typography variant="h6">Files & Notes</Typography>
+                            <Typography variant="body2">Files & Notes</Typography>
                         </Box>
                         <LinearProgressWithLabel
                             variant="determinate"
@@ -333,141 +313,6 @@ export default function Profile() {
                     />
                 </List>
             </BackgroundBox>
-            {/* <ConversationHeader >
-                <ConversationHeader.Content userName={<Typography variant="h6">Profile</Typography>} />
-            </ConversationHeader>
-            <Box sx={{ display: "flex", flexWrap: "wrap", alignContent: "center", justifyContent: "center", padding: "8px" }}>
-                <Badge
-                    overlap="circular"
-                    sx={{ padding: "-8px" }}
-                    onClick={() => { setUploadModalOpen(true) }}
-                    badgeContent={
-                        <SmallAvatar>
-                            <FileUploadIcon />
-                        </SmallAvatar>
-                    }
-                    anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-                >
-                    <Avatar
-                        src={
-                            user.profile_picture_location
-                        }
-                        sx={{ height: 128, width: 128, fontSize: 90, backgroundColor: "#fff" }}
-                        alt={user.first_name}
-                    />
-                </Badge>
-                <Box sx={{ marginTop: "8px", display: "flex", justifyContent: "center", flexWrap: "wrap", alignItems: "center", width: "100%" }}>
-                    <Box sx={{ fontWeight: 600, width: "100%", textAlign: "center" }}>
-                        {
-                            !isNameFocused ? (
-                                <Badge sx={{ padding: "4px" }} badgeContent={<Edit sx={{ color: "gray", fontSize: 16 }} />}>
-                                    <Typography variant="h5" onClick={() => { setIsNamedFocused(true) }}>{name}</Typography>
-                                </Badge>
-                            ) : (
-                                <TextField
-                                    autoFocus
-                                    variant="standard"
-                                    placeholder={name}
-                                    onChange={(e) => { handleNameChange(e.target.value) }}
-                                    onBlur={(e) => { handleNameSubmit() }}
-                                />
-                            )
-                        }
-
-                    </Box>
-                    <Typography variant="subtitle1">{user.email}</Typography>
-                </Box>
-            </Box>
-            <Box sx={{ flexWrap: "wrap", display: "flex", gap: "3%", alignContent: "center", justifyContent: "center", padding: "8px" }}>
-                <Box sx={{ width: progressBarWidth }}>
-                    <Box sx={{ alignContent: "center", jusfityContent: "center", textAlign: "center" }}>
-                        <Typography variant="h6">Bots</Typography>
-                    </Box>
-                    <LinearProgressWithLabel
-                        variant="determinate"
-                        color="secondary"
-                        sx={{ width: "100%" }}
-                        value={calculateBotValue()}
-                        labelValue={user.bot_count}
-                        maxValue={user.allowed_bots}
-                    />
-                </Box>
-                <Box sx={{ width: progressBarWidth }}>
-                    <Box sx={{ alignContent: "center", jusfityContent: "center", textAlign: "center" }}>
-                        <Typography variant="h6">Messages</Typography>
-                    </Box>
-                    <LinearProgressWithLabel
-                        variant="determinate"
-                        color="secondary"
-                        value={calculateMessageValue()}
-                        labelValue={user.message_count}
-                        maxValue={user.allowed_messages}
-                    />
-                </Box>
-                <Box sx={{ width: progressBarWidth }}>
-                    <Box sx={{ alignContent: "center", jusfityContent: "center", textAlign: "center" }}>
-                        <Typography variant="h6">Files & Notes</Typography>
-                    </Box>
-                    <LinearProgressWithLabel
-                        variant="determinate"
-                        color="secondary"
-                        value={calculateFileValue()}
-                        labelValue={user.file_count}
-                        maxValue={user.allowed_files}
-                    />
-                </Box>
-            </Box>
-            <Box>
-                <List>
-                    <ListItem
-                        sx={{ cursor: "pointer", backgroundColor: "white" }}
-                        secondaryAction={
-                            <IconButton edge="end" aria-label="subscription">
-                                <ChevronRight />
-                            </IconButton>
-                        }
-                        onClick={() => { subscriptionManageClick() }}
-                    >
-                        <ListItemAvatar>
-                            <Avatar>
-                                <MonetizationOnOutlined />
-                            </Avatar>
-                        </ListItemAvatar>
-                        <ListItemText primary={"Subscription"} secondary={renderUserSubscription()} />
-                    </ListItem>
-                    <Divider />
-                    <ListItem
-                        sx={{ cursor: "pointer", backgroundColor: "white" }}
-                        secondaryAction={
-                            <IconButton edge="end" aria-label="subscription">
-                                <ChevronRight />
-                            </IconButton>
-                        }
-                        onClick={() => { router.push("/bots") }}
-                    >
-                        <ListItemAvatar>
-                            <Avatar>
-                                <SmartToyOutlined />
-                            </Avatar>
-                        </ListItemAvatar>
-                        <ListItemText primary={"Bots"} />
-                    </ListItem>
-                    <Divider />
-                </List>
-            </Box>
-            <Box sx={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
-                <Button onClick={handleLogout} startIcon={<Logout />} variant="contained" sx={{ width: "80%" }}>
-                    Logout
-                </Button>
-            </Box>
-            <Divider sx={{ marginTop: "16px" }} />
-            <Box sx={{ display: "flex", alignContent: "center", justifyContent: "center", gap: "8px", paddingTop: "16px" }}>
-                <Link href="https://discord.com/channels/1103348778104279110/1107050513696030871/1126965614930571356">
-                    <Typography variant="h6">Join our Discord!</Typography>
-                </Link>
-                <SocialIcon url="https://discord.com/channels/1103348778104279110/1107050513696030871/1126965614930571356" style={{ marginTop: "2px", height: 25, width: 25 }} />
-            </Box>
-            <FileUploadModal setRecord={setUser} open={uploadModalOpen} handleClose={handleUploadClose} uploadUrl={"/profile/picture"} /> */}
         </LayoutWithNav >
     )
 }

@@ -17,3 +17,9 @@ export const createBot = (bot, callback) => {
         callback(data)
     })
 }
+
+export const getBotById = (bot_id, setter) => {
+    getRequest(`/bots/${bot_id}`, (data) => {
+        setter(data)
+    })
+}

@@ -2,7 +2,8 @@
 import { ArrowBack, MoreVert } from "@mui/icons-material";
 import { AppBar, Avatar, Box, Divider, IconButton, Toolbar, Typography, styled, useTheme } from "@mui/material";
 import { useRouter } from "next/router";
-import { StyledAppBar, StyledToolbar } from "./baseHeader";
+import { StyledAppBar } from "../styled/styledAppBar";
+import { StyledToolbar } from "../styled/styledToolbar";
 
 
 export default function ChatHeader({ bot, user }) {

@@ -20,8 +20,20 @@ export const getChats = (setter) => {
     })
 }
 
-export const createChat = (data, successFunc) => {
+export const createChat = (data, callback) => {
     genericRequest("/chats", "POST", JSON.stringify(data), () => {
-        successFunc();
+        callback();
     }, { "Content-Type": "application/json" })
+}
+
+export const sendMessage = (data, callback) => {
+    genericRequest(`/chats/${chatId}/message`, "POST", data, (response) => {
+        callback(response)
+    })
+}
+
+export const getChatById = (chat_id, setter) => {
+    getRequest(`/chats/${chat_id}`, (data) => {
+        setter(data)
+    })
 }
