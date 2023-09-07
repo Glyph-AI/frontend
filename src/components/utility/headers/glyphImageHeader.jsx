@@ -3,9 +3,11 @@ import { Avatar, Box, Divider, IconButton, List, ListItem, ListItemIcon, ListIte
 import { StyledListItem } from "../styled/styledListItem";
 import { StyledSwitch } from "../styled/styledSwitch";
 import { StyledList } from "../styled/styledList";
+import { useRouter } from "next/router";
 
 export default function GlyphImageHeader() {
     const theme = useTheme()
+    const router = useRouter()
     return (
         <Box sx={{ backgroundColor: "white" }}>
             <Box sx={{ height: "100px", width: "100%" }} />
@@ -14,13 +16,13 @@ export default function GlyphImageHeader() {
             </Box>
             <Box sx={{ pt: 2, pl: 2, display: 'flex', alignItems: "center" }}>
                 <IconButton>
-                    <ArrowBack />
+                    <ArrowBack onClick={() => router.back()} />
                 </IconButton>
                 <Box sx={{ display: "flex", pr: 2, justifyContent: "center", flex: 1 }}>
                     <Typography variant="h6">Glyph</Typography>
                 </Box>
                 <IconButton >
-                    <MoreVert />
+                    <MoreVert onClick={() => router.push("/profile")} />
                 </IconButton>
             </Box>
             <Box sx={{ pt: 4 }}>

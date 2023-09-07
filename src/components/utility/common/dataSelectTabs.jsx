@@ -21,6 +21,7 @@ export const ItemCreate = styled(Box)(() => {
     return ({
         // border: "1px solid" + theme.palette.primary.main,
         padding: "8px",
+        paddingLeft: "24px",
         borderRadius: "8px",
         display: "flex",
         // marginBottom: "8px",
@@ -39,15 +40,17 @@ export const ItemCreate = styled(Box)(() => {
     })
 })
 
-function SeeMoreButton() {
+function SeeMoreButton({ ...props }) {
     const theme = useTheme()
     return (
         <Box sx={{ p: 2, width: "100%" }}>
             <Button
+                {...props}
                 fullWidth
                 variant="outlined"
                 sx={{
                     textTransform: "none",
+                    height: "40px",
                     border: "none",
                     borderRadius: "8px",
                     backgroundColor: theme.palette.background.secondary
@@ -102,10 +105,13 @@ function LinkListItem({ id, redirectUrl, primaryText, secondaryText, isTool }) {
     )
 }
 
-export default function DataSelectTabs({ isSelectable, bot, setBot, user, contentHeight, createMode, seeMore }) {
+export default function DataSelectTabs({ isSelectable, bot, setBot, user, contentHeight, createMode, seeMore, tabState }) {
     const [tabValue, setTabValue] = useState(0)
     const [availableTexts, setAvailableTexts] = useState([])
     const [availableTools, setAvailableTools] = useState([])
+    const [notesToDisplay, setNotesToDisplay] = useState(10000)
+    const [filesToDisplay, setFilesToDisplay] = useState(10000)
+    const [toolsToDisplay, setToolsToDisplay] = useState(10000)
     const theme = useTheme()
 
     const ListComponent = isSelectable ? SelectableListItem : LinkListItem
@@ -163,6 +169,16 @@ export default function DataSelectTabs({ isSelectable, bot, setBot, user, conten
     useEffect(() => {
         getAvailableTexts(setAvailableTexts)
         getTools(setAvailableTools)
+
+        if (typeof tabState !== "undefined") {
+            setTabValue(tabState)
+        }
+
+        if (seeMore) {
+            setNotesToDisplay(3)
+            setFilesToDisplay(3)
+            setToolsToDisplay(3)
+        }
     }, [])
 
     const handleTextClick = (el) => {
@@ -254,7 +270,7 @@ export default function DataSelectTabs({ isSelectable, bot, setBot, user, conten
                         }
                         <StyledList dense={false} >
                             {
-                                notes.map((el) => (
+                                notes.slice(0, notesToDisplay).map((el) => (
                                     <ListComponent
                                         id={el.id}
                                         isSelected={bot ? checkSelection(bot.enabled_texts, el) : false}
@@ -266,7 +282,7 @@ export default function DataSelectTabs({ isSelectable, bot, setBot, user, conten
                             }
 
                         </StyledList>
-                        {seeMore && <SeeMoreButton />}
+                        {(notesToDisplay < notes.length) ? <SeeMoreButton onClick={() => { setNotesToDisplay(notesToDisplay + 3) }} /> : null}
                     </TabPanel>
                     <TabPanel value={tabValue} index={1} dir={theme.direction}>
                         {
@@ -284,7 +300,7 @@ export default function DataSelectTabs({ isSelectable, bot, setBot, user, conten
 
                         <StyledList dense={false}>
                             {
-                                files.map((el) => (
+                                files.slice(0, filesToDisplay).map((el) => (
                                     <ListComponent
                                         id={el.id}
                                         isSelected={bot ? checkSelection(bot.enabled_texts, el) : false}
@@ -293,13 +309,13 @@ export default function DataSelectTabs({ isSelectable, bot, setBot, user, conten
                                     />
                                 ))
                             }
-                            {seeMore && <SeeMoreButton />}
+                            {(filesToDisplay < files.length) ? <SeeMoreButton onClick={() => { setFilesToDisplay(filesToDisplay + 3) }} /> : null}
                         </StyledList>
                     </TabPanel>
                     <TabPanel value={tabValue} index={2} dir={theme.direction}>
                         <StyledList dense={false}>
                             {
-                                availableTools.map((el) => (
+                                availableTools.slice(0, toolsToDisplay).map((el) => (
                                     <ListComponent
                                         id={el.id}
                                         isSelected={bot ? checkSelection(bot.enabled_tools, el) : false}
@@ -310,7 +326,7 @@ export default function DataSelectTabs({ isSelectable, bot, setBot, user, conten
                                     />
                                 ))
                             }
-                            {seeMore && <SeeMoreButton />}
+                            {(toolsToDisplay < availableTools.length) ? <SeeMoreButton onClick={() => { setToolsToDisplay(toolsToDisplay + 3) }} /> : null}
                         </StyledList>
                     </TabPanel>
                 </SwipeableViews>

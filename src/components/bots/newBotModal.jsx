@@ -1,14 +1,13 @@
 import { TextField, Box, Divider, Typography, Button, ListItemText, SwipeableDrawer, ListItemButton, IconButton, useTheme } from "@mui/material";
 import { useEffect, useState } from "react";
-import { genericRequest } from "../utility/request_helper";
-import { theme } from "../utility/theme";
 import { Puller, StyledBox } from "../conversations/newConversationModal";
-import DataSelectTabs, { ItemCreate, StyledList } from "../utility/common/dataSelectTabs";
+import DataSelectTabs from "../utility/common/dataSelectTabs";
 import { getPerosonas } from "../api/personas";
 import { createBot, getBot } from "../api/bots";
 import { useSearchParams } from "next/navigation";
 import { Add, CopyAll } from "@mui/icons-material";
 import { StyledListItem } from "../utility/styled/styledListItem";
+import { StyledList } from "../utility/styled/styledList";
 
 const emptyBot = {
     id: null,
@@ -177,7 +176,7 @@ export default function NewBotModal({ open, handleClose, user, editMode }) {
                             variant="contained"
                         // onClick={handleCreate}
                         >
-                            Create
+                            {editMode ? "Update" : "Create"}
                         </Button>
                     </Box>
                 </Box>

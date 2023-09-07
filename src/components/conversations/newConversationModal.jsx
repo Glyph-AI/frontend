@@ -15,10 +15,11 @@ import {
 import { useEffect } from 'react';
 import { grey } from '@mui/material/colors';
 import { getUserBots } from '../api/bots';
-import { ItemCreate, StyledList } from '../utility/common/dataSelectTabs';
+import { ItemCreate } from '../utility/common/dataSelectTabs';
 import { Add } from '@mui/icons-material';
 import { createChat } from '../api/chats';
 import { StyledListItem } from '../utility/styled/styledListItem';
+import { StyledList } from '../utility/styled/styledList';
 
 export const StyledBox = styled(Box)(() => {
     const theme = useTheme()

@@ -1,9 +1,9 @@
 import { Avatar, Box, ListItem, ListItemButton, ListItemIcon, ListItemText, styled, Typography, useTheme } from "@mui/material"
 import { useRouter } from "next/router"
-import { StyledList } from "../utility/common/dataSelectTabs"
 import { useEffect, useState } from "react"
 import { Delete } from "@mui/icons-material"
 import { StyledListItem } from "../utility/styled/styledListItem"
+import { StyledList } from "../utility/styled/styledList"
 
 
 function ChatListItem({ chat }) {
@@ -37,7 +37,7 @@ function ChatListItem({ chat }) {
             return <i>Start Chatting...</i>
         }
         const sender = message.role == "user" ? "You" : bot_name
-        const formatted_message = `${sender}: ${message.content.slice(0, 20)}...`
+        const formatted_message = `${sender}: ${message.content}...`
         if (sender === "You") {
             return (<i>{formatted_message}</i>)
         }
@@ -102,6 +102,11 @@ function ChatListItem({ chat }) {
                     sx={{ marginTop: 0, marginBottom: 0 }}
                     primaryTypographyProps={{ sx: { mb: "8px" } }}
                     primary={chat.name}
+                    secondaryTypographyProps={
+                        {
+                            sx: { width: "85%", overflow: "hidden", maxHeight: "20px", textOverflow: "ellipsis", whiteSpace: "nowrap" }
+                        }
+                    }
                     secondary={formatLastMessage(chat.last_message, chat.bot.name)}
                 />
             </ListItemButton>

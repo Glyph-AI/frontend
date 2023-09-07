@@ -12,12 +12,14 @@ export default function Navbar() {
 
     useEffect(() => {
         if (window !== undefined) {
-            if (window.location.href.includes("profile")) {
+            if (window.location.href.includes("conversations")) {
                 setNavValue(0)
             } else if (window.location.href.includes("bots")) {
                 setNavValue(1)
             } else if (window.location.href.includes("notes")) {
                 setNavValue(2)
+            } else {
+                setNavValue(null)
             }
         }
     }, [])
@@ -38,7 +40,7 @@ export default function Navbar() {
             >
                 <BottomNavigationAction value={0} onClick={() => { router.push("/conversations") }} icon={<ChatBubble sx={{ fontSize: "24px" }} />} />
                 <BottomNavigationAction value={1} onClick={() => { router.push("/bots") }} icon={<Contacts sx={{ fontSize: "24px" }} />} />
-                <BottomNavigationAction value={2} onClick={() => { router.push("/profile?files=true") }} icon={<InsertDriveFile sx={{ fontSize: "24px" }} />} />
+                <BottomNavigationAction value={2} onClick={() => { router.push("/home?files=true") }} icon={<InsertDriveFile sx={{ fontSize: "24px" }} />} />
                 <BottomNavigationAction onClick={() => { router.push(`${router.pathname}?create=true`) }} icon={<NewChatIcon sx={{ fontSize: "24px" }} />} />
             </BottomNavigation>
         </Paper>
