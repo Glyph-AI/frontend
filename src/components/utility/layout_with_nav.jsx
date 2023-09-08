@@ -28,7 +28,7 @@ export default function LayoutWithNav({ showNavigation = true, children }) {
     const childHeight = () => {
         if (typeof (document) !== "undefined") {
             if (showNavigation) {
-                return document.body.style.height = (window.visualViewport.height - 56) + "px"
+                return (window.visualViewport.height - 56) + "px"
             }
         }
 
@@ -105,7 +105,7 @@ export default function LayoutWithNav({ showNavigation = true, children }) {
                 exit="exit"
                 transition={{ type: 'linear' }}
                 className=""
-                style={{ height: "100%", overflow: "hidden", width: "100%" }}
+                style={{ height: "100%", overflow: "hidden", width: "100%", position: "relative" }}
             >
                 <Box className="child-container" sx={{ height: childHeight() }}>
                     {children}

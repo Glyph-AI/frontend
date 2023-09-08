@@ -4,7 +4,7 @@ import { getChats } from "@/components/api/chats";
 import { getCurrentUser } from "@/components/api/users";
 import CondensedBotList from "@/components/bots/condensedBotList";
 import NewBotModal from "@/components/bots/newBotModal";
-import ConversationList from "@/components/chats/conversationList";
+import ConversationList from "@/components/chats/chatList";
 import NewChatModal from "@/components/chats/newChatModal";
 import CollapsibleCard from "@/components/utility/cardTypes/collapsibleCard";
 import BackgroundBox from "@/components/utility/common/backgroundBox";
@@ -78,7 +78,7 @@ export default function Home() {
 
     return (
         <LayoutWithNav showNavigation={false}>
-            <BackgroundBox onScroll={handleScroll} id="backgroundBox" innerRef={bodyRef} sx={{ background: "linear-gradient(180deg, rgb(255, 255, 255) 0%, rgb(250, 250, 250) 100%)", overflowY: "scroll", height: "100%" }}>
+            <BackgroundBox onScroll={handleScroll} id="backgroundBox" innerRef={bodyRef} sx={{ background: "linear-gradient(180deg, rgb(255, 255, 255) 0%, rgb(250, 250, 250) 100%)", overflowY: "scroll", height: "calc(100% + 200px)" }}>
                 <Box className="container" sx={{ minHeight: `calc(100% + ${spacerHeight()}px)` }}>
                     <GlyphImageHeader />
                     <DataSelectTabs tabState={tabState} isSelectable={false} contentHeight user={user} seeMore={true} />

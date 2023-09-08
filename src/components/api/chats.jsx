@@ -26,7 +26,7 @@ export const createChat = (data, callback) => {
     }, { "Content-Type": "application/json" })
 }
 
-export const sendMessage = (data, callback) => {
+export const sendMessage = (data, chatId, callback) => {
     genericRequest(`/chats/${chatId}/message`, "POST", data, (response) => {
         callback(response)
     })

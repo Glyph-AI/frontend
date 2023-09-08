@@ -29,7 +29,7 @@ export default function MessageContainer({ messageArray, toolsExt, renderSetting
                 flexDirection: "column",
                 height: "calc(100% - 56px)",
                 overflowY: "scroll",
-                paddingTop: "24px",
+                paddingTop: `${56 + 24}px`,
                 paddingBottom: (toolsExt ? (300 + settingsPadding) : (settingsPadding)) + "px",
                 transition: "all .3s ease-out",
             }}

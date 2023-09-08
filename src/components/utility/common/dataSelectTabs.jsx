@@ -1,5 +1,5 @@
 import { useTheme } from "@emotion/react"
-import { Box, Button, Checkbox, Divider, IconButton, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Select, Tab, Tabs, Typography, styled, useThemeProps } from "@mui/material"
+import { Box, Button, ButtonBase, Checkbox, Divider, IconButton, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Select, Tab, Tabs, Typography, styled, useThemeProps } from "@mui/material"
 import SwipeableViews from "react-swipeable-views"
 import TabPanel from "../tabPanel"
 import { Add, Build, CheckBox, ChevronRight, InsertDriveFile, Star, Upload } from "@mui/icons-material"
@@ -16,30 +16,37 @@ const DataTabsListItem = styled(ListItem)(() => ({
     }
 }))
 
-export const ItemCreate = styled(Box)(() => {
+export function ItemCreate({ isSelectable, children }) {
     const theme = useTheme()
-    return ({
-        // border: "1px solid" + theme.palette.primary.main,
-        padding: "8px",
-        paddingLeft: "24px",
-        borderRadius: "8px",
-        height: "24px",
-        display: "flex",
-        // marginBottom: "8px",
-        alignItems: "center",
-        width: "100%",
-        "& .text-container": {
-            flex: 1,
-            color: theme.palette.primary.main
-        },
-        "& .button-container": {
-            color: "white",
-            padding: 0,
-            borderRadius: "2px",
-            backgroundColor: theme.palette.primary.main
-        }
-    })
-})
+    return (
+        <ButtonBase
+            sx={{
+                // border: "1px solid" + theme.palette.primary.main,
+                padding: "8px",
+                textAlign: "left",
+                borderRadius: "8px",
+                height: "24px",
+                display: "flex",
+                // marginBottom: "8px",
+                alignItems: "center",
+                width: "100%",
+                "& .text-container": {
+                    flex: 1,
+                    color: theme.palette.primary.main,
+                    padding: 0
+                },
+                "& .button-container": {
+                    color: "white",
+                    padding: 0,
+                    borderRadius: "2px",
+                    backgroundColor: theme.palette.primary.main
+                }
+            }}
+        >
+            {children}
+        </ButtonBase>
+    )
+}
 
 function SeeMoreButton({ ...props }) {
     const theme = useTheme()
@@ -248,49 +255,46 @@ export default function DataSelectTabs({ isSelectable, bot, setBot, user, conten
                     onChangeIndex={handleTabChange}
                 >
                     <TabPanel
-                        sx={{
-                            "& .MuiBox-root": {
-                                padding: "14px"
-                            }
-                        }}
                         value={tabValue}
                         index={0}
                         dir={theme.direction}
                     >
-                        {
-                            Math.abs(user.files_left) > 0 && (
-                                <ItemCreate className="itemCreate">
-                                    <Box className="text-container" sx={{}}>
-                                        <Typography variant="body2">Create New</Typography>
-                                    </Box>
-                                    <IconButton className="button-container">
-                                        <Add />
-                                    </IconButton>
-                                </ItemCreate>
-                            )
-                        }
-                        <StyledList dense={false}>
+                        <Box sx={{ padding: 1 }}>
                             {
-                                notes.slice(0, notesToDisplay).map((el, idx) => (
-                                    <ListComponent
-                                        key={idx}
-                                        id={el.id}
-                                        isSelected={bot ? checkSelection(bot.enabled_texts, el) : false}
-                                        primaryText={el.name}
-                                        secondaryText={el.content.slice(0, 20) + "..."}
-                                        onSelectionChange={() => { handleTextClick(el) }}
-                                    />
-                                ))
+                                Math.abs(user.files_left) > 0 && (
+                                    <ItemCreate className="itemCreate">
+                                        <Box className="text-container" sx={{ paddingLeft: isSelectable ? "0px !important" : 2 }}>
+                                            <Typography variant="body2">Create New</Typography>
+                                        </Box>
+                                        <IconButton className="button-container">
+                                            <Add />
+                                        </IconButton>
+                                    </ItemCreate>
+                                )
                             }
+                            <StyledList dense={false}>
+                                {
+                                    notes.slice(0, notesToDisplay).map((el, idx) => (
+                                        <ListComponent
+                                            key={idx}
+                                            id={el.id}
+                                            isSelected={bot ? checkSelection(bot.enabled_texts, el) : false}
+                                            primaryText={el.name}
+                                            secondaryText={el.content.slice(0, 20) + "..."}
+                                            onSelectionChange={() => { handleTextClick(el) }}
+                                        />
+                                    ))
+                                }
 
-                        </StyledList>
-                        {(notesToDisplay < notes.length) ? <SeeMoreButton onClick={() => { setNotesToDisplay(notesToDisplay + 3) }} /> : null}
+                            </StyledList>
+                            {(notesToDisplay < notes.length) ? <SeeMoreButton onClick={() => { setNotesToDisplay(notesToDisplay + 3) }} /> : null}
+                        </Box>
                     </TabPanel>
                     <TabPanel value={tabValue} index={1} dir={theme.direction}>
                         {
                             Math.abs(user.files_left) > 0 && (
-                                <ItemCreate>
-                                    <Box className="text-container" sx={{ flex: 1, color: theme.palette.primary.main }}>
+                                <ItemCreate className="itemCreate">
+                                    <Box className="text-container" sx={{ paddingLeft: isSelectable ? "0px !important" : 2 }}>
                                         <Typography variant="body2">Upload File</Typography>
                                     </Box>
                                     <IconButton className="button-container">

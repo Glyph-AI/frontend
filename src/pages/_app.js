@@ -10,7 +10,9 @@ const env = process.env.NEXT_PUBLIC_ENVIRONMENT
 
 export default function App({ Component, pageProps }) {
   useEffect(() => {
+    console.log("HERE")
     window.addEventListener("resize", (ev) => {
+      console.log(window.visualViewport.height)
       document.body.style.height = window.visualViewport.height + "px"
     }, true);
   }, [])

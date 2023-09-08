@@ -11,7 +11,7 @@ export default function Navbar() {
 
     useEffect(() => {
         if (window !== undefined) {
-            if (window.location.href.includes("conversations")) {
+            if (window.location.href.includes("chats")) {
                 setNavValue(0)
             } else if (window.location.href.includes("bots")) {
                 setNavValue(1)

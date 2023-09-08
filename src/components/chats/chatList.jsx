@@ -1,4 +1,4 @@
-import { Avatar, Box, ListItem, ListItemButton, ListItemIcon, ListItemText, styled, Typography, useTheme } from "@mui/material"
+import { Avatar, Box, Button, ButtonBase, ListItem, ListItemButton, ListItemIcon, ListItemText, styled, Typography, useTheme } from "@mui/material"
 import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
 import { Delete } from "@mui/icons-material"
@@ -80,42 +80,44 @@ function ChatListItem({ chat }) {
     }
 
     return (
-        <StyledListItem
-            sx={
-                {
-                    backgroundColor: backgroundColor,
-                    transition: "all 0.3s ease-out"
-                }
-            }
-            secondaryAction={
-                secondaryAction
-            }
-            onClick={() => router.push(`/chats/${chat.id}`)}
-            onContextMenu={handleRightClick}
-            inContext={inContext}
-        >
-            <ListItemButton disableRipple>
-                <ListItemIcon>
-                    <Avatar />
-                </ListItemIcon>
-                <ListItemText
-                    sx={{ marginTop: 0, marginBottom: 0 }}
-                    primaryTypographyProps={{ sx: { mb: "8px" } }}
-                    primary={chat.name}
-                    secondaryTypographyProps={
-                        {
-                            sx: { width: "85%", overflow: "hidden", maxHeight: "20px", textOverflow: "ellipsis", whiteSpace: "nowrap" }
-                        }
+        <ButtonBase sx={{ width: "100%" }}>
+            <StyledListItem
+                sx={
+                    {
+                        backgroundColor: backgroundColor,
+                        transition: "all 0.3s ease-out"
                     }
-                    secondary={formatLastMessage(chat.last_message, chat.bot.name)}
-                />
-            </ListItemButton>
-        </StyledListItem>
+                }
+                secondaryAction={
+                    secondaryAction
+                }
+                onClick={() => router.push(`/chats/${chat.id}`)}
+                onContextMenu={handleRightClick}
+                inContext={inContext}
+            >
+                <ListItemButton disableRipple>
+                    <ListItemIcon>
+                        <Avatar />
+                    </ListItemIcon>
+                    <ListItemText
+                        sx={{ marginTop: 0, marginBottom: 0 }}
+                        primaryTypographyProps={{ sx: { mb: "8px" } }}
+                        primary={chat.name}
+                        secondaryTypographyProps={
+                            {
+                                sx: { width: "85%", overflow: "hidden", maxHeight: "20px", textOverflow: "ellipsis", whiteSpace: "nowrap" }
+                            }
+                        }
+                        secondary={formatLastMessage(chat.last_message, chat.bot.name)}
+                    />
+                </ListItemButton>
+            </StyledListItem>
+        </ButtonBase>
     )
 
 }
 
-export default function ConversationList({ chats, setChats }) {
+export default function ChatList({ chats, setChats }) {
     return (
         <StyledList dense={false}>
             {

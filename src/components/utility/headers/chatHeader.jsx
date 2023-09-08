@@ -66,7 +66,7 @@ export default function ChatHeader({ bot, user, chat }) {
     return (
         <>
             <StyledAppBar
-                position="sticky"
+                position="fixed"
                 elevation={5}
                 sx={{
                     fontWeight: 500

@@ -126,7 +126,7 @@ export default function Chat() {
     setChatData(newChatData)
     setNewMessage("")
 
-    sendMessage(JSON.stringify(newMessageJson), (data) => {
+    sendMessage(JSON.stringify(newMessageJson), chatId, (data) => {
       const newChatData = formatChatData(data.chat_messages)
       setChatData(newChatData)
       setGlyphTyping(false)
@@ -216,36 +216,34 @@ export default function Chat() {
           ref={inputFile}
           style={{ display: 'none' }}
         /> */}
-        <BackgroundBox sx={{ height: "calc(100% - 56px)" }}>
-          <ChatHeader bot={bot} user={user} chat={chat} />
-          <MessageContainer messageArray={chatData} typingIndicator={glyphTyping} toolsExt={toolsExt} renderSettings={renderBotSettings()} />
-          <Paper elevation={5} sx={{ position: "absolute", bottom: "0px", width: "100%", backgroundColor: "white" }}>
-            {
-              renderBotSettings() && (
-                <ToolDrawer bot={bot} setBot={setBot} setToolsExt={setToolsExt} toolsExt={toolsExt} user={user} />
-              )
+        <ChatHeader bot={bot} user={user} chat={chat} />
+        <MessageContainer messageArray={chatData} typingIndicator={glyphTyping} toolsExt={toolsExt} renderSettings={renderBotSettings()} />
+        <Paper elevation={5} sx={{ position: "absolute", bottom: "0px", width: "100%", backgroundColor: "white" }}>
+          {
+            renderBotSettings() && (
+              <ToolDrawer bot={bot} setBot={setBot} setToolsExt={setToolsExt} toolsExt={toolsExt} user={user} />
+            )
+          }
+          <Divider sx={{ width: "100%" }} />
+          <MessageInput
+            user={user}
+            onSubmit={handleNewMessage}
+            inputProps={
+              {
+                disabled: messageInputDisabled(),
+                onChange: (ev) => { setNewMessage(ev.target.value) },
+                value: newMessage,
+                ref: inputRef
+              }
             }
-            <Divider sx={{ width: "100%" }} />
-            <MessageInput
-              user={user}
-              onSubmit={handleNewMessage}
-              inputProps={
-                {
-                  disabled: messageInputDisabled(),
-                  onChange: (ev) => { setNewMessage(ev.target.value) },
-                  value: newMessage,
-                  ref: inputRef
-                }
+            sendProps={
+              {
+                disabled: messageInputDisabled()
               }
-              sendProps={
-                {
-                  disabled: messageInputDisabled()
-                }
 
-              }
-            />
-          </Paper>
-        </BackgroundBox>
+            }
+          />
+        </Paper>
       </div >
     </LayoutWithNav>
   )
