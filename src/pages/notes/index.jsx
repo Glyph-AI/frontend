@@ -2,11 +2,10 @@ import NewNoteModal from "@/components/notes/newNoteModal";
 import NoteListItem from "@/components/notes/noteListItem";
 import LayoutWithNav from "@/components/utility/layout_with_nav";
 import { getRequest } from "@/components/utility/request_helper";
-import { useUserContext } from "@/context/user";
-import { ConversationHeader, Search } from "@chatscope/chat-ui-kit-react";
+import { Search } from "@chatscope/chat-ui-kit-react";
 import { Add } from "@mui/icons-material";
 import { Masonry } from "@mui/lab";
-import { Avatar, Box, Fab, List, Typography } from "@mui/material";
+import { Avatar, Box, Fab } from "@mui/material";
 import { useEffect, useState } from "react";
 
 export default function NotesIndex() {

@@ -1,21 +1,13 @@
-import Layout from "@/components/utility/layout";
-import { motion } from "framer-motion";
-import {
-    ConversationHeader
-} from '@chatscope/chat-ui-kit-react'
 import { useRouter } from "next/router";
-import { Avatar, Badge, Box, ListItem, ListItemText, List, ListItemAvatar, Divider, IconButton, Typography, Button, LinearProgress, useMediaQuery, Link, TextField, ListItemIcon, Switch } from "@mui/material";
+import { Avatar, Badge, Box, ListItem, ListItemText, List, Divider, Typography, LinearProgress, useMediaQuery, TextField, ListItemIcon } from "@mui/material";
 import { styled } from '@mui/material/styles';
-import { theme, darkTheme } from "@/components/utility/theme";
+import { theme } from "@/components/utility/theme";
 import FileUploadIcon from '@mui/icons-material/FileUpload';
-import { AccountBox, ChevronRight, DarkMode, Edit, EmailOutlined, Info, Lock, Logout, MonetizationOnOutlined, Notifications, Person, SmartToyOutlined, Upload } from "@mui/icons-material";
+import { AccountBox, ChevronRight, Edit, Info, Notifications } from "@mui/icons-material";
 import { useEffect, useState } from "react";
 import { genericRequest, getRequest } from "@/components/utility/request_helper";
 import { getCookie } from "@/components/utility/cookie_helper";
 import LayoutWithNav from "@/components/utility/layout_with_nav";
-import { SocialIcon } from "react-social-icons";
-import { useUserContext } from "@/context/user";
-import FileUploadModal from "@/components/utility/fileUploadModal";
 import BaseHeader from "@/components/utility/headers/baseHeader";
 import { getCurrentUser } from "@/components/api/users";
 import BackgroundBox from "@/components/utility/common/backgroundBox";

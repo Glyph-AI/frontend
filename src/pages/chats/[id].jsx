@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { Alert, AlertTitle, Box, Divider, Paper, Snackbar, Typography } from '@mui/material'
+import { useState, useEffect, useRef } from 'react';
+import { Alert, AlertTitle, Divider, Paper, Snackbar } from '@mui/material';
 import { useRouter } from 'next/router';
 import { getCookie } from '@/components/utility/cookie_helper';
 import LayoutWithNav from '@/components/utility/layout_with_nav';

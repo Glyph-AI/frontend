@@ -5,7 +5,7 @@ import NewBotModal from "@/components/bots/newBotModal";
 import { getCookie } from "@/components/utility/cookie_helper";
 import LayoutWithNav from "@/components/utility/layout_with_nav";
 import { Masonry } from "@mui/lab";
-import { theme, darkTheme } from "@/components/utility/theme";
+import { theme } from "@/components/utility/theme";
 import BaseHeader from "@/components/utility/headers/baseHeader";
 import BotCard from "@/components/bots/botCard";
 import { getUserBots } from "@/components/api/bots";

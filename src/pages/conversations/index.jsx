@@ -1,5 +1,5 @@
 'use client'
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { getCookie } from '@/components/utility/cookie_helper';
 import NewConversationModal from '@/components/conversations/newConversationModal';
 import { useRouter } from 'next/router';
@@ -8,7 +8,7 @@ import BaseHeader from '@/components/utility/headers/baseHeader';
 import { getCurrentUser } from '@/components/api/users';
 import { getChats } from '@/components/api/chats';
 import ConversationList from '@/components/conversations/conversationList';
-import { useSearchParams } from 'next/navigation'
+import { useSearchParams } from 'next/navigation';
 import BackgroundBox from '@/components/utility/common/backgroundBox';
 
 export default function Conversations() {

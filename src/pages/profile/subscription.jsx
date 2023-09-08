@@ -1,7 +1,7 @@
 import LayoutWithNav from "@/components/utility/layout_with_nav";
 import { genericRequest, getRequest } from "@/components/utility/request_helper";
 import { ChatBubble, SmartToy, UploadFile } from "@mui/icons-material";
-import { Box, Button, Card, CardContent, CardHeader, CardMedia, CircularProgress, List, ListItem, ListItemIcon, ListItemText, Paper, Radio, Typography } from "@mui/material";
+import { Box, Button, Card, CardContent, CardHeader, CardMedia, List, ListItem, ListItemIcon, ListItemText, Radio, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 

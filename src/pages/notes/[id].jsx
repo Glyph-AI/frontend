@@ -1,13 +1,10 @@
-import Layout from "@/components/utility/layout";
 import LayoutWithNav from "@/components/utility/layout_with_nav";
 import { genericRequest, getRequest } from "@/components/utility/request_helper";
-import { ConversationHeader } from "@chatscope/chat-ui-kit-react";
-import { Box, Card, CardActions, CardContent, CardHeader, CssBaseline, IconButton, Paper, ThemeProvider, Typography } from "@mui/material";
+import { Box, Card, CardContent, IconButton, Typography } from "@mui/material";
 import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
 import dynamic from "next/dynamic";
 import { Edit, Preview } from "@mui/icons-material";
-import { theme, darkTheme } from '../../components/utility/theme.jsx'
 
 
 const MDEditor = dynamic(
