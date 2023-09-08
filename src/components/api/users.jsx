@@ -1,7 +1,13 @@
-import { getRequest } from "../utility/request_helper"
+import { genericRequest, getRequest } from "../utility/request_helper"
 
 export const getCurrentUser = (setter) => {
     getRequest("/profile", (data) => {
         setter(data)
+    })
+}
+
+export const logoutUser = (callback) => {
+    genericRequest("/logout", "POST", null, (resp) => {
+        callback(resp)
     })
 }

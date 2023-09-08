@@ -3,13 +3,13 @@ import { Avatar, Badge, Box, ListItem, ListItemText, List, Divider, Typography, 
 import { styled } from '@mui/material/styles';
 import { theme } from "@/components/utility/theme";
 import FileUploadIcon from '@mui/icons-material/FileUpload';
-import { AccountBox, ChevronRight, Edit, Info, Notifications } from "@mui/icons-material";
+import { AccountBox, ChevronRight, Edit, Info, Logout, Notifications } from "@mui/icons-material";
 import { useEffect, useState } from "react";
 import { genericRequest, getRequest } from "@/components/utility/request_helper";
 import { getCookie } from "@/components/utility/cookie_helper";
 import LayoutWithNav from "@/components/utility/layout_with_nav";
 import BaseHeader from "@/components/utility/headers/baseHeader";
-import { getCurrentUser } from "@/components/api/users";
+import { getCurrentUser, logoutUser } from "@/components/api/users";
 import BackgroundBox from "@/components/utility/common/backgroundBox";
 
 
@@ -301,6 +301,16 @@ export default function Profile() {
                         text={"Discord"}
                         itemProps={{
                             onClick: () => { router.push("https://discord.com/channels/1103348778104279110/1107050513696030871/1126965614930571356") }
+                        }}
+                    />
+                    <SettingsListItem
+                        secondaryAction={null}
+                        icon={<Logout sx={{ color: theme.palette.common.blue }} />}
+                        text={"Logout"}
+                        itemProps={{
+                            onClick: () => {
+                                logoutUser(() => router.push("/login"))
+                            }
                         }}
                     />
                 </List>
