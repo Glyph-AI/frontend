@@ -1,5 +1,5 @@
-import { Box, Paper, Skeleton, SwipeableDrawer, Typography } from "@mui/material";
-import { Puller, StyledBox } from "../conversations/newConversationModal";
+import { Box, Paper, SwipeableDrawer } from "@mui/material";
+import { Puller } from "../conversations/newConversationModal";
 import BaseHeader from "../utility/headers/baseHeader";
 import { Masonry } from "@mui/lab";
 import { getUserBots } from "../api/bots";
@@ -15,7 +15,6 @@ export default function BotStoreModal({ open, handleClose, handleOpen }) {
 
     return (
         <SwipeableDrawer
-            containerClassName="botListContainer"
             anchor="bottom"
             open={open}
             onClose={handleClose}
@@ -25,7 +24,7 @@ export default function BotStoreModal({ open, handleClose, handleOpen }) {
             ModalProps={{
                 keepMounted: true,
             }}
-            swipeAreaWidth={"112px"}
+            swipeAreaWidth={112}
             sx={{
                 height: "100%",
                 "& .MuiDrawer-paper": {
@@ -78,8 +77,8 @@ export default function BotStoreModal({ open, handleClose, handleOpen }) {
                     >
                         <Masonry columns={2} spacing={2} sx={{ display: "-webkit-box", minHeight: "90%", pb: "50px" }}>
                             {
-                                userBots.map((item) => {
-                                    return (<BotCard bot={item} isStore={true} />)
+                                userBots.map((item, idx) => {
+                                    return (<BotCard key={idx} bot={item} isStore={true} />)
                                 })
                             }
                         </Masonry>

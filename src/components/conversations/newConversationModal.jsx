@@ -141,10 +141,10 @@ export default function NewConversationModal({ open, handleClose, updateUserFunc
 
                 <StyledList>
                     {
-                        userBots.map((el) => {
+                        userBots.map((el, idx) => {
                             var bgColor = el === bot ? "rgba(47, 128, 237, 0.1)" : null
                             return (
-                                <StyledListItem sx={{ backgroundColor: bgColor }} onClick={() => { setBot(el) }} >
+                                <StyledListItem sx={{ backgroundColor: bgColor }} onClick={() => { setBot(el) }} key={idx}>
                                     <ListItemIcon>
                                         <Avatar src={el.avatar_location || "/glyph-avatar.png"} />
                                     </ListItemIcon>

@@ -49,14 +49,14 @@ const SmallAvatar = styled(Avatar)(({ theme }) => ({
     }
 }));
 
-function LinearProgressWithLabel(props) {
+function LinearProgressWithLabel({ labelValue, maxValue, ...props }) {
     return (
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
             <Box sx={{ width: '100%', mr: 1 }}>
                 <LinearProgress variant="determinate" {...props} />
             </Box>
             <Box sx={{ minWidth: 35 }}>
-                <Typography variant="body2" color="text.secondary">{props.labelValue}/{props.maxValue === -1 ? "INF" : props.maxValue}</Typography>
+                <Typography variant="body2" color="text.secondary">{labelValue}/{maxValue === -1 ? "INF" : maxValue}</Typography>
             </Box>
         </Box>
     );

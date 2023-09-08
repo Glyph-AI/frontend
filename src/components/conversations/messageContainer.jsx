@@ -38,11 +38,11 @@ export default function MessageContainer({ messageArray, toolsExt, renderSetting
                 messageArray.map((msg, idx) => {
                     if (msg.direction === "outgoing") {
                         return (
-                            <OutgoingMessage content={msg.content} />
+                            <OutgoingMessage content={msg.content} key={idx} />
                         )
                     } else if (msg.direction === "incoming") {
                         return (
-                            <IncomingMessage content={msg.content} />
+                            <IncomingMessage content={msg.content} key={idx} />
                         )
                     }
                 })

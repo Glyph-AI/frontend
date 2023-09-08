@@ -41,9 +41,9 @@ export default function CondensedBotList({ bots, setBots, user }) {
         <>
             <StyledList>
                 {
-                    bots && bots.map((item) => {
+                    bots && bots.map((item, idx) => {
                         return (
-                            <CondensedBotListItem onClick={() => { handleBotClick(item) }} bot={item} />
+                            <CondensedBotListItem key={idx} onClick={() => { handleBotClick(item) }} bot={item} />
                         )
                     })
                 }

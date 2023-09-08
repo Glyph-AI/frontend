@@ -270,8 +270,9 @@ export default function DataSelectTabs({ isSelectable, bot, setBot, user, conten
                         }
                         <StyledList dense={false} >
                             {
-                                notes.slice(0, notesToDisplay).map((el) => (
+                                notes.slice(0, notesToDisplay).map((el, idx) => (
                                     <ListComponent
+                                        key={idx}
                                         id={el.id}
                                         isSelected={bot ? checkSelection(bot.enabled_texts, el) : false}
                                         primaryText={el.name}
@@ -300,8 +301,9 @@ export default function DataSelectTabs({ isSelectable, bot, setBot, user, conten
 
                         <StyledList dense={false}>
                             {
-                                files.slice(0, filesToDisplay).map((el) => (
+                                files.slice(0, filesToDisplay).map((el, idx) => (
                                     <ListComponent
+                                        key={idx}
                                         id={el.id}
                                         isSelected={bot ? checkSelection(bot.enabled_texts, el) : false}
                                         primaryText={el.name}
@@ -315,8 +317,9 @@ export default function DataSelectTabs({ isSelectable, bot, setBot, user, conten
                     <TabPanel value={tabValue} index={2} dir={theme.direction}>
                         <StyledList dense={false}>
                             {
-                                availableTools.slice(0, toolsToDisplay).map((el) => (
+                                availableTools.slice(0, toolsToDisplay).map((el, idx) => (
                                     <ListComponent
+                                        key={idx}
                                         id={el.id}
                                         isSelected={bot ? checkSelection(bot.enabled_tools, el) : false}
                                         primaryText={el.name}

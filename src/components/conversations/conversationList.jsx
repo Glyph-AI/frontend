@@ -119,8 +119,9 @@ export default function ConversationList({ chats, setChats }) {
     return (
         <StyledList dense={false}>
             {
-                chats.map((el) => (
+                chats.map((el, idx) => (
                     <ChatListItem
+                        key={idx}
                         chat={el}
                     />
                 ))

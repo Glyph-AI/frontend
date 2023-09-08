@@ -8,7 +8,6 @@ export default function Navbar() {
     const [navValue, setNavValue] = useState(0)
     const theme = useTheme()
     const router = useRouter()
-    console.log(navValue)
 
     useEffect(() => {
         if (window !== undefined) {
@@ -31,17 +30,16 @@ export default function Navbar() {
                     setNavValue(newValue);
                 }}
                 value={navValue}
-                disableRipple
                 sx={{
                     "& .Mui-selected, .Mui-selected > svg": {
                         color: theme.palette.primary.main
                     }
                 }}
             >
-                <BottomNavigationAction value={0} onClick={() => { router.push("/conversations") }} icon={<ChatBubble sx={{ fontSize: "24px" }} />} />
-                <BottomNavigationAction value={1} onClick={() => { router.push("/bots") }} icon={<Contacts sx={{ fontSize: "24px" }} />} />
-                <BottomNavigationAction value={2} onClick={() => { router.push("/home?files=true") }} icon={<InsertDriveFile sx={{ fontSize: "24px" }} />} />
-                <BottomNavigationAction onClick={() => { router.push(`${router.pathname}?create=true`) }} icon={<NewChatIcon sx={{ fontSize: "24px" }} />} />
+                <BottomNavigationAction disableRipple value={0} onClick={() => { router.push("/conversations") }} icon={<ChatBubble sx={{ fontSize: "24px" }} />} />
+                <BottomNavigationAction disableRipple value={1} onClick={() => { router.push("/bots") }} icon={<Contacts sx={{ fontSize: "24px" }} />} />
+                <BottomNavigationAction disableRipple value={2} onClick={() => { router.push("/home?files=true") }} icon={<InsertDriveFile sx={{ fontSize: "24px" }} />} />
+                <BottomNavigationAction disableRipple onClick={() => { router.push(`${router.pathname}?create=true`) }} icon={<NewChatIcon sx={{ fontSize: "24px" }} />} />
             </BottomNavigation>
         </Paper>
     )

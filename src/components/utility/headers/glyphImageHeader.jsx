@@ -15,14 +15,14 @@ export default function GlyphImageHeader() {
                 <Avatar src={"/glyph-avatar.png"} sx={{ width: "100%", height: "100%" }} />
             </Box>
             <Box sx={{ pt: 2, pl: 2, display: 'flex', alignItems: "center" }}>
-                <IconButton>
-                    <ArrowBack onClick={() => router.back()} />
+                <IconButton onClick={() => router.back()}>
+                    <ArrowBack />
                 </IconButton>
                 <Box sx={{ display: "flex", pr: 2, justifyContent: "center", flex: 1 }}>
                     <Typography variant="h6">Glyph</Typography>
                 </Box>
-                <IconButton >
-                    <MoreVert onClick={() => router.push("/profile")} />
+                <IconButton onClick={() => router.push("/profile")}>
+                    <MoreVert />
                 </IconButton>
             </Box>
             <Box sx={{ pt: 4 }}>

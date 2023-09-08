@@ -61,18 +61,17 @@ export default function BaseHeader({ title, searchFunction, showSearch, searchVa
                     </Box>
                     {
                         showSearch && (
-                            <IconButton edge="end">
-                                <Search onClick={() => { setSearchActive(!searchActive) }} />
+                            <IconButton edge="end" onClick={() => { setSearchActive(!searchActive) }}>
+                                <Search />
                             </IconButton>
                         )
                     }
                     {
                         showProfile && (
-                            <IconButton edge="end">
+                            <IconButton edge="end" onClick={() => { router.push("/profile") }}>
                                 <Avatar
                                     src={user && user.profile_picture_location}
                                     sx={{ height: "24px", width: "24px" }}
-                                    onClick={() => { router.push("/profile") }}
                                 />
                             </IconButton>
                         )

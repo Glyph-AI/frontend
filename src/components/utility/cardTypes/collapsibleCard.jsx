@@ -5,8 +5,8 @@ import { useState } from "react";
 function ExpandedActions({ newItemFunc }) {
     return (
         <Box>
-            <IconButton>
-                <PersonAdd onClick={(ev) => { ev.stopPropagation(); newItemFunc() }} />
+            <IconButton onClick={(ev) => { ev.stopPropagation(); newItemFunc() }} >
+                <PersonAdd />
             </IconButton>
             <IconButton>
                 <Search />

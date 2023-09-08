@@ -128,7 +128,7 @@ export default function Bots() {
                 >
                     <Masonry columns={2} spacing={2} sx={{ display: "-webkit-box", minHeight: "90%", pb: "50px" }}>
                         {
-                            userBots.map((item) => {
+                            userBots.map((item, idx) => {
                                 return (
                                     <BotCard
                                         CardProps={{
@@ -137,6 +137,7 @@ export default function Bots() {
                                             }
                                         }
                                         }
+                                        key={idx}
                                         bot={item}
                                         isStore={false}
                                     />

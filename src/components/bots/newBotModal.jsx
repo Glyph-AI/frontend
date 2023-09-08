@@ -113,8 +113,9 @@ export default function NewBotModal({ open, handleClose, user, editMode }) {
                     </Box>
                     <StyledList>
                         {
-                            personas && personas.map((item) => (
+                            personas && personas.map((item, idx) => (
                                 <StyledListItem
+                                    key={idx}
                                     onClick={() => { setSelectedPersonaId(item.id) }}
                                     sx={{ backgroundColor: item.id === selectedPersonaId ? theme.palette.common.selectedBackground : null }}
                                 >
