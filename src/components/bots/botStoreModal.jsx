@@ -1,5 +1,5 @@
 import { Box, Paper, SwipeableDrawer } from "@mui/material";
-import { Puller } from "../conversations/newConversationModal";
+import { Puller } from "../chats/newChatModal";
 import BaseHeader from "../utility/headers/baseHeader";
 import { Masonry } from "@mui/lab";
 import { getUserBots } from "../api/bots";

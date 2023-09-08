@@ -44,7 +44,7 @@ export default function ToolDrawer({ bot, setToolsExt, toolsExt, user, setBot })
                 <Box
                     sx={{
                         width: "100%",
-                        height: toolsExt ? "300px" : "0px",
+                        // height: toolsExt ? "300px" : "0px",
                         display: toolsExt ? null : "none",
                         transition: "all .3s ease-out"
                     }}

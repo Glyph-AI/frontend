@@ -1,4 +1,4 @@
-import { Search } from "@mui/icons-material";
+import { ArrowBack, Search } from "@mui/icons-material";
 import { AppBar, Avatar, Box, Divider, IconButton, styled, TextField, Toolbar, Typography, useTheme } from "@mui/material";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
@@ -27,8 +27,11 @@ export default function BaseHeader({ title, searchFunction, showSearch, searchVa
                 position="sticky"
                 elevation={0}
             >
-                <StyledToolbar sx={{ display: "flex", paddingLeft: "16px" }}>
-                    <Box sx={{ flex: 1 }} onClick={() => { setSearchActive(!searchActive) }}>
+                <StyledToolbar sx={{ pl: 1, display: "flex", }}>
+                    <IconButton onClick={() => router.back()} >
+                        <ArrowBack />
+                    </IconButton>
+                    <Box sx={{ flex: 1, pl: 1 }} onClick={() => { setSearchActive(!searchActive) }}>
                         <Typography
                             sx={
                                 {

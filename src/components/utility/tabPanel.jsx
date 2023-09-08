@@ -4,7 +4,7 @@ export default function TabPanel(props) {
   const { children, value, index, ...other } = props;
 
   return (
-    <div
+    <Box
       role="tabpanel"
       hidden={value !== index}
       id={`full-width-tabpanel-${index}`}
@@ -12,10 +12,10 @@ export default function TabPanel(props) {
       {...other}
     >
       {value === index && (
-        <Box sx={{ p: "24px 8px 24px 8px" }}>
+        <Box sx={{ p: "24px 8px 24px 8px", height: "80%" }}>
           <Typography component="div">{children}</Typography>
         </Box>
       )}
-    </div>
+    </Box>
   );
 }

@@ -4,8 +4,8 @@ import { getChats } from "@/components/api/chats";
 import { getCurrentUser } from "@/components/api/users";
 import CondensedBotList from "@/components/bots/condensedBotList";
 import NewBotModal from "@/components/bots/newBotModal";
-import ConversationList from "@/components/conversations/conversationList";
-import NewConversationModal from "@/components/conversations/newConversationModal";
+import ConversationList from "@/components/chats/conversationList";
+import NewChatModal from "@/components/chats/newChatModal";
 import CollapsibleCard from "@/components/utility/cardTypes/collapsibleCard";
 import BackgroundBox from "@/components/utility/common/backgroundBox";
 import DataSelectTabs from "@/components/utility/common/dataSelectTabs";
@@ -103,7 +103,7 @@ export default function Home() {
                         </CollapsibleCard>
                     </Box>
                 </Box>
-                <NewConversationModal
+                <NewChatModal
                     open={conversationModalVisible}
                     handleClose={handleConversationModalClose}
                     user={user}

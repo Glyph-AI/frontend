@@ -1,4 +1,4 @@
-import { getRequest } from "../utility/request_helper"
+import { getRequest, genericRequest } from "../utility/request_helper"
 
 const getChatDateSafe = (chat) => {
     if (chat.last_message === null) {

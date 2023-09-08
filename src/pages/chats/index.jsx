@@ -1,13 +1,13 @@
 'use client'
 import { useState, useEffect } from 'react';
 import { getCookie } from '@/components/utility/cookie_helper';
-import NewConversationModal from '@/components/conversations/newConversationModal';
+import NewChatModal from '@/components/chats/newChatModal';
 import { useRouter } from 'next/router';
 import LayoutWithNav from '@/components/utility/layout_with_nav';
 import BaseHeader from '@/components/utility/headers/baseHeader';
 import { getCurrentUser } from '@/components/api/users';
 import { getChats } from '@/components/api/chats';
-import ConversationList from '@/components/conversations/conversationList';
+import ConversationList from '@/components/chats/conversationList';
 import { useSearchParams } from 'next/navigation';
 import BackgroundBox from '@/components/utility/common/backgroundBox';
 
@@ -60,7 +60,7 @@ export default function Conversations() {
             setUserChats(data);
             setDisplayChats(data);
             setModalVisible(false)
-            router.push("/conversations")
+            router.push("/chats")
         })
 
     }
@@ -71,7 +71,7 @@ export default function Conversations() {
             <BackgroundBox sx={{ padding: "8px" }}>
                 <ConversationList chats={displayChats} />
             </BackgroundBox>
-            <NewConversationModal open={modalVisible} handleClose={handleModalClose} user={user} updateUserFunc={() => { getCurrentUser(setUser) }} />
+            <NewChatModal open={modalVisible} handleClose={handleModalClose} user={user} updateUserFunc={() => { getCurrentUser(setUser) }} />
         </LayoutWithNav>
     )
 }

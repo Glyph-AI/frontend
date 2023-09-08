@@ -3,10 +3,10 @@ import { Alert, AlertTitle, Divider, Paper, Snackbar } from '@mui/material';
 import { useRouter } from 'next/router';
 import { getCookie } from '@/components/utility/cookie_helper';
 import LayoutWithNav from '@/components/utility/layout_with_nav';
-import ToolDrawer from '@/components/conversations/toolDrawer';
-import MessageContainer from '@/components/conversations/messageContainer';
+import ToolDrawer from '@/components/chats/toolDrawer';
+import MessageContainer from '@/components/chats/messageContainer';
 import ChatHeader from '@/components/utility/headers/chatHeader';
-import MessageInput from '@/components/conversations/messageInput';
+import MessageInput from '@/components/chats/messageInput';
 import BackgroundBox from '@/components/utility/common/backgroundBox';
 import { getChatById, sendMessage } from '@/components/api/chats';
 import { getBotById } from '@/components/api/bots';
@@ -22,8 +22,8 @@ export default function Chat() {
   const [anchorEl, setAnchorEl] = useState(null)
   const [snackbarOpen, setSnackbarOpen] = useState(false)
   const [snackbarMessage, setSnackbarMessage] = useState("")
-  const [chat, setChat] = useState("")
-  const [bot, setBot] = useState("")
+  const [chat, setChat] = useState({})
+  const [bot, setBot] = useState({})
   const [user, setUser] = useState({})
   const [ttsActive, setTtsActive] = useState(false)
   const [showTts, setShowTts] = useState(false)
@@ -82,7 +82,7 @@ export default function Chat() {
     }
 
     if (id === undefined) {
-      router.push("/conversations")
+      router.push("/chats")
     }
 
     getCurrentUser((data) => {
@@ -216,8 +216,8 @@ export default function Chat() {
           ref={inputFile}
           style={{ display: 'none' }}
         /> */}
-        <BackgroundBox sx={{ height: "100%" }}>
-          <ChatHeader bot={bot} user={user} />
+        <BackgroundBox sx={{ height: "calc(100% - 56px)" }}>
+          <ChatHeader bot={bot} user={user} chat={chat} />
           <MessageContainer messageArray={chatData} typingIndicator={glyphTyping} toolsExt={toolsExt} renderSettings={renderBotSettings()} />
           <Paper elevation={5} sx={{ position: "absolute", bottom: "0px", width: "100%", backgroundColor: "white" }}>
             {

@@ -41,7 +41,7 @@ export const Puller = styled(Box)(() => {
     })
 });
 
-export default function NewConversationModal({ open, handleClose, updateUserFunc, user }) {
+export default function NewChatModal({ open, handleClose, updateUserFunc, user }) {
     const [bot, setBot] = useState(null)
     const [userBots, setUserBots] = useState([])
     const [conversationName, setConversationName] = useState("")

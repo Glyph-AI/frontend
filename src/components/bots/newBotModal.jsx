@@ -1,6 +1,6 @@
 import { TextField, Box, Divider, Typography, Button, ListItemText, SwipeableDrawer, ListItemButton, IconButton, useTheme } from "@mui/material";
 import { useEffect, useState } from "react";
-import { Puller, StyledBox } from "../conversations/newConversationModal";
+import { Puller, StyledBox } from "../chats/newChatModal";
 import DataSelectTabs from "../utility/common/dataSelectTabs";
 import { getPerosonas } from "../api/personas";
 import { createBot, getBot } from "../api/bots";

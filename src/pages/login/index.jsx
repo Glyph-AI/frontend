@@ -107,7 +107,7 @@ export default function Login() {
             return `/bots?bot_code=${bot_code}`
         }
 
-        return "/conversations"
+        return "/chats"
     }
 
     const handleSignup = () => {

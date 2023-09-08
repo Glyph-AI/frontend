@@ -23,6 +23,7 @@ export const ItemCreate = styled(Box)(() => {
         padding: "8px",
         paddingLeft: "24px",
         borderRadius: "8px",
+        height: "24px",
         display: "flex",
         // marginBottom: "8px",
         alignItems: "center",
@@ -258,7 +259,7 @@ export default function DataSelectTabs({ isSelectable, bot, setBot, user, conten
                     >
                         {
                             Math.abs(user.files_left) > 0 && (
-                                <ItemCreate>
+                                <ItemCreate className="itemCreate">
                                     <Box className="text-container" sx={{}}>
                                         <Typography variant="body2">Create New</Typography>
                                     </Box>
@@ -268,7 +269,7 @@ export default function DataSelectTabs({ isSelectable, bot, setBot, user, conten
                                 </ItemCreate>
                             )
                         }
-                        <StyledList dense={false} >
+                        <StyledList dense={false}>
                             {
                                 notes.slice(0, notesToDisplay).map((el, idx) => (
                                     <ListComponent

@@ -36,7 +36,7 @@ export default function Navbar() {
                     }
                 }}
             >
-                <BottomNavigationAction disableRipple value={0} onClick={() => { router.push("/conversations") }} icon={<ChatBubble sx={{ fontSize: "24px" }} />} />
+                <BottomNavigationAction disableRipple value={0} onClick={() => { router.push("/chats") }} icon={<ChatBubble sx={{ fontSize: "24px" }} />} />
                 <BottomNavigationAction disableRipple value={1} onClick={() => { router.push("/bots") }} icon={<Contacts sx={{ fontSize: "24px" }} />} />
                 <BottomNavigationAction disableRipple value={2} onClick={() => { router.push("/home?files=true") }} icon={<InsertDriveFile sx={{ fontSize: "24px" }} />} />
                 <BottomNavigationAction disableRipple onClick={() => { router.push(`${router.pathname}?create=true`) }} icon={<NewChatIcon sx={{ fontSize: "24px" }} />} />
