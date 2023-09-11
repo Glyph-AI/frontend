@@ -3,7 +3,7 @@ import { Avatar, Badge, Box, ListItem, ListItemText, List, Divider, Typography, 
 import { styled } from '@mui/material/styles';
 import { theme } from "@/components/utility/theme";
 import FileUploadIcon from '@mui/icons-material/FileUpload';
-import { AccountBox, ChevronRight, Edit, Info, Logout, Notifications } from "@mui/icons-material";
+import { AccountBox, ChevronRight, Edit, FlashOffOutlined, Info, Logout, Notifications } from "@mui/icons-material";
 import { useEffect, useState } from "react";
 import { genericRequest, getRequest } from "@/components/utility/request_helper";
 import { getCookie } from "@/components/utility/cookie_helper";
@@ -11,6 +11,7 @@ import LayoutWithNav from "@/components/utility/layout_with_nav";
 import BaseHeader from "@/components/utility/headers/baseHeader";
 import { getCurrentUser, logoutUser } from "@/components/api/users";
 import BackgroundBox from "@/components/utility/common/backgroundBox";
+import FileUploadModal from "@/components/utility/fileUploadModal";
 
 
 function SettingsListItem({ icon, text, secondaryAction, itemProps }) {
@@ -315,6 +316,12 @@ export default function Profile() {
                     />
                 </List>
             </BackgroundBox>
+            <FileUploadModal
+                open={uploadModalOpen}
+                handleClose={() => { setUploadModalOpen(false) }}
+                setRecord={setUser}
+                uploadUrl={"/profile/picture"}
+            />
         </LayoutWithNav >
     )
 }

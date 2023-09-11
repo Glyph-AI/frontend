@@ -8,6 +8,8 @@ import { useEffect } from "react"
 import { getAvailableTexts, handleTextHide } from "@/components/api/texts"
 import { getTools, handleToolDisable } from "@/components/api/tools"
 import { StyledList } from "../styled/styledList"
+import FileUploadModal from "../fileUploadModal"
+import UserUploadModal from "../userUploadModal"
 
 const DataTabsListItem = styled(ListItem)(() => ({
     borderRadius: "8px",
@@ -120,6 +122,7 @@ export default function DataSelectTabs({ isSelectable, bot, setBot, user, conten
     const [notesToDisplay, setNotesToDisplay] = useState(10000)
     const [filesToDisplay, setFilesToDisplay] = useState(10000)
     const [toolsToDisplay, setToolsToDisplay] = useState(10000)
+    const [fileUploadModalOpen, setFileUploadModalOpen] = useState(false)
     const theme = useTheme()
 
     const ListComponent = isSelectable ? SelectableListItem : LinkListItem
@@ -297,7 +300,7 @@ export default function DataSelectTabs({ isSelectable, bot, setBot, user, conten
                                     <Box className="text-container" sx={{ paddingLeft: isSelectable ? "0px !important" : 2 }}>
                                         <Typography variant="body2">Upload File</Typography>
                                     </Box>
-                                    <IconButton className="button-container">
+                                    <IconButton onClick={() => { setFileUploadModalOpen(true) }} className="button-container">
                                         <Upload />
                                     </IconButton>
                                 </ItemCreate>
@@ -338,6 +341,10 @@ export default function DataSelectTabs({ isSelectable, bot, setBot, user, conten
                         </StyledList>
                     </TabPanel>
                 </SwipeableViews>
+                <UserUploadModal
+                    open={fileUploadModalOpen}
+                    handleClose={() => { setFileUploadModalOpen(false); getAvailableTexts(setAvailableTexts) }}
+                />
             </Box>
         </>
 
