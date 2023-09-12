@@ -7,11 +7,13 @@ import { AccountBox, ChevronRight, Edit, FlashOffOutlined, Info, Logout, Notific
 import { useEffect, useState } from "react";
 import { genericRequest, getRequest } from "@/components/utility/request_helper";
 import { getCookie } from "@/components/utility/cookie_helper";
-import LayoutWithNav from "@/components/utility/layout_with_nav";
+import LayoutWithNav from "@/components/utility/layouts/layout_with_nav";
 import BaseHeader from "@/components/utility/headers/baseHeader";
 import { getCurrentUser, logoutUser } from "@/components/api/users";
 import BackgroundBox from "@/components/utility/common/backgroundBox";
 import FileUploadModal from "@/components/utility/fileUploadModal";
+import UsageBars from "@/components/settings/usageBars";
+import EditableTextField from "@/components/settings/editableTextField";
 
 
 function SettingsListItem({ icon, text, secondaryAction, itemProps }) {
@@ -120,26 +122,6 @@ export default function Profile() {
         }
     }
 
-    const calculateBotValue = () => {
-        if (user.allowed_bots === -1) {
-            return 0
-        }
-
-        return ((user.allowed_bots - user.bots_left) / (user.allowed_bots)) * 100
-    }
-
-    const calculateMessageValue = () => {
-        return ((user.allowed_messages - user.messages_left) / (user.allowed_messages)) * 100
-    }
-
-    const calculateFileValue = () => {
-        if (user.allowed_files === -1) {
-            return 0
-        }
-
-        return ((user.allowed_files - user.files_left) / (user.allowed_files)) * 100
-    }
-
     const handleNameChange = (val) => {
         var split = val.split(" ")
         var first_name = split[0]
@@ -212,65 +194,13 @@ export default function Profile() {
                     </Box>
                     <Box sx={{ width: "80%", flex: 1, pl: 3, pt: 1 }}>
                         <Box sx={{ marginTop: "8px", display: "flex", flexWrap: "wrap", alignItems: "center", width: "100%" }}>
-                            <Box sx={{ fontWeight: 500, width: "100%" }}>
-                                {
-                                    !isNameFocused ? (
-                                        <Typography variant="body" onClick={() => { setIsNamedFocused(true) }}>{name}<Edit sx={{ color: "gray", fontSize: 16, ml: "4px" }} /></Typography>
-                                    ) : (
-                                        <TextField
-                                            autoFocus
-                                            variant="standard"
-                                            placeholder={name}
-                                            onChange={(e) => { handleNameChange(e.target.value) }}
-                                            onBlur={(e) => { handleNameSubmit() }}
-                                        />
-                                    )
-                                }
+                            <EditableTextField placeholder={name} handleChange={handleNameChange} handleSubmit={handleNameSubmit} />
 
-                            </Box>
                             <Typography color={theme.palette.common.subtitleBlue} variant="body2">Glyph Lite / 10.01.23</Typography>
                         </Box>
                     </Box>
                 </Box>
-                <Box sx={{ flexWrap: "wrap", display: "flex", gap: "3%", alignContent: "center", justifyContent: "center", padding: "8px", pb: 3 }}>
-                    <Box sx={{ width: progressBarWidth }}>
-                        <Box sx={{ alignContent: "center", jusfityContent: "center", textAlign: "center" }}>
-                            <Typography variant="body2">Bots</Typography>
-                        </Box>
-                        <LinearProgressWithLabel
-                            variant="determinate"
-                            color="primary"
-                            sx={{ width: "100%" }}
-                            value={calculateBotValue()}
-                            labelValue={user.bot_count}
-                            maxValue={user.allowed_bots}
-                        />
-                    </Box>
-                    <Box sx={{ width: progressBarWidth }}>
-                        <Box sx={{ alignContent: "center", jusfityContent: "center", textAlign: "center" }}>
-                            <Typography variant="body2">Messages</Typography>
-                        </Box>
-                        <LinearProgressWithLabel
-                            variant="determinate"
-                            color="primary"
-                            value={calculateMessageValue()}
-                            labelValue={user.message_count}
-                            maxValue={user.allowed_messages}
-                        />
-                    </Box>
-                    <Box sx={{ width: progressBarWidth }}>
-                        <Box sx={{ alignContent: "center", jusfityContent: "center", textAlign: "center" }}>
-                            <Typography variant="body2">Files & Notes</Typography>
-                        </Box>
-                        <LinearProgressWithLabel
-                            variant="determinate"
-                            color="primary"
-                            value={calculateFileValue()}
-                            labelValue={user.file_count}
-                            maxValue={user.allowed_files}
-                        />
-                    </Box>
-                </Box>
+                <UsageBars user={user} dense={smallScreen} />
                 <Divider sx={{ width: "100%" }} />
                 <List sx={{ p: 1, pt: 2 }}>
                     {/* <SettingsListItem

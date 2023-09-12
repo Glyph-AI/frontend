@@ -2,7 +2,7 @@ import { genericRequest, getRequest } from "@/components/utility/request_helper"
 import { Avatar, Backdrop, Box, CircularProgress, IconButton, Typography } from "@mui/material"
 import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
-import LayoutWithNav from "@/components/utility/layout_with_nav";
+import LayoutWithNav from "@/components/utility/layouts/layout_with_nav";
 import { CallEnd, Mic, MicOff } from "@mui/icons-material";
 import { API_ROOT } from '@/components/utility/apiConfig';
 

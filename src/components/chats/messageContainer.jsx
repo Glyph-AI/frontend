@@ -5,13 +5,13 @@ import TypingIndicator from "./typingIndicator";
 import { createRef } from "react";
 import { useEffect } from "react";
 
-export default function MessageContainer({ messageArray, toolsExt, renderSettings, typingIndicator = false }) {
+export default function MessageContainer({ messageArray, toolsExt, renderSettings, desktopMode, typingIndicator = false }) {
     const messagesEndRef = createRef()
     const settingsPadding = renderSettings ? 47 : 0
     const theme = useTheme()
 
     const scrollToBottom = () => {
-        messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
+        messagesEndRef.current?.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "start" })
     }
 
     useEffect(() => {
@@ -27,11 +27,16 @@ export default function MessageContainer({ messageArray, toolsExt, renderSetting
                 display: "flex",
                 gap: "14px",
                 flexDirection: "column",
-                height: "calc(100% - 56px)",
+                height: `calc(100% - ${desktopMode ? "168px" : "56px"})`,
                 overflowY: "scroll",
                 paddingTop: `${56 + 24}px`,
                 paddingBottom: (toolsExt ? (300 + settingsPadding) : (settingsPadding)) + "px",
                 transition: "all .3s ease-out",
+                "-ms-overflow-style": "none",
+                scrollbarWidth: "none",
+                "::-webkit-scrollbar": {
+                    display: "none"
+                }
             }}
         >
             {

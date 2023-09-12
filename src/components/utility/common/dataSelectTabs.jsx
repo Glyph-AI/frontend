@@ -190,7 +190,7 @@ export default function DataSelectTabs({ isSelectable, bot, setBot, user, conten
             setFilesToDisplay(3)
             setToolsToDisplay(3)
         }
-    }, [])
+    }, [tabState])
 
     const handleTextClick = (el) => {
         if (createMode) {
@@ -251,7 +251,7 @@ export default function DataSelectTabs({ isSelectable, bot, setBot, user, conten
                     label={<Typography sx={{ fontWeight: 500 }} variant="body2">Tools</Typography>}
                 />
             </StyledTabs>
-            <Box className="test" sx={{ maxHeight: contentHeight || "90%", overflowY: "scroll" }}>
+            <Box className="test" sx={{ maxHeight: contentHeight || "90%" }}>
                 <SwipeableViews
                     axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
                     index={tabValue}

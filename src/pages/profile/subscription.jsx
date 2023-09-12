@@ -1,4 +1,4 @@
-import LayoutWithNav from "@/components/utility/layout_with_nav";
+import LayoutWithNav from "@/components/utility/layouts/layout_with_nav";
 import { genericRequest, getRequest } from "@/components/utility/request_helper";
 import { ChatBubble, SmartToy, UploadFile } from "@mui/icons-material";
 import { Box, Button, Card, CardContent, CardHeader, CardMedia, List, ListItem, ListItemIcon, ListItemText, Radio, Typography } from "@mui/material";

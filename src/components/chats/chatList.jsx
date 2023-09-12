@@ -6,7 +6,7 @@ import { StyledListItem } from "../utility/styled/styledListItem"
 import { StyledList } from "../utility/styled/styledList"
 
 
-function ChatListItem({ chat }) {
+function ChatListItem({ chat, desktopMode }) {
     const [secondaryAction, setSecondaryAction] = useState(null)
     const [inContext, setInContext] = useState(false)
     const theme = useTheme()
@@ -91,7 +91,7 @@ function ChatListItem({ chat }) {
                 secondaryAction={
                     secondaryAction
                 }
-                onClick={() => router.push(`/chats/${chat.id}`)}
+                onClick={() => { desktopMode ? router.push(`${router.pathname}?chat_id=${chat.id}`) : router.push(`/chats/${chat.id}`) }}
                 onContextMenu={handleRightClick}
                 inContext={inContext}
             >
@@ -117,7 +117,7 @@ function ChatListItem({ chat }) {
 
 }
 
-export default function ChatList({ chats, setChats }) {
+export default function ChatList({ chats, setChats, desktopMode }) {
     return (
         <StyledList dense={false}>
             {
@@ -125,6 +125,7 @@ export default function ChatList({ chats, setChats }) {
                     <ChatListItem
                         key={idx}
                         chat={el}
+                        desktopMode={desktopMode}
                     />
                 ))
             }

@@ -1,15 +1,15 @@
-import { theme, darkTheme } from './theme.jsx'
+import { theme, darkTheme } from '../theme.jsx'
 import { ThemeProvider, CssBaseline, Snackbar, Alert, AlertTitle, Box, useMediaQuery } from '@mui/material';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router'
 import { motion } from "framer-motion";
-import { genericRequest, getRequest } from './request_helper.jsx';
+import { genericRequest, getRequest } from '../request_helper.jsx';
 import { initializeApp } from 'firebase/app';
 import { getMessaging, onMessage } from "firebase/messaging";
 import { fetchToken } from '@/components/utility/firebase';
 import { FIREBASE_CONFIG } from '@/components/utility/firebaseConfig';
-import Navbar from '../navbar/navbar.jsx';
-import { getCurrentUser } from '../api/users.jsx';
+import Navbar from '../../navbar/navbar.jsx';
+import { getCurrentUser } from '../../api/users.jsx';
 
 
 const variants = {

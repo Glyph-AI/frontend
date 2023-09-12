@@ -1,4 +1,4 @@
-import LayoutWithNav from "@/components/utility/layout_with_nav";
+import LayoutWithNav from "@/components/utility/layouts/layout_with_nav";
 import { genericRequest, getRequest } from "@/components/utility/request_helper";
 import { Box, Card, CardContent, IconButton, Typography } from "@mui/material";
 import { useRouter } from "next/router";

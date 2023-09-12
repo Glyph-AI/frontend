@@ -10,7 +10,7 @@ import CollapsibleCard from "@/components/utility/cardTypes/collapsibleCard";
 import BackgroundBox from "@/components/utility/common/backgroundBox";
 import DataSelectTabs from "@/components/utility/common/dataSelectTabs";
 import GlyphImageHeader from "@/components/utility/headers/glyphImageHeader";
-import LayoutWithNav from "@/components/utility/layout_with_nav";
+import LayoutWithNav from "@/components/utility/layouts/layout_with_nav";
 import { ChatBubble, Contacts } from "@mui/icons-material";
 import { Box, Typography, useTheme } from "@mui/material";
 import { useSearchParams } from "next/navigation";

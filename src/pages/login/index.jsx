@@ -2,9 +2,9 @@ import { useEffect, useState } from 'react'
 import { genericRequest } from '@/components/utility/request_helper'
 import { useRouter } from 'next/router';
 import { GOOGLE_LOGIN_KEY } from '@/components/utility/gLogin';
-import Layout from '@/components/utility/layout';
+import Layout from '@/components/utility/layouts/layout';
 import { Box } from '@mui/system';
-import { Alert, AlertTitle, Button, Divider, Snackbar, TextField, Typography, styled } from '@mui/material';
+import { Alert, AlertTitle, Button, Divider, Paper, Snackbar, TextField, Typography, styled, useMediaQuery, useTheme } from '@mui/material';
 import Script from 'next/script';
 import BackgroundBox from '@/components/utility/common/backgroundBox';
 
@@ -27,6 +27,8 @@ export default function Login() {
     const [errorContent, setErrorContent] = useState("")
     const [inTwa, setInTwa] = useState(false)
     const router = useRouter()
+    const theme = useTheme()
+    const smallScreen = useMediaQuery(theme.breakpoints.down("md"))
 
     const handleGoogle = (resp) => {
         var auth_data = {
@@ -98,16 +100,20 @@ export default function Login() {
     }
 
     const redirectUrl = () => {
-        const params = new Proxy(new URLSearchParams(window.location.search), {
-            get: (searchParams, prop) => searchParams.get(prop),
-        });
+        if (smallScreen) {
+            const params = new Proxy(new URLSearchParams(window.location.search), {
+                get: (searchParams, prop) => searchParams.get(prop),
+            });
 
-        let bot_code = params.bot_code
-        if (bot_code !== null) {
-            return `/bots?bot_code=${bot_code}`
+            let bot_code = params.bot_code
+            if (bot_code !== null) {
+                return `/bots?bot_code=${bot_code}`
+            }
+
+            return "/chats"
+        } else {
+            return "/"
         }
-
-        return "/chats"
     }
 
     const handleSignup = () => {
@@ -234,6 +240,28 @@ export default function Login() {
         )
     }
 
+    const loginContainer = () => {
+        return (
+            <Box style={{ height: "100%", display: "flex", justifyContent: "center", alignItems: "center" }}>
+                <Box style={{ width: "100%" }}>
+                    <Box sx={{ alignContent: "center", justifyContent: "center" }}>
+                        <Box sx={{ width: "100%", display: "flex", justifyContent: "center", alignItems: "center" }}>
+                            <img className="logo" alt="Glyph Logo" src={"/dark_vertical.png"} style={{ width: "50%", marginBottom: "8px", maxWidth: "450px" }} />
+                        </Box>
+                        {displaySignup ? renderSignup() : renderLogin()}
+                        {
+                            (
+                                <>
+                                    <Divider sx={{ marginTop: "16px" }} variant="middle" >OR</Divider>
+                                    <div style={{ marginTop: "16px", width: "100%", display: "flex", justifyContent: "center" }} id="gLogin" />
+                                </>
+                            )
+                        }
+                    </Box>
+                </Box>
+            </Box>
+        )
+    }
 
     return (
         <>
@@ -268,26 +296,22 @@ export default function Login() {
                 >
                     {snackbarContent()}
                 </Snackbar>
-                <BackgroundBox sx={{ height: "100%" }}>
-                    <Box style={{ height: "100%", display: "flex", justifyContent: "center", alignItems: "center" }}>
-                        <Box style={{ width: "100%" }}>
-                            <Box sx={{ alignContent: "center", justifyContent: "center" }}>
-                                <Box sx={{ width: "100%", display: "flex", justifyContent: "center", alignItems: "center" }}>
-                                    <img className="logo" alt="Glyph Logo" src={"/dark_vertical.png"} style={{ width: "50%", marginBottom: "8px", maxWidth: "450px" }} />
-                                </Box>
-                                {displaySignup ? renderSignup() : renderLogin()}
-                                {
-                                    (
-                                        <>
-                                            <Divider sx={{ marginTop: "16px" }} variant="middle" >OR</Divider>
-                                            <div style={{ marginTop: "16px", width: "100%", display: "flex", justifyContent: "center" }} id="gLogin" />
-                                        </>
-                                    )
-                                }
-                            </Box>
-                        </Box>
-                    </Box>
-                </BackgroundBox>
+                {
+                    smallScreen && (
+                        <BackgroundBox sx={{ height: "100%", width: "100%" }}>
+                            {loginContainer()}
+                        </BackgroundBox>
+                    )
+                }
+                {
+                    !smallScreen && (
+                        <BackgroundBox sx={{ height: "100%", display: "flex", justifyContent: "center", alignItems: "center" }}>
+                            <Paper elevation={5} sx={{ height: "60%", width: "40%", p: 4 }}>
+                                {loginContainer()}
+                            </Paper>
+                        </BackgroundBox>
+                    )
+                }
             </Layout>
         </>
     )

@@ -5,7 +5,8 @@ export const StyledToolbar = styled(Toolbar)(() => {
         {
             paddingLeft: 0,
             marginBottom: "4px",
-            marginTop: "4px"
+            marginTop: "4px",
+            display: "flex"
         }
     )
 

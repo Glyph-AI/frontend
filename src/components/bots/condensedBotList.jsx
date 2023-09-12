@@ -21,7 +21,7 @@ function CondensedBotListItem({ bot, ...props }) {
     )
 }
 
-export default function CondensedBotList({ bots, setBots, user }) {
+export default function CondensedBotList({ bots, setBots, user, desktopMode }) {
     const [botModalVisible, setBotModalVisible] = useState(false)
     const [selectedBot, setSelectedBot] = useState(null)
     const router = useRouter()
@@ -34,6 +34,9 @@ export default function CondensedBotList({ bots, setBots, user }) {
     const handleBotClick = (item) => {
         setSelectedBot(item)
         setBotModalVisible(true)
+        // if (desktopMode) {
+        //     router.push(``)
+        // }
         router.push(`/home?bot_id=${item.id}`)
     }
 

@@ -1,7 +1,7 @@
 import { Mic, Send } from "@mui/icons-material";
 import { Box, Divider, IconButton, TextField, useTheme } from "@mui/material";
 
-export default function MessageInput({ user, inputProps, sendProps, onSubmit }) {
+export default function MessageInput({ user, inputProps, sendProps, onSubmit, desktopMode }) {
     const theme = useTheme()
     return (
         <Box
@@ -13,7 +13,8 @@ export default function MessageInput({ user, inputProps, sendProps, onSubmit }) 
                 alignItems: "center",
                 padding: "0px 8px 0px 0px",
                 width: "100%",
-                backgroundColor: theme.palette.background.main,
+                borderRadius: desktopMode ? "0 0 16px 16px" : 0,
+                backgroundColor: desktopMode ? theme.palette.background.secondary : theme.background.primary.main,
                 '& .MuiTextField-root': { m: 1, width: '35ch' }
             }}
             onSubmit={onSubmit}

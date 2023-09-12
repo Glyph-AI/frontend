@@ -3,11 +3,11 @@ import { useState, useEffect } from 'react';
 import { getCookie } from '@/components/utility/cookie_helper';
 import NewChatModal from '@/components/chats/newChatModal';
 import { useRouter } from 'next/router';
-import LayoutWithNav from '@/components/utility/layout_with_nav';
+import LayoutWithNav from '@/components/utility/layouts/layout_with_nav';
 import BaseHeader from '@/components/utility/headers/baseHeader';
 import { getCurrentUser } from '@/components/api/users';
 import { getChats } from '@/components/api/chats';
-import ConversationList from '@/components/chats/chatList';
+import ChatList from '@/components/chats/chatList';
 import { useSearchParams } from 'next/navigation';
 import BackgroundBox from '@/components/utility/common/backgroundBox';
 
@@ -69,7 +69,7 @@ export default function Conversations() {
         <LayoutWithNav>
             <BaseHeader title="All Chats" searchFunction={handleSearchValueChange} searchValue={searchValue} showSearch={true} showProfile={true} user={user} />
             <BackgroundBox sx={{ padding: "8px" }}>
-                <ConversationList chats={displayChats} />
+                <ChatList chats={displayChats} />
             </BackgroundBox>
             <NewChatModal open={modalVisible} handleClose={handleModalClose} user={user} updateUserFunc={() => { getCurrentUser(setUser) }} />
         </LayoutWithNav>

@@ -1,4 +1,4 @@
-import { TextField, Box, Divider, Typography, Button, ListItemText, SwipeableDrawer, ListItemButton, IconButton, useTheme } from "@mui/material";
+import { TextField, Box, Divider, Typography, Button, ListItemText, SwipeableDrawer, ListItemButton, IconButton, useTheme, Dialog, useMediaQuery } from "@mui/material";
 import { useEffect, useState } from "react";
 import { Puller, StyledBox } from "../chats/newChatModal";
 import DataSelectTabs from "../utility/common/dataSelectTabs";
@@ -25,9 +25,14 @@ export default function NewBotModal({ open, handleClose, user, editMode }) {
     const [selectedPersonaId, setSelectedPersonaId] = useState(null)
     const [personas, setPersonas] = useState([])
     const [headerText, setHeaderText] = useState("Create Bot")
+
     const searchParams = useSearchParams()
+
     const buttonDisabled = !(selectedPersonaId && name)
     const theme = useTheme()
+    const smallScreen = useMediaQuery(theme.breakpoints.down("md"))
+
+    const ContainerComponent = smallScreen ? SwipeableDrawer : Dialog
 
     const handleCreate = () => {
         bot.name = name
@@ -135,31 +140,35 @@ export default function NewBotModal({ open, handleClose, user, editMode }) {
     }
 
     return (
-        <SwipeableDrawer
+        <ContainerComponent
             anchor="bottom"
             open={open}
             onClose={handleClose}
             onOpen={() => { }}
-            sx={{ "& .MuiPaper-root": { height: "100%" } }}
+            sx={{ "& .MuiPaper-root": { width: smallScreen ? "100%" : "50%", height: "100%" } }}
         >
-            <StyledBox
-                sx={{
-                    position: 'absolute',
-                    top: 10,
-                    borderTopLeftRadius: 8,
-                    borderTopRightRadius: 8,
-                    visibility: 'visible',
-                    right: 0,
-                    left: 0,
-                    marginBottom: "8px"
-                }}
-            >
-                <Puller />
-            </StyledBox>
+            {
+                smallScreen && (
+                    <StyledBox
+                        sx={{
+                            position: 'absolute',
+                            top: 10,
+                            borderTopLeftRadius: 8,
+                            borderTopRightRadius: 8,
+                            visibility: 'visible',
+                            right: 0,
+                            left: 0,
+                            marginBottom: "8px"
+                        }}
+                    >
+                        <Puller />
+                    </StyledBox>
+                )
+            }
             <Box
                 sx={{ padding: "16px" }}
             >
-                <Box sx={{ marginTop: "24px" }}>
+                <Box sx={{ marginTop: smallScreen ? "24px" : 0 }}>
                     <Typography variant="h5">{headerText}</Typography>
                 </Box>
                 <Box sx={{ width: "100%", display: "flex", marginTop: "32px" }}>
@@ -201,6 +210,6 @@ export default function NewBotModal({ open, handleClose, user, editMode }) {
                     />
                 </Box>
             </Box>
-        </SwipeableDrawer>
+        </ContainerComponent>
     )
 }

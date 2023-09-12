@@ -3,7 +3,7 @@ import { Box, useMediaQuery } from "@mui/material";
 import { useEffect, useState } from "react";
 import NewBotModal from "@/components/bots/newBotModal";
 import { getCookie } from "@/components/utility/cookie_helper";
-import LayoutWithNav from "@/components/utility/layout_with_nav";
+import LayoutWithNav from "@/components/utility/layouts/layout_with_nav";
 import { Masonry } from "@mui/lab";
 import { theme } from "@/components/utility/theme";
 import BaseHeader from "@/components/utility/headers/baseHeader";

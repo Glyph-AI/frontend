@@ -1,6 +1,6 @@
 import NewNoteModal from "@/components/notes/newNoteModal";
 import NoteListItem from "@/components/notes/noteListItem";
-import LayoutWithNav from "@/components/utility/layout_with_nav";
+import LayoutWithNav from "@/components/utility/layouts/layout_with_nav";
 import { getRequest } from "@/components/utility/request_helper";
 import { Search } from "@chatscope/chat-ui-kit-react";
 import { Add } from "@mui/icons-material";
