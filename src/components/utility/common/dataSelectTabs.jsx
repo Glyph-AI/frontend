@@ -1,15 +1,15 @@
 import { useTheme } from "@emotion/react"
-import { Box, Button, ButtonBase, Checkbox, Divider, IconButton, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Select, Tab, Tabs, Typography, styled, useThemeProps } from "@mui/material"
+import { Box, Button, ButtonBase, IconButton, ListItem, ListItemButton, ListItemText, Tab, Tabs, Typography, styled, useMediaQuery } from "@mui/material"
 import SwipeableViews from "react-swipeable-views"
 import TabPanel from "../tabPanel"
-import { Add, Build, CheckBox, ChevronRight, InsertDriveFile, Star, Upload } from "@mui/icons-material"
+import { Add, Build, ChevronRight, InsertDriveFile, Star, Upload } from "@mui/icons-material"
 import { useState } from "react"
 import { useEffect } from "react"
-import { getAvailableTexts, handleTextHide } from "@/components/api/texts"
+import { createText, getAvailableTexts, handleTextHide } from "@/components/api/texts"
 import { getTools, handleToolDisable } from "@/components/api/tools"
 import { StyledList } from "../styled/styledList"
-import FileUploadModal from "../fileUploadModal"
 import UserUploadModal from "../userUploadModal"
+import { useRouter } from "next/router"
 
 const DataTabsListItem = styled(ListItem)(() => ({
     borderRadius: "8px",
@@ -18,7 +18,7 @@ const DataTabsListItem = styled(ListItem)(() => ({
     }
 }))
 
-export function ItemCreate({ isSelectable, children }) {
+export function ItemCreate({ isSelectable, children, ...props }) {
     const theme = useTheme()
     return (
         <ButtonBase
@@ -44,6 +44,7 @@ export function ItemCreate({ isSelectable, children }) {
                     backgroundColor: theme.palette.primary.main
                 }
             }}
+            {...props}
         >
             {children}
         </ButtonBase>
@@ -80,7 +81,7 @@ function SelectableListItem({ id, isSelected, onSelectionChange, primaryText, se
             sx={{ backgroundColor: isSelected ? selectionBackground : null, width: "100%" }}
             onClick={onSelectionChange}
         >
-            <ListItemButton disableRipple>
+            <ListItemButton disableRipple sx={{ borderRadius: "8px" }}>
                 <ListItemText
                     primary={primaryText}
                     secondary={secondaryText}
@@ -91,6 +92,7 @@ function SelectableListItem({ id, isSelected, onSelectionChange, primaryText, se
 }
 
 function LinkListItem({ id, redirectUrl, primaryText, secondaryText, isTool }) {
+    const router = useRouter()
     return (
         <>
             <DataTabsListItem
@@ -103,8 +105,9 @@ function LinkListItem({ id, redirectUrl, primaryText, secondaryText, isTool }) {
                         </IconButton>
                     )
                 }
+                onClick={() => { router.push(redirectUrl) }}
             >
-                <ListItemButton>
+                <ListItemButton sx={{ borderRadius: "8px" }}>
                     <ListItemText
                         primary={primaryText}
                         secondary={secondaryText}
@@ -124,6 +127,9 @@ export default function DataSelectTabs({ isSelectable, bot, setBot, user, conten
     const [toolsToDisplay, setToolsToDisplay] = useState(10000)
     const [fileUploadModalOpen, setFileUploadModalOpen] = useState(false)
     const theme = useTheme()
+    const smallScreen = useMediaQuery(theme.breakpoints.down("md"))
+    const router = useRouter()
+
 
     const ListComponent = isSelectable ? SelectableListItem : LinkListItem
 
@@ -175,6 +181,12 @@ export default function DataSelectTabs({ isSelectable, bot, setBot, user, conten
         }
 
         return false
+    }
+
+    const handleNoteCreate = () => {
+        createText({ name: "New Note", content: "", text_type: "note" }, (data) => {
+            router.push(smallScreen ? `/notes/${data.id}` : `${router.pathname}?note_id=${data.id}`)
+        });
     }
 
     useEffect(() => {
@@ -265,7 +277,7 @@ export default function DataSelectTabs({ isSelectable, bot, setBot, user, conten
                         <Box sx={{ padding: 1 }}>
                             {
                                 Math.abs(user.files_left) > 0 && (
-                                    <ItemCreate className="itemCreate">
+                                    <ItemCreate className="itemCreate" onClick={handleNoteCreate}>
                                         <Box className="text-container" sx={{ paddingLeft: isSelectable ? "0px !important" : 2 }}>
                                             <Typography variant="body2">Create New</Typography>
                                         </Box>
@@ -285,6 +297,7 @@ export default function DataSelectTabs({ isSelectable, bot, setBot, user, conten
                                             primaryText={el.name}
                                             secondaryText={el.content.slice(0, 20) + "..."}
                                             onSelectionChange={() => { handleTextClick(el) }}
+                                            redirectUrl={smallScreen ? `/notes/${el.id}` : `${router.pathname}?note_id=${el.id}`}
                                         />
                                     ))
                                 }

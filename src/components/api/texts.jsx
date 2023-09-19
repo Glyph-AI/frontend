@@ -17,3 +17,34 @@ export const handleTextHide = (bot, targetText, setter) => {
         setter(data)
     })
 }
+
+export const saveText = (id, data, setter) => {
+    genericRequest(`/texts/${id}`, "PATCH", JSON.stringify(data), (data, status) => {
+        if (status !== 200) {
+            console.log("Save error")
+        } else {
+            setter(data)
+        }
+
+    })
+}
+
+export const createText = (data, setter) => {
+    genericRequest("/texts", "POST", JSON.stringify(data), (data, status) => {
+        setter(data)
+    })
+}
+
+export const embedText = (id) => {
+    genericRequest(`/texts/${id}/embed`, "POST", null, (data, status) => {
+        if (status !== 200) {
+            console.log("Embed error")
+        }
+    })
+}
+
+export const getTextById = (id, setter) => {
+    getRequest(`/texts/${id}`, (data) => {
+        setter(data)
+    })
+}

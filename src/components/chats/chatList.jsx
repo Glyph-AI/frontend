@@ -10,7 +10,6 @@ function ChatListItem({ chat, desktopMode }) {
     const [secondaryAction, setSecondaryAction] = useState(null)
     const [inContext, setInContext] = useState(false)
     const theme = useTheme()
-    const unreadBackground = "rgba(47, 128, 237, 0.1)"
     const unread = chat.last_message.role !== "user"
     const router = useRouter()
 
@@ -74,8 +73,6 @@ function ChatListItem({ chat, desktopMode }) {
     const backgroundColor = () => {
         if (inContext) {
             return "rgba(256, 0, 0, 0.2)"
-        } else if (unread) {
-            return unreadBackground
         }
     }
 
@@ -85,7 +82,10 @@ function ChatListItem({ chat, desktopMode }) {
                 sx={
                     {
                         backgroundColor: backgroundColor,
-                        transition: "all 0.3s ease-out"
+                        transition: "all 0.3s ease-out",
+                        "&:hover": {
+                            background: "rgba(0, 0, 0, 0.04)"
+                        }
                     }
                 }
                 secondaryAction={
@@ -95,22 +95,20 @@ function ChatListItem({ chat, desktopMode }) {
                 onContextMenu={handleRightClick}
                 inContext={inContext}
             >
-                <ListItemButton disableRipple>
-                    <ListItemIcon>
-                        <Avatar />
-                    </ListItemIcon>
-                    <ListItemText
-                        sx={{ marginTop: 0, marginBottom: 0 }}
-                        primaryTypographyProps={{ sx: { mb: "8px" } }}
-                        primary={chat.name}
-                        secondaryTypographyProps={
-                            {
-                                sx: { width: "85%", overflow: "hidden", maxHeight: "20px", textOverflow: "ellipsis", whiteSpace: "nowrap" }
-                            }
+                <ListItemIcon>
+                    <Avatar />
+                </ListItemIcon>
+                <ListItemText
+                    sx={{ marginTop: 0, marginBottom: 0 }}
+                    primaryTypographyProps={{ sx: { mb: "8px" } }}
+                    primary={chat.name}
+                    secondaryTypographyProps={
+                        {
+                            sx: { width: "85%", overflow: "hidden", maxHeight: "20px", textOverflow: "ellipsis", whiteSpace: "nowrap" }
                         }
-                        secondary={formatLastMessage(chat.last_message, chat.bot.name)}
-                    />
-                </ListItemButton>
+                    }
+                    secondary={formatLastMessage(chat.last_message, chat.bot.name)}
+                />
             </StyledListItem>
         </ButtonBase>
     )

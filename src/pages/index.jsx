@@ -9,7 +9,7 @@ import DesktopLayout from "@/components/utility/layouts/desktop_layout";
 import ConversationList from "@/components/chats/chatList";
 import { darkTheme, theme } from "@/components/utility/theme";
 import { ChatBubble, Contacts, Search, Settings } from "@mui/icons-material";
-import { Avatar, Box, Icon, InputAdornment, Paper, Skeleton, TextField, Typography, useMediaQuery } from "@mui/material"
+import { Avatar, Box, Divider, Icon, InputAdornment, Paper, Skeleton, TextField, Typography, useMediaQuery } from "@mui/material"
 import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
 import { getCookie } from "@/components/utility/cookie_helper";
@@ -19,6 +19,8 @@ import ChatList from "@/components/chats/chatList";
 import { useSearchParams } from "next/navigation";
 import UsageBars from "@/components/settings/usageBars";
 import EditableTextField from "@/components/settings/editableTextField";
+import { getTextById } from "@/components/api/texts";
+import NotesContainer from "@/components/notes/notesContainer";
 
 export default function Index() {
     const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
@@ -33,6 +35,7 @@ export default function Index() {
     const [bots, setBots] = useState([])
     const [activeTab, setActiveTab] = useState("bots")
     const [selectedChat, setSelectedChat] = useState({})
+    const [selectedNote, setSelectedNote] = useState({})
     const [selectedBot, setSelectedBot] = useState({})
 
 
@@ -60,10 +63,20 @@ export default function Index() {
         if (chat_id) {
             getChatById(chat_id, (data) => {
                 setSelectedChat(data)
+                setSelectedNote({})
                 console.log(data)
                 getBotById(data.bot_id, setSelectedBot)
             })
 
+        }
+
+        let note_id = searchParams.get("note_id")
+        if (note_id) {
+            getTextById(note_id, (data) => {
+                setSelectedNote(data)
+                setSelectedChat({})
+                setSelectedBot({})
+            })
         }
 
     }, [searchParams])
@@ -143,6 +156,7 @@ export default function Index() {
                                 tabState={activeTab === "files" ? 1 : 0}
                             />
                         </Box>
+                        <Divider sx={{ width: "100%", mb: 2 }} />
                         <Box sx={{ width: "100%", pb: 4 }}>
                             <CollapsibleCard
                                 expand={activeTab === "profile"}
@@ -185,7 +199,7 @@ export default function Index() {
                                 newItemFunc={() => { setNewBotModalVisible(true) }}
                                 title={<Typography variant="body2">{botsTitle}</Typography>}
                             >
-                                <CondensedBotList user={user} setBots={setBots} bots={bots} />
+                                <CondensedBotList user={user} setBots={setBots} bots={bots} desktopMode={true} />
                             </CollapsibleCard>
                         </Box>
                         <Box sx={{ width: "100%", pb: 4 }}>
@@ -215,6 +229,15 @@ export default function Index() {
                         )
                     }
                     {
+                        Object.keys(selectedNote).length !== 0 && (
+                            <NotesContainer
+                                note={selectedNote}
+                                setNote={setSelectedNote}
+                                desktopMode={true}
+                            />
+                        )
+                    }
+                    {/* {
                         Object.keys(selectedChat).length === 0 && (
                             <Box sx={{ height: "100%", display: "flex", justifyContent: "center", alignItems: "center" }}>
                                 <Icon sx={{ height: "50%", width: "50%", opacity: "0.1" }}>
@@ -222,7 +245,7 @@ export default function Index() {
                                 </Icon>
                             </Box>
                         )
-                    }
+                    } */}
                 </Paper >
             </Box>
         </DesktopLayout>

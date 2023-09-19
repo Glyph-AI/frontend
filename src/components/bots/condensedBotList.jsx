@@ -8,15 +8,17 @@ import { useRouter } from "next/router";
 
 function CondensedBotListItem({ bot, ...props }) {
     return (
-        <StyledListItem {...props}>
-            <ListItemButton disableRipple>
-                <ListItemIcon>
-                    <Avatar src={bot.avatar_location || "/glyph-avatar.png"} />
-                </ListItemIcon>
-                <ListItemText
-                    primary={bot.name}
-                />
-            </ListItemButton>
+        <StyledListItem {...props} sx={{
+            "&:hover": {
+                background: "rgba(0, 0, 0, 0.04)"
+            }
+        }}>
+            <ListItemIcon>
+                <Avatar src={bot.avatar_location || "/glyph-avatar.png"} />
+            </ListItemIcon>
+            <ListItemText
+                primary={bot.name}
+            />
         </StyledListItem>
     )
 }
@@ -34,10 +36,8 @@ export default function CondensedBotList({ bots, setBots, user, desktopMode }) {
     const handleBotClick = (item) => {
         setSelectedBot(item)
         setBotModalVisible(true)
-        // if (desktopMode) {
-        //     router.push(``)
-        // }
-        router.push(`/home?bot_id=${item.id}`)
+        console.log(desktopMode)
+        router.push(desktopMode ? `${router.pathname}?bot_id=${item.id}` : `/home?bot_id=${item.id}`)
     }
 
     return (
