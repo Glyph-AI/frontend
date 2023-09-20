@@ -23,7 +23,7 @@ export default function BotCard({ bot, isStore, CardProps }) {
             </Box>
             <Box sx={{ width: "100%", display: "flex", marginTop: "10px" }}>
                 <Box>
-                    <Typography color={theme.palette.common.textSecondary} sx={{ fontWeight: "700", opacity: "0.6" }} variant="body2">Shares: 12</Typography>
+                    <Typography color={theme.palette.common.textSecondary} sx={{ fontWeight: "700", opacity: "0.6" }} variant="body2">Shares: {bot.share_count}</Typography>
                 </Box>
             </Box>
             {

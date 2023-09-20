@@ -91,6 +91,20 @@ export default function NewBotModal({ open, handleClose, user, editMode }) {
         })
     }
 
+    const handleStore = () => {
+        console.log(bot.available_in_store)
+        const data = {
+            id: bot.id,
+            available_in_store: true
+        }
+
+        updateBotById(bot.id, data, (data) => {
+            setBot(data);
+            setName(data.name)
+            setHeaderText(data.name)
+        })
+    }
+
     const renderSharing = () => {
         if (editMode) {
             return (
@@ -148,8 +162,8 @@ export default function NewBotModal({ open, handleClose, user, editMode }) {
                         <Box sx={{ flex: 1, pl: 1 }}>
                             <Typography sx={{ fontWeight: 500, fontSize: "16px" }} variant="body2">Bot Store</Typography>
                         </Box>
-                        <Button variant="text">
-                            Add to Bot Store
+                        <Button disabled={bot.available_in_store} variant="text" onClick={handleStore}>
+                            {bot.available_in_store ? "Already In Store" : "Add to Bot Store"}
                         </Button>
                     </Box>
                 </>
@@ -228,11 +242,12 @@ export default function NewBotModal({ open, handleClose, user, editMode }) {
                             placeholder="Name this bot"
                         />
                     </Box>
-                    <Box width={{ width: "10%", "& .MuiButtonBase-root": { padding: "4px 8px" } }}>
+                    <Box width={{ width: "20%", display: "flex", justifyContent: "right", "& .MuiButtonBase-root": { padding: "4px 8px" } }}>
                         <Button
                             disabled={buttonDisabled}
                             variant="contained"
                             onClick={handleCreate}
+
                         >
                             {editMode ? "Update" : "Create"}
                         </Button>

@@ -29,3 +29,9 @@ export const updateBotById = (bot_id, data, callback) => {
         callback(data)
     })
 }
+
+export const getStoreBots = (callback) => {
+    getRequest("/bots/store", (data) => {
+        callback(data)
+    })
+}
