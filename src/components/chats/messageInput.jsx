@@ -14,7 +14,7 @@ export default function MessageInput({ user, inputProps, sendProps, onSubmit, de
                 padding: "0px 8px 0px 0px",
                 width: "100%",
                 borderRadius: desktopMode ? "0 0 16px 16px" : 0,
-                backgroundColor: desktopMode ? theme.palette.background.secondary : theme.background.primary.main,
+                backgroundColor: desktopMode ? theme.palette.background.secondary : theme.palette.background.main,
                 '& .MuiTextField-root': { m: 1, width: '35ch' }
             }}
             onSubmit={onSubmit}
