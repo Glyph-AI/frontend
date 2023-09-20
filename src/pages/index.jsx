@@ -1,26 +1,25 @@
-import { getBot, getBotById, getUserBots } from "@/components/api/bots";
+import { getBotById, getUserBots } from "@/components/api/bots";
 import { getChatById, getChats } from "@/components/api/chats";
+import { getAvailableTexts, getTextById } from "@/components/api/texts";
 import { getCurrentUser } from "@/components/api/users";
 import CondensedBotList from "@/components/bots/condensedBotList";
+import ChatList from "@/components/chats/chatList";
+import ChatsContainer from "@/components/chats/chatsContainer";
 import DesktopNavbar from "@/components/navbar/desktop_navbar";
+import NotesContainer from "@/components/notes/notesContainer";
+import EditableTextField from "@/components/settings/editableTextField";
+import UsageBars from "@/components/settings/usageBars";
 import CollapsibleCard from "@/components/utility/cardTypes/collapsibleCard";
 import DataSelectTabs from "@/components/utility/common/dataSelectTabs";
+import { getCookie } from "@/components/utility/cookie_helper";
 import DesktopLayout from "@/components/utility/layouts/desktop_layout";
-import ConversationList from "@/components/chats/chatList";
 import { darkTheme, theme } from "@/components/utility/theme";
 import { ChatBubble, Contacts, Search, Settings } from "@mui/icons-material";
-import { Avatar, Box, Divider, Icon, InputAdornment, Paper, Skeleton, TextField, Typography, useMediaQuery } from "@mui/material"
-import { useRouter } from "next/router"
-import { useEffect, useState } from "react"
-import { getCookie } from "@/components/utility/cookie_helper";
-import ChatHeader from "@/components/utility/headers/chatHeader";
-import ChatsContainer from "@/components/chats/chatsContainer";
-import ChatList from "@/components/chats/chatList";
+import { Avatar, Box, Divider, InputAdornment, Paper, TextField, Typography, useMediaQuery } from "@mui/material";
 import { useSearchParams } from "next/navigation";
-import UsageBars from "@/components/settings/usageBars";
-import EditableTextField from "@/components/settings/editableTextField";
-import { getAvailableTexts, getTextById } from "@/components/api/texts";
-import NotesContainer from "@/components/notes/notesContainer";
+import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
+import SettingsContainer from "../components/settings/settingsContainer";
 
 export default function Index() {
     const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
@@ -41,7 +40,6 @@ export default function Index() {
 
 
     useEffect(() => {
-        console.log(smallScreen)
         if (smallScreen) {
             router.push("/chats")
         }
@@ -66,7 +64,6 @@ export default function Index() {
             getChatById(chat_id, (data) => {
                 setSelectedChat(data)
                 setSelectedNote({})
-                console.log(data)
                 getBotById(data.bot_id, setSelectedBot)
             })
 
@@ -214,7 +211,8 @@ export default function Index() {
                                 }
                                 title={<Typography variant="body2">Settings</Typography>}
                             >
-                                <CondensedBotList user={user} setBots={setBots} bots={bots} />
+                                <SettingsContainer user={user} />
+
                             </CollapsibleCard>
                         </Box>
 

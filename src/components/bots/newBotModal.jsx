@@ -1,14 +1,14 @@
-import { TextField, Box, Divider, Typography, Button, ListItemText, SwipeableDrawer, ListItemButton, IconButton, useTheme, Dialog, useMediaQuery } from "@mui/material";
+import { CopyAll } from "@mui/icons-material";
+import { Box, Button, Dialog, ListItemButton, ListItemText, SwipeableDrawer, TextField, Typography, useMediaQuery, useTheme } from "@mui/material";
+import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
+import { createBot, getBot } from "../api/bots";
+import { getPerosonas } from "../api/personas";
+import { getAvailableTexts } from "../api/texts";
 import { Puller, StyledBox } from "../chats/newChatModal";
 import DataSelectTabs from "../utility/common/dataSelectTabs";
-import { getPerosonas } from "../api/personas";
-import { createBot, getBot } from "../api/bots";
-import { useSearchParams } from "next/navigation";
-import { Add, CopyAll } from "@mui/icons-material";
-import { StyledListItem } from "../utility/styled/styledListItem";
 import { StyledList } from "../utility/styled/styledList";
-import { getAvailableTexts } from "../api/texts";
+import { StyledListItem } from "../utility/styled/styledListItem";
 
 const emptyBot = {
     id: null,

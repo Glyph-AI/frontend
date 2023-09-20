@@ -1,10 +1,10 @@
-import { Avatar, ListItemButton, ListItemIcon, ListItemText } from "@mui/material";
-import { StyledList } from "../utility/styled/styledList";
-import { StyledListItem } from "../utility/styled/styledListItem";
+import { Avatar, ListItemIcon, ListItemText } from "@mui/material";
+import { useRouter } from "next/router";
 import { useState } from "react";
 import { getUserBots } from "../api/bots";
+import { StyledList } from "../utility/styled/styledList";
+import { StyledListItem } from "../utility/styled/styledListItem";
 import NewBotModal from "./newBotModal";
-import { useRouter } from "next/router";
 
 function CondensedBotListItem({ bot, ...props }) {
     return (
@@ -36,7 +36,6 @@ export default function CondensedBotList({ bots, setBots, user, desktopMode }) {
     const handleBotClick = (item) => {
         setSelectedBot(item)
         setBotModalVisible(true)
-        console.log(desktopMode)
         router.push(desktopMode ? `${router.pathname}?bot_id=${item.id}` : `/home?bot_id=${item.id}`)
     }
 

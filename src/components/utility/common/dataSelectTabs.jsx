@@ -1,15 +1,14 @@
-import { useTheme } from "@emotion/react"
-import { Box, Button, ButtonBase, Icon, IconButton, ListItem, ListItemButton, ListItemText, Tab, Tabs, Typography, styled, useMediaQuery } from "@mui/material"
-import SwipeableViews from "react-swipeable-views"
-import TabPanel from "../tabPanel"
-import { Add, Build, ChevronRight, InsertDriveFile, Star, Upload } from "@mui/icons-material"
-import { useState } from "react"
-import { useEffect } from "react"
 import { createText, getAvailableTexts, handleTextHide } from "@/components/api/texts"
 import { getTools, handleToolDisable } from "@/components/api/tools"
-import { StyledList } from "../styled/styledList"
-import UserUploadModal from "../userUploadModal"
+import { useTheme } from "@emotion/react"
+import { Add, Build, ChevronRight, InsertDriveFile, Star, Upload } from "@mui/icons-material"
+import { Box, Button, ButtonBase, Icon, IconButton, ListItem, ListItemButton, ListItemText, Tab, Tabs, Typography, styled, useMediaQuery } from "@mui/material"
 import { useRouter } from "next/router"
+import { useEffect, useState } from "react"
+import SwipeableViews from "react-swipeable-views"
+import { StyledList } from "../styled/styledList"
+import TabPanel from "../tabPanel"
+import UserUploadModal from "../userUploadModal"
 
 const DataTabsListItem = styled(ListItem)(() => ({
     borderRadius: "8px",
@@ -188,8 +187,14 @@ export default function DataSelectTabs({ isSelectable, bot, setBot, user, conten
 
     useEffect(() => {
         getTools(setAvailableTools)
-        setNotes(availableTexts.filter((el) => { return (el.text_type === "note") }))
-        setFiles(availableTexts.filter((el) => { return (el.text_type === "file") }))
+        if (typeof availableTexts === "undefined") {
+            getAvailableTexts((data) => {
+                setNotes(data.filter((el) => { return (el.text_type === "note") }))
+                setFiles(data.filter((el) => { return (el.text_type === "file") }))
+            })
+
+        }
+
 
 
         if (typeof tabState !== "undefined") {
@@ -225,6 +230,18 @@ export default function DataSelectTabs({ isSelectable, bot, setBot, user, conten
             }
         } else {
             handleToolDisable(bot, el, setBot)
+        }
+    }
+
+    const handleUploadClose = () => {
+        setFileUploadModalOpen(false);
+        if (typeof setAvailableTexts !== "undefined") {
+            getAvailableTexts(setAvailableTexts)
+        } else {
+            getAvailableTexts((data) => {
+                setNotes(data.filter((el) => { return (el.text_type === "note") }))
+                setFiles(data.filter((el) => { return (el.text_type === "file") }))
+            })
         }
     }
 
@@ -373,7 +390,7 @@ export default function DataSelectTabs({ isSelectable, bot, setBot, user, conten
                 </SwipeableViews>
                 <UserUploadModal
                     open={fileUploadModalOpen}
-                    handleClose={() => { setFileUploadModalOpen(false); getAvailableTexts(setAvailableTexts) }}
+                    handleClose={() => { }}
                 />
             </Box>
         </>

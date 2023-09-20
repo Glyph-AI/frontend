@@ -11,3 +11,9 @@ export const logoutUser = (callback) => {
         callback(resp)
     })
 }
+
+export const updateProfile = (data, callback) => {
+    genericRequest("/profile", "PATCH", JSON.stringify(data), (data) => {
+        callback(data)
+    })
+}

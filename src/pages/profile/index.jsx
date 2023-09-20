@@ -14,26 +14,10 @@ import BackgroundBox from "@/components/utility/common/backgroundBox";
 import FileUploadModal from "@/components/utility/fileUploadModal";
 import UsageBars from "@/components/settings/usageBars";
 import EditableTextField from "@/components/settings/editableTextField";
+import SettingsContainer from "../../components/settings/settingsContainer";
 
 
-function SettingsListItem({ icon, text, secondaryAction, itemProps }) {
-    return (
-        <ListItem
-            secondaryAction={
-                secondaryAction
-            }
-            sx={{ padding: "16px 24px" }}
-            {...itemProps}
-        >
-            <ListItemIcon>
-                {icon}
-            </ListItemIcon>
-            <ListItemText>
-                {text}
-            </ListItemText>
-        </ListItem>
-    )
-}
+
 
 const SmallAvatar = styled(Avatar)(({ theme }) => ({
     width: 32,
@@ -43,19 +27,6 @@ const SmallAvatar = styled(Avatar)(({ theme }) => ({
         border: "2px solid #fff"
     }
 }));
-
-function LinearProgressWithLabel({ labelValue, maxValue, ...props }) {
-    return (
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <Box sx={{ width: '100%', mr: 1 }}>
-                <LinearProgress variant="determinate" {...props} />
-            </Box>
-            <Box sx={{ minWidth: 35 }}>
-                <Typography variant="body2" color="text.secondary">{labelValue}/{maxValue === -1 ? "INF" : maxValue}</Typography>
-            </Box>
-        </Box>
-    );
-}
 
 const env = process.env.NEXT_PUBLIC_ENVIRONMENT
 
@@ -103,23 +74,6 @@ export default function Profile() {
         genericRequest("/logout", "POST", null, () => {
             router.push("/login")
         })
-    }
-
-    const renderUserSubscription = () => {
-        if (user.subscribed && user.is_current) {
-            if (user.subscription_provider === "Google") {
-                return <i>Manage Subscription on Google Play</i>
-            } else {
-                return <i>Manage Subscription on Our Website</i>
-            }
-            return <i>Subscribed</i>
-        } else if (user.subscription_canceled) {
-            return <i>Subscription Canceled</i>
-        } else if (user.subscribed && !user.is_current) {
-            return <i>Payment Issue</i>
-        } else {
-            return <i>Not Subscribed</i>
-        }
     }
 
     const handleNameChange = (val) => {
@@ -202,49 +156,7 @@ export default function Profile() {
                 </Box>
                 <UsageBars user={user} dense={smallScreen} />
                 <Divider sx={{ width: "100%" }} />
-                <List sx={{ p: 1, pt: 2 }}>
-                    {/* <SettingsListItem
-                        secondaryAction={<StyledSwitch />}
-                        icon={<DarkMode sx={{ color: theme.palette.common.blue }} />}
-                        text={"Dark Mode"}
-                    /> */}
-                    <SettingsListItem
-                        secondaryAction={<ChevronRight />}
-                        icon={<AccountBox sx={{ color: theme.palette.common.blue }} />}
-                        text={"Account & Subscription"}
-                        itemProps={{
-                            onClick: () => { subscriptionManageClick() }
-                        }}
-                    />
-                    <SettingsListItem
-                        secondaryAction={<ChevronRight />}
-                        icon={<Notifications sx={{ color: theme.palette.common.blue }} />}
-                        text={"Notification"}
-                    />
-                    {/* <SettingsListItem
-                        secondaryAction={<ChevronRight />}
-                        icon={<Lock sx={{ color: theme.palette.common.blue }} />}
-                        text={"Privacy and Security"}
-                    /> */}
-                    <SettingsListItem
-                        secondaryAction={null}
-                        icon={<Info sx={{ color: theme.palette.common.blue }} />}
-                        text={"Discord"}
-                        itemProps={{
-                            onClick: () => { router.push("https://discord.com/channels/1103348778104279110/1107050513696030871/1126965614930571356") }
-                        }}
-                    />
-                    <SettingsListItem
-                        secondaryAction={null}
-                        icon={<Logout sx={{ color: theme.palette.common.blue }} />}
-                        text={"Logout"}
-                        itemProps={{
-                            onClick: () => {
-                                logoutUser(() => router.push("/login"))
-                            }
-                        }}
-                    />
-                </List>
+                <SettingsContainer user={user} />
             </BackgroundBox>
             <FileUploadModal
                 open={uploadModalOpen}
