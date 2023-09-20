@@ -1,12 +1,12 @@
 "use client";
+import NewBotModal from "@/components/bots/newBotModal";
 import { ArrowBack, MoreVert } from "@mui/icons-material";
-import { AppBar, Avatar, Box, Divider, IconButton, Toolbar, Typography, styled, useTheme } from "@mui/material";
+import { Avatar, Box, Divider, IconButton, Typography, useTheme } from "@mui/material";
+import { useSearchParams } from "next/navigation";
 import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
 import { StyledAppBar } from "../styled/styledAppBar";
 import { StyledToolbar } from "../styled/styledToolbar";
-import NewBotModal from "@/components/bots/newBotModal";
-import { useEffect, useState } from "react";
-import { useSearchParams } from "next/navigation";
 
 
 export default function ChatHeader({ bot, user, chat, desktopMode }) {
@@ -60,7 +60,12 @@ export default function ChatHeader({ bot, user, chat, desktopMode }) {
 
     const handleBotModalClose = () => {
         setBotModalOpen(false)
-        router.push(`/chats/${chat.id}`)
+        if (desktopMode) {
+            router.push("/")
+        } else {
+            router.push(`/chats/${chat.id}`)
+        }
+
     }
 
     const handleSettingsRouting = () => {
@@ -99,17 +104,27 @@ export default function ChatHeader({ bot, user, chat, desktopMode }) {
                         <Typography variant="body" sx={{ color: theme.palette.common.darkBlue }}>{bot.name}</Typography>
                         <Typography variant="body2" sx={{ color: theme.palette.common.subtitleBlue }}>{enabledTools()}, {enabledFiles()}, {enabledNotes()}</Typography>
                     </Box>
-                    <IconButton edge="end" onClick={() => { handleSettingsRouting() }}>
-                        <MoreVert sx={{ color: desktopMode ? theme.palette.primary.main : "rgba(0,0,0,0.54)" }} />
-                    </IconButton>
+                    {
+                        !desktopMode && (
+                            <IconButton edge="end" onClick={() => { handleSettingsRouting() }}>
+                                <MoreVert sx={{ color: desktopMode ? theme.palette.primary.main : "rgba(0,0,0,0.54)" }} />
+                            </IconButton>
+                        )
+                    }
+
                 </StyledToolbar>
                 <Divider sx={{ width: "100%" }} />
-                <NewBotModal
-                    open={botModalOpen}
-                    handleClose={handleBotModalClose}
-                    user={user}
-                    editMode={true}
-                />
+                {
+                    !desktopMode && (
+                        <NewBotModal
+                            open={botModalOpen}
+                            handleClose={handleBotModalClose}
+                            user={user}
+                            editMode={true}
+                        />
+                    )
+                }
+
             </StyledAppBar>
 
         </>

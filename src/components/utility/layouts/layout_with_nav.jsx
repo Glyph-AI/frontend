@@ -1,15 +1,15 @@
-import { theme, darkTheme } from '../theme.jsx'
-import { ThemeProvider, CssBaseline, Snackbar, Alert, AlertTitle, Box, useMediaQuery } from '@mui/material';
-import { useState, useEffect } from 'react';
-import { useRouter } from 'next/router'
-import { motion } from "framer-motion";
-import { genericRequest, getRequest } from '../request_helper.jsx';
-import { initializeApp } from 'firebase/app';
-import { getMessaging, onMessage } from "firebase/messaging";
 import { fetchToken } from '@/components/utility/firebase';
 import { FIREBASE_CONFIG } from '@/components/utility/firebaseConfig';
-import Navbar from '../../navbar/navbar.jsx';
+import { Alert, AlertTitle, Box, CssBaseline, Snackbar, ThemeProvider, useMediaQuery } from '@mui/material';
+import { initializeApp } from 'firebase/app';
+import { getMessaging, onMessage } from "firebase/messaging";
+import { motion } from "framer-motion";
+import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
 import { getCurrentUser } from '../../api/users.jsx';
+import Navbar from '../../navbar/navbar.jsx';
+import { genericRequest } from '../request_helper.jsx';
+import { theme } from '../theme.jsx';
 
 
 const variants = {
@@ -105,7 +105,7 @@ export default function LayoutWithNav({ showNavigation = true, children }) {
                 exit="exit"
                 transition={{ type: 'linear' }}
                 className=""
-                style={{ height: "100%", overflow: "hidden", width: "100%", position: "relative" }}
+                style={{ height: "100%", width: "100%", position: "relative", overflow: "hidden" }}
             >
                 <Box className="child-container" sx={{ height: childHeight() }}>
                     {children}

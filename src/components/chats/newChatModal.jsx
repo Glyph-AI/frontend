@@ -1,25 +1,24 @@
-import React, { useState, useEFfect } from 'react';
-import {
-    Box,
-    TextField,
-    Button,
-    Typography,
-    SwipeableDrawer,
-    useTheme,
-    styled,
-    ListItemIcon,
-    Avatar,
-    ListItemText,
-    IconButton
-} from '@mui/material'
-import { useEffect } from 'react';
-import { grey } from '@mui/material/colors';
-import { getUserBots } from '../api/bots';
-import { ItemCreate } from '../utility/common/dataSelectTabs';
 import { Add } from '@mui/icons-material';
+import {
+    Avatar,
+    Box,
+    Button,
+    Icon,
+    ListItemIcon,
+    ListItemText,
+    SwipeableDrawer,
+    TextField,
+    Typography,
+    styled,
+    useTheme
+} from '@mui/material';
+import { grey } from '@mui/material/colors';
+import { useEffect, useState } from 'react';
+import { getUserBots } from '../api/bots';
 import { createChat } from '../api/chats';
-import { StyledListItem } from '../utility/styled/styledListItem';
+import { ItemCreate } from '../utility/common/dataSelectTabs';
 import { StyledList } from '../utility/styled/styledList';
+import { StyledListItem } from '../utility/styled/styledListItem';
 
 export const StyledBox = styled(Box)(() => {
     const theme = useTheme()
@@ -132,9 +131,9 @@ export default function NewChatModal({ open, handleClose, updateUserFunc, user }
                             <Box className="text-container" sx={{}}>
                                 <Typography variant="body2">Create New</Typography>
                             </Box>
-                            <IconButton className="button-container">
+                            <Icon className="button-container">
                                 <Add />
-                            </IconButton>
+                            </Icon>
                         </ItemCreate>
                     )
                 }

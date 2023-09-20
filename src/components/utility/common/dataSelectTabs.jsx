@@ -301,9 +301,9 @@ export default function DataSelectTabs({ isSelectable, bot, setBot, user, conten
                                         <Box className="text-container" sx={{ paddingLeft: isSelectable ? "0px !important" : 2 }}>
                                             <Typography variant="body2">Create New</Typography>
                                         </Box>
-                                        <IconButton className="button-container">
+                                        <Icon className="button-container">
                                             <Add />
-                                        </IconButton>
+                                        </Icon>
                                     </ItemCreate>
                                 )
                             }
@@ -338,13 +338,13 @@ export default function DataSelectTabs({ isSelectable, bot, setBot, user, conten
                     <TabPanel value={tabValue} index={1} dir={theme.direction}>
                         {
                             Math.abs(user.files_left) > 0 && (
-                                <ItemCreate className="itemCreate">
+                                <ItemCreate className="itemCreate" onClick={() => { setFileUploadModalOpen(true) }} >
                                     <Box className="text-container" sx={{ paddingLeft: isSelectable ? "0px !important" : 2 }}>
                                         <Typography variant="body2">Upload File</Typography>
                                     </Box>
-                                    <IconButton onClick={() => { setFileUploadModalOpen(true) }} className="button-container">
+                                    <Icon className="button-container">
                                         <Upload />
-                                    </IconButton>
+                                    </Icon>
                                 </ItemCreate>
                             )
                         }

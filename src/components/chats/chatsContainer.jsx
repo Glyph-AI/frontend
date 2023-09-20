@@ -1,10 +1,10 @@
 import { Alert, AlertTitle, Divider, Paper, Snackbar } from "@mui/material"
-import ChatHeader from "../utility/headers/chatHeader"
-import MessageContainer from "./messageContainer"
-import ToolDrawer from "./toolDrawer"
-import MessageInput from "./messageInput"
 import { useEffect, useRef, useState } from "react"
 import { sendMessage } from "../api/chats"
+import ChatHeader from "../utility/headers/chatHeader"
+import MessageContainer from "./messageContainer"
+import MessageInput from "./messageInput"
+import ToolDrawer from "./toolDrawer"
 
 export default function ChatsContainer({ bot, setBot, user, chat, desktopMode }) {
     const [glyphTyping, setGlyphTyping] = useState(false)
@@ -128,7 +128,7 @@ export default function ChatsContainer({ bot, setBot, user, chat, desktopMode })
             </Snackbar>
             <ChatHeader bot={bot} user={user} chat={chat} desktopMode={desktopMode} />
             <MessageContainer messageArray={chatData} typingIndicator={glyphTyping} toolsExt={toolsExt} renderSettings={renderBotSettings()} desktopMode={desktopMode} />
-            <Paper elevation={desktopMode ? 0 : 5} sx={{ position: "absolute", bottom: 0, width: "100%", backgroundColor: "white" }}>
+            <Paper elevation={desktopMode ? 0 : 5} sx={{ position: "sticky", bottom: 0, width: "100%", backgroundColor: "white" }}>
                 {
                     renderBotSettings() && (
                         <ToolDrawer desktopMode={desktopMode} bot={bot} setBot={setBot} setToolsExt={setToolsExt} toolsExt={toolsExt} user={user} />

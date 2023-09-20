@@ -1,13 +1,12 @@
 import { Box, useTheme } from "@mui/material";
-import OutgoingMessage from "./outgoingMessage";
+import { createRef, useEffect } from "react";
 import IncomingMessage from "./incomingMessage";
+import OutgoingMessage from "./outgoingMessage";
 import TypingIndicator from "./typingIndicator";
-import { createRef } from "react";
-import { useEffect } from "react";
 
 export default function MessageContainer({ messageArray, toolsExt, renderSettings, desktopMode, typingIndicator = false }) {
     const messagesEndRef = createRef()
-    const settingsPadding = renderSettings ? 47 : 0
+    const settingsPadding = renderSettings ? 96 : 0
     const theme = useTheme()
 
     const scrollToBottom = () => {

@@ -24,7 +24,7 @@ export default function MessageInput({ user, inputProps, sendProps, onSubmit, de
                 size="small"
                 name="message"
                 placeholder="Write a message..."
-                multilline
+                multiline
                 sx={{
                     flex: 1,
                     input: {

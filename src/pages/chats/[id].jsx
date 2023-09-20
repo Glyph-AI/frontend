@@ -1,27 +1,13 @@
-import { useState, useEffect, useRef } from 'react';
-import { Alert, AlertTitle, Divider, Paper, Snackbar } from '@mui/material';
-import { useRouter } from 'next/router';
-import { getCookie } from '@/components/utility/cookie_helper';
-import LayoutWithNav from '@/components/utility/layouts/layout_with_nav';
-import ToolDrawer from '@/components/chats/toolDrawer';
-import MessageContainer from '@/components/chats/messageContainer';
-import ChatHeader from '@/components/utility/headers/chatHeader';
-import MessageInput from '@/components/chats/messageInput';
-import BackgroundBox from '@/components/utility/common/backgroundBox';
-import { getChatById, sendMessage } from '@/components/api/chats';
 import { getBotById } from '@/components/api/bots';
+import { getChatById } from '@/components/api/chats';
 import { getCurrentUser } from '@/components/api/users';
 import ChatsContainer from '@/components/chats/chatsContainer';
+import { getCookie } from '@/components/utility/cookie_helper';
+import LayoutWithNav from '@/components/utility/layouts/layout_with_nav';
+import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
 
 export default function Chat() {
-
-
-  const [botId, setBotId] = useState()
-  const [chatId, setChatId] = useState()
-  const [chatData, setChatData] = useState([])
-  const [anchorEl, setAnchorEl] = useState(null)
-  const [snackbarOpen, setSnackbarOpen] = useState(false)
-  const [snackbarMessage, setSnackbarMessage] = useState("")
   const [chat, setChat] = useState({})
   const [bot, setBot] = useState({})
   const [user, setUser] = useState({})
@@ -50,8 +36,6 @@ export default function Chat() {
       // setShowTts(true)
     })
 
-    setChatId(id)
-
 
     // REST pre-work for chats
     getChatById(router.query.id, (chatData) => {
@@ -59,7 +43,6 @@ export default function Chat() {
       getBotById(chatData.bot_id, (botData) => {
         setBot(botData)
       })
-      setBotId(chatData.bot_id)
     })
 
     if (user.conversation_mode) {
