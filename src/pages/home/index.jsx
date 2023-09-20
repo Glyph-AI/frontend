@@ -1,6 +1,7 @@
 "use client"
 import { getUserBots } from "@/components/api/bots";
 import { getChats } from "@/components/api/chats";
+import { getAvailableTexts } from "@/components/api/texts";
 import { getCurrentUser } from "@/components/api/users";
 import CondensedBotList from "@/components/bots/condensedBotList";
 import NewBotModal from "@/components/bots/newBotModal";
