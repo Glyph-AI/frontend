@@ -188,11 +188,15 @@ export default function DataSelectTabs({ isSelectable, bot, setBot, user, conten
     useEffect(() => {
         getTools(setAvailableTools)
         if (typeof availableTexts === "undefined") {
+            console.log("Getting Texts")
             getAvailableTexts((data) => {
                 setNotes(data.filter((el) => { return (el.text_type === "note") }))
                 setFiles(data.filter((el) => { return (el.text_type === "file") }))
             })
 
+        } else {
+            setNotes(availableTexts.filter((el) => { return (el.text_type === "note") }))
+            setFiles(availableTexts.filter((el) => { return (el.text_type === "file") }))
         }
 
 

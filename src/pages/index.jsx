@@ -110,6 +110,13 @@ export default function Index() {
 
     const botsTitle = bots.length === 1 ? `${bots.length} Bot` : `${bots.length} Bots`
     const chatsTitle = chats.length === 1 ? `${chats.length} Chat` : `${chats.length} Chats`
+    const subscriptionText = () => {
+        if (!user.subscribed) {
+            return "Glyph Free"
+        } else {
+            return `${user.subscription_price_tier.name} / ${user.subscription_renewal_date}`
+        }
+    }
 
     return (
         <DesktopLayout>
@@ -173,8 +180,7 @@ export default function Index() {
                                     </Box>
                                 </Box>
                                 <Box sx={{ display: "flex", justifyContent: "center" }}>
-                                    <Typography color={theme.palette.common.subtitleBlue} variant="body2">Glyph Lite / 10.01.23</Typography>
-
+                                    <Typography color={theme.palette.common.subtitleBlue} variant="body2">{subscriptionText()}</Typography>
                                 </Box>
                                 <UsageBars user={user} dense={false} />
                             </CollapsibleCard>

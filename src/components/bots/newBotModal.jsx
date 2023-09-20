@@ -103,11 +103,11 @@ export default function NewBotModal({ open, handleClose, user, editMode }) {
                             <Typography sx={{ fontWeight: 500, fontSize: "16px" }} variant="body2">Sharing</Typography>
                         </Box>
                         <Button variant="text" onClick={toggleSharing}>
-                            {bot.sharing_enabled ? "Disable" : "Enable"} Sharing
+                            {bot?.sharing_enabled ? "Disable" : "Enable"} Sharing
                         </Button>
                     </Box>
                     {
-                        bot.sharing_enabled && (
+                        bot?.sharing_enabled && (
                             <>
                                 <Box sx={{ display: "flex", alignItems: "center", width: "100%" }}>
                                     <Box sx={{ flex: 1, pl: 1 }}>
