@@ -1,16 +1,16 @@
+import { Masonry } from "@mui/lab";
 import { Box, Paper, SwipeableDrawer } from "@mui/material";
+import { useEffect, useState } from "react";
+import { getStoreBots } from "../api/bots";
 import { Puller } from "../chats/newChatModal";
 import BaseHeader from "../utility/headers/baseHeader";
-import { Masonry } from "@mui/lab";
-import { getUserBots } from "../api/bots";
-import { useEffect, useState } from "react";
 import BotCard from "./botCard";
 
 export default function BotStoreModal({ open, handleClose, handleOpen }) {
-    const [userBots, setUserBots] = useState([])
+    const [storeBots, setStoreBots] = useState([])
 
     useEffect(() => {
-        getUserBots(setUserBots)
+        getStoreBots(setStoreBots)
     }, [])
 
     return (
@@ -77,7 +77,7 @@ export default function BotStoreModal({ open, handleClose, handleOpen }) {
                     >
                         <Masonry columns={2} spacing={2} sx={{ display: "-webkit-box", minHeight: "90%", pb: "50px" }}>
                             {
-                                userBots.map((item, idx) => {
+                                storeBots.map((item, idx) => {
                                     return (<BotCard key={idx} bot={item} isStore={true} />)
                                 })
                             }

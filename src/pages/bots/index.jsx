@@ -1,18 +1,18 @@
-import { useRouter } from "next/router";
-import { Box, useMediaQuery } from "@mui/material";
-import { useEffect, useState } from "react";
-import NewBotModal from "@/components/bots/newBotModal";
-import { getCookie } from "@/components/utility/cookie_helper";
-import LayoutWithNav from "@/components/utility/layouts/layout_with_nav";
-import { Masonry } from "@mui/lab";
-import { theme } from "@/components/utility/theme";
-import BaseHeader from "@/components/utility/headers/baseHeader";
-import BotCard from "@/components/bots/botCard";
 import { getUserBots } from "@/components/api/bots";
 import { getCurrentUser } from "@/components/api/users";
+import BotCard from "@/components/bots/botCard";
 import BotStoreModal from "@/components/bots/botStoreModal";
+import NewBotModal from "@/components/bots/newBotModal";
+import { getCookie } from "@/components/utility/cookie_helper";
+import BaseHeader from "@/components/utility/headers/baseHeader";
+import LayoutWithNav from "@/components/utility/layouts/layout_with_nav";
+import { theme } from "@/components/utility/theme";
 import { Global } from "@emotion/react";
+import { Masonry } from "@mui/lab";
+import { Box, useMediaQuery } from "@mui/material";
 import { useSearchParams } from "next/navigation";
+import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
 
 export default function Bots() {
     const [userBots, setUserBots] = useState([])
