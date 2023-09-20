@@ -162,8 +162,8 @@ export default function NewBotModal({ open, handleClose, user, editMode }) {
                         <Box sx={{ flex: 1, pl: 1 }}>
                             <Typography sx={{ fontWeight: 500, fontSize: "16px" }} variant="body2">Bot Store</Typography>
                         </Box>
-                        <Button disabled={bot.available_in_store} variant="text" onClick={handleStore}>
-                            {bot.available_in_store ? "Already In Store" : "Add to Bot Store"}
+                        <Button disabled={bot?.available_in_store} variant="text" onClick={handleStore}>
+                            {bot?.available_in_store ? "Already In Store" : "Add to Bot Store"}
                         </Button>
                     </Box>
                 </>
