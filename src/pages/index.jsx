@@ -14,8 +14,8 @@ import DataSelectTabs from "@/components/utility/common/dataSelectTabs";
 import { getCookie } from "@/components/utility/cookie_helper";
 import DesktopLayout from "@/components/utility/layouts/desktop_layout";
 import { darkTheme, theme } from "@/components/utility/theme";
-import { ChatBubble, Contacts, Search, Settings } from "@mui/icons-material";
-import { Avatar, Box, Divider, InputAdornment, Paper, TextField, Typography, useMediaQuery } from "@mui/material";
+import { ChatBubble, Contacts, Settings } from "@mui/icons-material";
+import { Avatar, Box, Divider, Paper, Typography, useMediaQuery } from "@mui/material";
 import { useSearchParams } from "next/navigation";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
@@ -123,7 +123,7 @@ export default function Index() {
             <Box sx={{ display: "flex", width: "100%", height: "100%" }}>
                 <DesktopNavbar activeTab={activeTab} setActiveTab={setActiveTab} user={user} />
                 <Box sx={{ width: "30%", minWidth: "500px", p: "0px 32px" }}>
-                    <Box sx={{ pb: "32px" }}>
+                    {/* <Box sx={{ pb: "32px" }}>
                         <TextField
                             sx={{
                                 backgroundColor: "white",
@@ -135,7 +135,7 @@ export default function Index() {
                                 startAdornment: <InputAdornment position="start"><Search /></InputAdornment>,
                             }}
                         />
-                    </Box>
+                    </Box> */}
                     <Paper
                         elevation={0}
                         sx={
