@@ -1,14 +1,19 @@
 import { useTheme } from "@emotion/react";
-import { Build, ExpandLess, ExpandMore, InsertDriveFile, MoreVert, Star } from "@mui/icons-material";
-import { Box, Checkbox, Collapse, Divider, Drawer, Fade, Icon, IconButton, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Skeleton, Slide, SwipeableDrawer, Tab, Tabs, Typography, styled } from "@mui/material";
-import { useRef, useState } from "react";
+import { ExpandLess, ExpandMore } from "@mui/icons-material";
+import { Box, Fade, IconButton, Typography } from "@mui/material";
+import { useEffect, useRef, useState } from "react";
 import DataSelectTabs from "../utility/common/dataSelectTabs";
+import { getAvailableTexts } from "../api/texts";
 
 export default function ToolDrawer({ bot, setToolsExt, toolsExt, user, setBot, desktopMode }) {
-    const [tabValue, setTabValue] = useState(0)
+    const [availableTexts, setAvailableTexts] = useState([])
     const containerRef = useRef(null);
 
     const theme = useTheme()
+
+    useEffect(() => {
+        getAvailableTexts(setAvailableTexts)
+    }, [])
 
     return (
         <>
@@ -57,6 +62,8 @@ export default function ToolDrawer({ bot, setToolsExt, toolsExt, user, setBot, d
                             user={user}
                             setBot={setBot}
                             seeMore={true}
+                            availableTexts={availableTexts}
+                            setAvailableTexts={setAvailableTexts}
                         />
                     </Box>
                 </Fade>

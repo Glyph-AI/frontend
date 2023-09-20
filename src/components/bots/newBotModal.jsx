@@ -8,6 +8,7 @@ import { useSearchParams } from "next/navigation";
 import { Add, CopyAll } from "@mui/icons-material";
 import { StyledListItem } from "../utility/styled/styledListItem";
 import { StyledList } from "../utility/styled/styledList";
+import { getAvailableTexts } from "../api/texts";
 
 const emptyBot = {
     id: null,
@@ -22,6 +23,7 @@ const emptyBot = {
 export default function NewBotModal({ open, handleClose, user, editMode }) {
     const [name, setName] = useState("")
     const [bot, setBot] = useState(null)
+    const [availableTexts, setAvailableTexts] = useState([])
     const [selectedPersonaId, setSelectedPersonaId] = useState(null)
     const [personas, setPersonas] = useState([])
     const [headerText, setHeaderText] = useState("Create Bot")
@@ -51,6 +53,7 @@ export default function NewBotModal({ open, handleClose, user, editMode }) {
         // if (bot_code !== undefined || bot_code !== null) {
         //     setBotCode(bot_code || "")
         // }
+        getAvailableTexts(setAvailableTexts)
         setBot(emptyBot)
         getPerosonas(setPersonas)
 
@@ -207,6 +210,8 @@ export default function NewBotModal({ open, handleClose, user, editMode }) {
                         bot={bot}
                         user={user}
                         createMode={!editMode}
+                        avaialbleTexts={availableTexts}
+                        setAvailableTexts={setAvailableTexts}
                     />
                 </Box>
             </Box>

@@ -19,7 +19,7 @@ import ChatList from "@/components/chats/chatList";
 import { useSearchParams } from "next/navigation";
 import UsageBars from "@/components/settings/usageBars";
 import EditableTextField from "@/components/settings/editableTextField";
-import { getTextById } from "@/components/api/texts";
+import { getAvailableTexts, getTextById } from "@/components/api/texts";
 import NotesContainer from "@/components/notes/notesContainer";
 
 export default function Index() {
@@ -31,6 +31,7 @@ export default function Index() {
 
     const [user, setUser] = useState({})
     const [name, setName] = useState("")
+    const [availableTexts, setAvailableTexts] = useState([])
     const [chats, setChats] = useState([])
     const [bots, setBots] = useState([])
     const [activeTab, setActiveTab] = useState("bots")
@@ -58,6 +59,7 @@ export default function Index() {
 
         getUserBots(setBots)
         getChats(setChats)
+        getAvailableTexts(setAvailableTexts)
 
         let chat_id = searchParams.get("chat_id")
         if (chat_id) {
@@ -154,6 +156,8 @@ export default function Index() {
                                 user={user}
                                 seeMore={true}
                                 tabState={activeTab === "files" ? 1 : 0}
+                                availableTexts={availableTexts}
+                                setAvailableTexts={setAvailableTexts}
                             />
                         </Box>
                         <Divider sx={{ width: "100%", mb: 2 }} />
@@ -234,6 +238,7 @@ export default function Index() {
                                 note={selectedNote}
                                 setNote={setSelectedNote}
                                 desktopMode={true}
+                                setAvailableTexts={setAvailableTexts}
                             />
                         )
                     }

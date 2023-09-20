@@ -22,6 +22,7 @@ export default function Home() {
     const [user, setUser] = useState({})
     const [chats, setChats] = useState([])
     const [bots, setBots] = useState([])
+    const [availableTexts, setAvailableTexts] = useState([])
     const [conversationModalVisible, setConversationModalVisible] = useState(false)
     const [newBotModalVisible, setNewBotModalVisible] = useState(false)
     const [tabState, setTabState] = useState(0)
@@ -30,6 +31,7 @@ export default function Home() {
     const bodyRef = useRef(null)
 
     useEffect(() => {
+        getAvailableTexts(setAvailableTexts)
         getCurrentUser(setUser)
         getUserBots(setBots)
         getChats(setChats)
@@ -81,7 +83,15 @@ export default function Home() {
             <BackgroundBox onScroll={handleScroll} id="backgroundBox" innerRef={bodyRef} sx={{ background: "linear-gradient(180deg, rgb(255, 255, 255) 0%, rgb(250, 250, 250) 100%)", overflowY: "scroll", height: "calc(100% + 200px)" }}>
                 <Box className="container" sx={{ minHeight: `calc(100% + ${spacerHeight()}px)` }}>
                     <GlyphImageHeader />
-                    <DataSelectTabs tabState={tabState} isSelectable={false} contentHeight user={user} seeMore={true} />
+                    <DataSelectTabs
+                        tabState={tabState}
+                        isSelectable={false}
+                        contentHeight
+                        user={user}
+                        seeMore={true}
+                        availableTexts={availableTexts}
+                        setAvailableTexts={setAvailableTexts}
+                    />
                     <Box sx={{ padding: 2, display: "flex", gap: 2, flexWrap: "wrap" }}>
                         <CollapsibleCard
                             avatar={

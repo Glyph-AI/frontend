@@ -1,5 +1,5 @@
 import { useTheme } from "@emotion/react"
-import { Box, Button, ButtonBase, IconButton, ListItem, ListItemButton, ListItemText, Tab, Tabs, Typography, styled, useMediaQuery } from "@mui/material"
+import { Box, Button, ButtonBase, Icon, IconButton, ListItem, ListItemButton, ListItemText, Tab, Tabs, Typography, styled, useMediaQuery } from "@mui/material"
 import SwipeableViews from "react-swipeable-views"
 import TabPanel from "../tabPanel"
 import { Add, Build, ChevronRight, InsertDriveFile, Star, Upload } from "@mui/icons-material"
@@ -118,13 +118,14 @@ function LinkListItem({ id, redirectUrl, primaryText, secondaryText, isTool }) {
     )
 }
 
-export default function DataSelectTabs({ isSelectable, bot, setBot, user, contentHeight, createMode, seeMore, tabState }) {
+export default function DataSelectTabs({ isSelectable, bot, setBot, user, contentHeight, createMode, seeMore, tabState, availableTexts, setAvailableTexts }) {
     const [tabValue, setTabValue] = useState(0)
-    const [availableTexts, setAvailableTexts] = useState([])
     const [availableTools, setAvailableTools] = useState([])
     const [notesToDisplay, setNotesToDisplay] = useState(10000)
     const [filesToDisplay, setFilesToDisplay] = useState(10000)
     const [toolsToDisplay, setToolsToDisplay] = useState(10000)
+    const [notes, setNotes] = useState([])
+    const [files, setFiles] = useState([])
     const [fileUploadModalOpen, setFileUploadModalOpen] = useState(false)
     const theme = useTheme()
     const smallScreen = useMediaQuery(theme.breakpoints.down("md"))
@@ -168,10 +169,6 @@ export default function DataSelectTabs({ isSelectable, bot, setBot, user, conten
         setTabValue(idx)
     }
 
-    const notes = availableTexts.filter((el) => { return (el.text_type === "note") })
-
-    const files = availableTexts.filter((el) => { return (el.text_type === "file") })
-
     const checkSelection = (array, el) => {
         if (array !== undefined) {
             var array_el = array.find(item => item.id === el.id)
@@ -190,8 +187,10 @@ export default function DataSelectTabs({ isSelectable, bot, setBot, user, conten
     }
 
     useEffect(() => {
-        getAvailableTexts(setAvailableTexts)
         getTools(setAvailableTools)
+        setNotes(availableTexts.filter((el) => { return (el.text_type === "note") }))
+        setFiles(availableTexts.filter((el) => { return (el.text_type === "file") }))
+
 
         if (typeof tabState !== "undefined") {
             setTabValue(tabState)
@@ -202,7 +201,7 @@ export default function DataSelectTabs({ isSelectable, bot, setBot, user, conten
             setFilesToDisplay(3)
             setToolsToDisplay(3)
         }
-    }, [tabState])
+    }, [tabState, availableTexts])
 
     const handleTextClick = (el) => {
         if (createMode) {
@@ -304,6 +303,15 @@ export default function DataSelectTabs({ isSelectable, bot, setBot, user, conten
 
                             </StyledList>
                             {(notesToDisplay < notes.length) ? <SeeMoreButton onClick={() => { setNotesToDisplay(notesToDisplay + 3) }} /> : null}
+                            {
+                                (notes.length === 0 || !files) && (
+                                    <Box className="filler" sx={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100px", width: "100%" }}>
+                                        <Icon sx={{ height: "50%", width: "50%", opacity: "0.1" }}>
+                                            <Star sx={{ height: "100%", width: "100%" }} />
+                                        </Icon>
+                                    </Box>
+                                )
+                            }
                         </Box>
                     </TabPanel>
                     <TabPanel value={tabValue} index={1} dir={theme.direction}>
@@ -333,6 +341,15 @@ export default function DataSelectTabs({ isSelectable, bot, setBot, user, conten
                                 ))
                             }
                             {(filesToDisplay < files.length) ? <SeeMoreButton onClick={() => { setFilesToDisplay(filesToDisplay + 3) }} /> : null}
+                            {
+                                (files.length === 0 || !files) && (
+                                    <Box className="filler" sx={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100px", width: "100%" }}>
+                                        <Icon sx={{ height: "50%", width: "50%", opacity: "0.1" }}>
+                                            <InsertDriveFile sx={{ height: "100%", width: "100%" }} />
+                                        </Icon>
+                                    </Box>
+                                )
+                            }
                         </StyledList>
                     </TabPanel>
                     <TabPanel value={tabValue} index={2} dir={theme.direction}>

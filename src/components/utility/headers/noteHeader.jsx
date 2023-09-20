@@ -1,16 +1,16 @@
 "use client";
-import { ArrowBack, MoreVert } from "@mui/icons-material";
+import { ArrowBack, Delete, MoreVert } from "@mui/icons-material";
 import { Box, Divider, IconButton, Typography, useTheme } from "@mui/material";
 import { useRouter } from "next/router";
 import { StyledAppBar } from "../styled/styledAppBar";
 import { StyledToolbar } from "../styled/styledToolbar";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
-import { saveText } from "@/components/api/texts";
+import { deleteText, getAvailableTexts, saveText } from "@/components/api/texts";
 import EditableTextField from "@/components/settings/editableTextField";
 
 
-export default function NoteHeader({ note, setNote, user, desktopMode }) {
+export default function NoteHeader({ note, setNote, user, desktopMode, setAvailableTexts }) {
     const [botModalOpen, setBotModalOpen] = useState(false)
     const theme = useTheme()
     const router = useRouter()
@@ -23,15 +23,6 @@ export default function NoteHeader({ note, setNote, user, desktopMode }) {
         }
     }, [searchParams])
 
-    const handleSettingsRouting = () => {
-        if (desktopMode) {
-            router.query.bot_id = bot.id
-            router.push(router)
-        } else {
-            router.push(`/chats/${chat.id}?bot_id=${bot.id}`)
-        }
-    }
-
     const handleNameChange = (val) => {
         setNote({ ...note, name: val })
     }
@@ -39,6 +30,18 @@ export default function NoteHeader({ note, setNote, user, desktopMode }) {
     const handleNameSubmit = () => {
         saveText(note.id, { ...note, name: note.name }, (data) => {
             setNote(data)
+            getAvailableTexts(setAvailableTexts)
+        })
+    }
+
+    const handleDelete = () => {
+        deleteText(note.id, () => {
+            getAvailableTexts(setAvailableTexts)
+            if (desktopMode) {
+                router.push("/")
+            } else {
+                router.push("/home")
+            }
         })
     }
 
@@ -68,8 +71,8 @@ export default function NoteHeader({ note, setNote, user, desktopMode }) {
                         <EditableTextField placeholder={note.name} handleChange={handleNameChange} handleSubmit={handleNameSubmit} />
                         <Typography variant="body2" sx={{ color: theme.palette.common.subtitleBlue }}>{note.content.length} characters</Typography>
                     </Box>
-                    <IconButton edge="end" onClick={() => { handleSettingsRouting() }}>
-                        <MoreVert sx={{ color: desktopMode ? theme.palette.primary.main : "rgba(0,0,0,0.54)" }} />
+                    <IconButton edge="end" onClick={() => { handleDelete() }}>
+                        <Delete sx={{ color: desktopMode ? theme.palette.primary.main : "rgba(0,0,0,0.54)" }} />
                     </IconButton>
                 </StyledToolbar>
                 <Divider sx={{ width: "100%" }} />

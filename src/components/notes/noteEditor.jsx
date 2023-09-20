@@ -67,7 +67,7 @@ export default function NoteEditor({ note, setNote, desktopMode }) {
     }
 
     return (
-        <Box sx={{ pt: 1, pb: 2, backgroundColor: theme.palette.background.secondary, height: "calc(100% - 56px)" }}>
+        <Box sx={{ pt: 1, pb: 2, backgroundColor: theme.palette.background.secondary, height: "calc(100% - 56px)", borderRadius: "8px", }}>
             <TextField
                 fullWidth
                 multiline
@@ -76,6 +76,7 @@ export default function NoteEditor({ note, setNote, desktopMode }) {
                 maxRows={Infinity}
                 sx={{
                     backgroundColor: theme.palette.background.secondary,
+
                     height: "100%",
                     overflowY: "scroll",
                     "-ms-overflow-style": "none",

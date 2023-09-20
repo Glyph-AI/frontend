@@ -48,3 +48,9 @@ export const getTextById = (id, setter) => {
         setter(data)
     })
 }
+
+export const deleteText = (id, setter) => {
+    genericRequest(`/texts/${id}`, "DELETE", null, (data, status) => {
+        setter(data)
+    })
+}

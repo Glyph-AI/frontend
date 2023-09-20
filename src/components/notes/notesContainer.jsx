@@ -6,11 +6,11 @@ const dummy_note = {
     content: "Test test test test test"
 }
 
-export default function NotesContainer({ note, setNote, desktopMode }) {
+export default function NotesContainer({ note, setNote, desktopMode, setAvailableTexts }) {
     return (
         <div style={{ position: "relative", height: "100%" }}>
-            <NoteHeader note={note} setNote={setNote} desktopMode={desktopMode} />
-            <NoteEditor note={note} setNote={setNote} />
+            <NoteHeader note={note} setNote={setNote} setAvailableTexts={setAvailableTexts} desktopMode={desktopMode} />
+            <NoteEditor note={note} setNote={setNote} desktopMode={desktopMode} />
         </div>
     )
 }
