@@ -2,7 +2,7 @@ import { CopyAll } from "@mui/icons-material";
 import { Box, Button, Dialog, ListItemButton, ListItemText, SwipeableDrawer, TextField, Typography, useMediaQuery, useTheme } from "@mui/material";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import { createBot, getBot } from "../api/bots";
+import { createBot, getBot, updateBotById } from "../api/bots";
 import { getPerosonas } from "../api/personas";
 import { getAvailableTexts } from "../api/texts";
 import { Puller, StyledBox } from "../chats/newChatModal";
@@ -37,14 +37,24 @@ export default function NewBotModal({ open, handleClose, user, editMode }) {
     const ContainerComponent = smallScreen ? SwipeableDrawer : Dialog
 
     const handleCreate = () => {
-        bot.name = name
-        bot.persona_id = selectedPersonaId
-        createBot(bot, (data) => {
-            setName("")
-            setSelectedPersonaId(null)
-            setBot(emptyBot)
-            handleClose()
-        })
+        if (!editMode) {
+            bot.name = name
+            bot.persona_id = selectedPersonaId
+            createBot(bot, (data) => {
+                setName("")
+                setSelectedPersonaId(null)
+                setBot(emptyBot)
+                handleClose()
+            })
+        } else {
+            bot.name = name
+            updateBotById(bot.id, bot, (data) => {
+                setName("")
+                setBot(emptyBot)
+                handleClose()
+            })
+        }
+
     }
 
 
@@ -68,6 +78,19 @@ export default function NewBotModal({ open, handleClose, user, editMode }) {
         }
     }, [searchParams])
 
+    const toggleSharing = () => {
+        const data = {
+            id: bot.id,
+            sharing_enabled: !bot.sharing_enabled
+        }
+
+        updateBotById(bot.id, data, (data) => {
+            setBot(data);
+            setName(data.name)
+            setHeaderText(data.name)
+        })
+    }
+
     const renderSharing = () => {
         if (editMode) {
             return (
@@ -79,21 +102,43 @@ export default function NewBotModal({ open, handleClose, user, editMode }) {
                         <Box sx={{ flex: 1, pl: 1 }}>
                             <Typography sx={{ fontWeight: 500, fontSize: "16px" }} variant="body2">Sharing</Typography>
                         </Box>
-                        <Button variant="text">
-                            Enable Code
+                        <Button variant="text" onClick={toggleSharing}>
+                            {bot.sharing_enabled ? "Disable" : "Enable"} Sharing
                         </Button>
                     </Box>
                     {
-                        true && (
+                        bot.sharing_enabled && (
                             <>
                                 <Box sx={{ display: "flex", alignItems: "center", width: "100%" }}>
                                     <Box sx={{ flex: 1, pl: 1 }}>
-                                        <Typography color={theme.palette.common.textSecondary} variant="body2">Code: {"code here"}<CopyAll sx={{ ml: "4px", fontSize: "14px" }} /></Typography>
+                                        <Typography
+                                            color={theme.palette.common.textSecondary}
+                                            variant="body2"
+                                        >
+                                            Code: {bot.sharing_code}
+                                            <CopyAll
+                                                sx={{ ml: "4px", fontSize: "14px" }}
+                                                onClick={() => {
+                                                    navigator.clipboard.writeText(bot.sharing_code)
+                                                }}
+                                            />
+                                        </Typography>
                                     </Box>
                                 </Box>
                                 <Box sx={{ display: "flex", alignItems: "center", width: "100%" }}>
                                     <Box sx={{ flex: 1, pl: 1, pt: 1, pb: 1 }}>
-                                        <Typography color={theme.palette.common.textSecondary} variant="body2">Sharing URL: {"glyphassistant.com/bots?bot_code=code"}<CopyAll sx={{ ml: "4px", fontSize: "14px" }} /></Typography>
+                                        <Typography
+                                            color={theme.palette.common.textSecondary}
+                                            variant="body2"
+                                        >
+                                            Sharing URL: {`glyphassistant.com/bots?bot_code=${bot.sharing_code}`}
+                                            <CopyAll
+                                                sx={{ ml: "4px", fontSize: "14px" }}
+                                                onClick={() => {
+                                                    navigator.clipboard.writeText(`glyphassistant.com/bots?bot_code=${bot.sharing_code}`)
+                                                }}
+                                            />
+                                        </Typography>
                                     </Box>
                                 </Box>
                             </>
@@ -174,8 +219,8 @@ export default function NewBotModal({ open, handleClose, user, editMode }) {
                 <Box sx={{ marginTop: smallScreen ? "24px" : 0 }}>
                     <Typography variant="h5">{headerText}</Typography>
                 </Box>
-                <Box sx={{ width: "100%", display: "flex", marginTop: "32px" }}>
-                    <Box sx={{ width: "75%", marginRight: "24px" }}>
+                <Box sx={{ width: "100%", display: "flex", marginTop: "32px", p: 1 }}>
+                    <Box sx={{ flex: 1, marginRight: "24px" }}>
                         <TextField
                             value={name}
                             onChange={(ev) => { setName(ev.target.value) }}
@@ -187,7 +232,7 @@ export default function NewBotModal({ open, handleClose, user, editMode }) {
                         <Button
                             disabled={buttonDisabled}
                             variant="contained"
-                        // onClick={handleCreate}
+                            onClick={handleCreate}
                         >
                             {editMode ? "Update" : "Create"}
                         </Button>

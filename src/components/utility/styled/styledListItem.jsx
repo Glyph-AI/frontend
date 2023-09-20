@@ -1,8 +1,9 @@
-import { ListItem } from "@mui/material";
+import { ListItem, ListItemButton } from "@mui/material";
 
-export function StyledListItem({ children, inContext, sx, ...props }) {
+export function StyledListItem({ children, inContext, sx, isButton, ...props }) {
+    const Component = isButton ? ListItemButton : ListItem
     return (
-        <ListItem
+        <Component
             sx={
                 {
                     borderRadius: "8px",
@@ -23,6 +24,6 @@ export function StyledListItem({ children, inContext, sx, ...props }) {
             {...props}
         >
             {children}
-        </ListItem>
+        </Component>
     )
 }

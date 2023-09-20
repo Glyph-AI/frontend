@@ -23,3 +23,9 @@ export const getBotById = (bot_id, setter) => {
         setter(data)
     })
 }
+
+export const updateBotById = (bot_id, data, callback) => {
+    genericRequest(`/bots/${bot_id}`, "PATCH", JSON.stringify(data), (data) => {
+        callback(data)
+    })
+}

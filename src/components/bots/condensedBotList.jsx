@@ -8,7 +8,7 @@ import NewBotModal from "./newBotModal";
 
 function CondensedBotListItem({ bot, ...props }) {
     return (
-        <StyledListItem {...props} sx={{
+        <StyledListItem isButton={true} {...props} sx={{
             "&:hover": {
                 background: "rgba(0, 0, 0, 0.04)"
             }
