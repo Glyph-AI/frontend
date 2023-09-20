@@ -24,6 +24,7 @@ export default function LayoutWithNav({ showNavigation = true, children }) {
     const [tokenFound, setTokenFound] = useState(false)
     const router = useRouter()
     const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
+    const smallScreen = useMediaQuery(theme.breakpoints.down("md"))
 
     const childHeight = () => {
         if (typeof (document) !== "undefined") {
@@ -82,7 +83,12 @@ export default function LayoutWithNav({ showNavigation = true, children }) {
 
     useEffect(() => {
         getCurrentUser(handleUserInfo)
-    }, [])
+
+        if (!smallScreen) {
+            console.log("HERE2")
+            router.push("/")
+        }
+    }, [smallScreen])
 
     return (
         <ThemeProvider theme={prefersDarkMode ? theme : theme}>
