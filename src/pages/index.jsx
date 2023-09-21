@@ -178,7 +178,7 @@ export default function Index() {
                             {
                                 p: 4,
                                 borderRadius: 3,
-                                maxHeight: "calc(100% - 88px)",
+                                maxHeight: "103%",
                                 background: theme.palette.background.main,
                                 overflowY: "scroll",
                                 "-ms-overflow-style": "none",
