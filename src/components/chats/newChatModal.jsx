@@ -3,6 +3,7 @@ import {
     Avatar,
     Box,
     Button,
+    Dialog,
     Icon,
     ListItemIcon,
     ListItemText,
@@ -10,6 +11,7 @@ import {
     TextField,
     Typography,
     styled,
+    useMediaQuery,
     useTheme
 } from '@mui/material';
 import { grey } from '@mui/material/colors';
@@ -46,6 +48,9 @@ export default function NewChatModal({ open, handleClose, updateUserFunc, user }
     const [conversationName, setConversationName] = useState("")
     const [showCreation, setShowCreation] = useState(false)
     const theme = useTheme()
+    const smallScreen = useMediaQuery(theme.breakpoints.down("md"))
+
+    const ContainerComponent = smallScreen ? SwipeableDrawer : Dialog
 
     const createNewChat = () => {
         const data = {
@@ -75,7 +80,7 @@ export default function NewChatModal({ open, handleClose, updateUserFunc, user }
     }, [])
 
     return (
-        <SwipeableDrawer
+        <ContainerComponent
             anchor="bottom"
             open={open}
             onClose={handleClose}
@@ -83,22 +88,26 @@ export default function NewChatModal({ open, handleClose, updateUserFunc, user }
             ModalProps={{
                 keepMounted: true
             }}
-            sx={{ "& .MuiPaper-root": { height: "100%" } }}
+            sx={{ "& .MuiPaper-root": { width: smallScreen ? "100%" : "50%", height: "100%" } }}
         >
-            <StyledBox
-                sx={{
-                    position: 'absolute',
-                    top: 10,
-                    borderTopLeftRadius: 8,
-                    borderTopRightRadius: 8,
-                    visibility: 'visible',
-                    right: 0,
-                    left: 0,
-                    marginBottom: "8px"
-                }}
-            >
-                <Puller />
-            </StyledBox>
+            {
+                smallScreen && (
+                    <StyledBox
+                        sx={{
+                            position: 'absolute',
+                            top: 10,
+                            borderTopLeftRadius: 8,
+                            borderTopRightRadius: 8,
+                            visibility: 'visible',
+                            right: 0,
+                            left: 0,
+                            marginBottom: "8px"
+                        }}
+                    >
+                        <Puller />
+                    </StyledBox>
+                )
+            }
             <Box sx={{ padding: "16px" }}>
                 <Box sx={{ marginTop: "24px" }}>
                     <Typography variant="h5">Create Chat</Typography>
@@ -155,6 +164,6 @@ export default function NewChatModal({ open, handleClose, updateUserFunc, user }
                 </StyledList>
             </Box>
 
-        </SwipeableDrawer>
+        </ContainerComponent>
     )
 }

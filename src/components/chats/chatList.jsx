@@ -1,16 +1,15 @@
-import { Avatar, Box, Button, ButtonBase, ListItem, ListItemButton, ListItemIcon, ListItemText, styled, Typography, useTheme } from "@mui/material"
+import { Delete } from "@mui/icons-material"
+import { Avatar, Box, ButtonBase, ListItemIcon, ListItemText, Typography, useTheme } from "@mui/material"
 import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
-import { Delete } from "@mui/icons-material"
-import { StyledListItem } from "../utility/styled/styledListItem"
 import { StyledList } from "../utility/styled/styledList"
+import { StyledListItem } from "../utility/styled/styledListItem"
 
 
 function ChatListItem({ chat, desktopMode }) {
     const [secondaryAction, setSecondaryAction] = useState(null)
     const [inContext, setInContext] = useState(false)
     const theme = useTheme()
-    const unread = chat.last_message.role !== "user"
     const router = useRouter()
 
     useEffect(() => {
@@ -119,13 +118,16 @@ export default function ChatList({ chats, setChats, desktopMode }) {
     return (
         <StyledList dense={false}>
             {
-                chats.map((el, idx) => (
-                    <ChatListItem
-                        key={idx}
-                        chat={el}
-                        desktopMode={desktopMode}
-                    />
-                ))
+                chats.map((el, idx) => {
+                    console.log(idx, el)
+                    return (
+                        <ChatListItem
+                            key={idx}
+                            chat={el}
+                            desktopMode={desktopMode}
+                        />
+                    )
+                })
             }
         </StyledList>
     )

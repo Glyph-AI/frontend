@@ -44,17 +44,25 @@ export default function NewBotModal({ open, handleClose, user, editMode }) {
                 setName("")
                 setSelectedPersonaId(null)
                 setBot(emptyBot)
-                handleClose()
+                close()
             })
         } else {
             bot.name = name
             updateBotById(bot.id, bot, (data) => {
                 setName("")
                 setBot(emptyBot)
-                handleClose()
+                close()
             })
         }
 
+    }
+
+    const close = () => {
+        setBot(emptyBot)
+        setSelectedPersonaId(null)
+        setHeaderText("Create Bot")
+        setName("")
+        handleClose()
     }
 
 
@@ -66,9 +74,10 @@ export default function NewBotModal({ open, handleClose, user, editMode }) {
         getAvailableTexts(setAvailableTexts)
         setBot(emptyBot)
         getPerosonas(setPersonas)
-
+        console.log("Use Effect fired again")
         let bot_id = searchParams.get("bot_id")
         if (editMode && bot_id) {
+            console.log("HERE")
             getBot(bot_id, (data) => {
                 setBot(data);
                 setName(data.name);
@@ -205,7 +214,7 @@ export default function NewBotModal({ open, handleClose, user, editMode }) {
         <ContainerComponent
             anchor="bottom"
             open={open}
-            onClose={handleClose}
+            onClose={close}
             onOpen={() => { }}
             sx={{ "& .MuiPaper-root": { width: smallScreen ? "100%" : "50%", height: "100%" } }}
         >
