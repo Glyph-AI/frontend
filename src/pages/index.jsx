@@ -127,6 +127,32 @@ export default function Index() {
         }
     }
 
+    const botSearchFunc = (val) => {
+        if (val === "" || val === null) {
+            getUserBots(setBots)
+        } else {
+            const matchingBots = bots.filter((item) => item.name.toLowerCase().includes(val.toLowerCase()))
+            setBots(matchingBots)
+        }
+    }
+
+    const botSearchBlur = () => {
+        getUserBots(setBots)
+    }
+
+    const chatSearchFunc = (val) => {
+        if (val === "" || val === null) {
+            getChats(setChats)
+        } else {
+            const matchingChats = chats.filter((item) => item.name.toLowerCase().includes(val.toLowerCase()))
+            setChats(matchingChats)
+        }
+    }
+
+    const chatSearchBlur = () => {
+        getChats(setChats)
+    }
+
     return (
         <DesktopLayout>
             <Box sx={{ display: "flex", width: "100%", height: "100%" }}>
@@ -180,7 +206,6 @@ export default function Index() {
                                 avatar={
                                     <Avatar src={user.profile_picture_location} />
                                 }
-                                newItemFunc={() => { setConversationModalVisible(true) }}
                                 title={<Typography variant="body2">Profile</Typography>}
                             >
                                 <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
@@ -202,6 +227,8 @@ export default function Index() {
                                 }
                                 newItemFunc={() => { setConversationModalVisible(true) }}
                                 title={<Typography variant="body2">{chatsTitle}</Typography>}
+                                searchFunc={chatSearchFunc}
+                                searchBlurFunc={chatSearchBlur}
                             >
                                 <ChatList chats={chats} desktopMode={true} />
                                 <NewChatModal
@@ -218,10 +245,17 @@ export default function Index() {
                                 avatar={
                                     <Contacts color="primary" />
                                 }
+                                searchFunc={botSearchFunc}
+                                searchBlurFunc={botSearchBlur}
                                 newItemFunc={() => { setNewBotModalVisible(true) }}
                                 title={<Typography variant="body2">{botsTitle}</Typography>}
                             >
-                                <CondensedBotList user={user} setBots={setBots} bots={bots} desktopMode={true} />
+                                <CondensedBotList
+                                    user={user}
+                                    setBots={setBots}
+                                    bots={bots}
+                                    desktopMode={true}
+                                />
                                 <NewBotModal
                                     user={user}
                                     handleClose={handleBotProfileClose}
