@@ -17,7 +17,7 @@ import { getCookie } from "@/components/utility/cookie_helper";
 import DesktopLayout from "@/components/utility/layouts/desktop_layout";
 import { darkTheme, theme } from "@/components/utility/theme";
 import { ChatBubble, Contacts, Settings } from "@mui/icons-material";
-import { Avatar, Box, Divider, Paper, Typography, useMediaQuery } from "@mui/material";
+import { Avatar, Box, Divider, Icon, Paper, Typography, useMediaQuery } from "@mui/material";
 import { useSearchParams } from "next/navigation";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
@@ -301,15 +301,15 @@ export default function Index() {
                             />
                         )
                     }
-                    {/* {
-                        Object.keys(selectedChat).length === 0 && (
+                    {
+                        Object.keys(selectedChat).length === 0 && Object.keys(selectedNote).length === 0 && (
                             <Box sx={{ height: "100%", display: "flex", justifyContent: "center", alignItems: "center" }}>
                                 <Icon sx={{ height: "50%", width: "50%", opacity: "0.1" }}>
                                     <ChatBubble sx={{ height: "100%", width: "100%" }} />
                                 </Icon>
                             </Box>
                         )
-                    } */}
+                    }
                 </Paper >
             </Box>
         </DesktopLayout>
