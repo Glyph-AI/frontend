@@ -128,7 +128,7 @@ export default function ChatsContainer({ bot, setBot, user, chat, desktopMode })
             </Snackbar>
             <ChatHeader bot={bot} user={user} chat={chat} desktopMode={desktopMode} />
             <MessageContainer messageArray={chatData} typingIndicator={glyphTyping} toolsExt={toolsExt} renderSettings={renderBotSettings()} desktopMode={desktopMode} />
-            <Paper elevation={desktopMode ? 0 : 5} sx={{ position: "sticky", bottom: 0, width: "100%", backgroundColor: "white" }}>
+            <Paper elevation={desktopMode ? 0 : 5} sx={{ position: desktopMode ? "absolute" : "sticky", bottom: 0, width: "100%", backgroundColor: "white" }}>
                 {
                     renderBotSettings() && (
                         <ToolDrawer desktopMode={desktopMode} bot={bot} setBot={setBot} setToolsExt={setToolsExt} toolsExt={toolsExt} user={user} />
