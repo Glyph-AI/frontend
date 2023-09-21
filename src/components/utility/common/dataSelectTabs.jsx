@@ -358,6 +358,7 @@ export default function DataSelectTabs({ isSelectable, bot, setBot, user, conten
                                         isSelected={bot ? checkSelection(bot.enabled_texts, el) : false}
                                         primaryText={el.name}
                                         onSelectionChange={() => { handleTextClick(el) }}
+                                        isTool={true}
                                     />
                                 ))
                             }

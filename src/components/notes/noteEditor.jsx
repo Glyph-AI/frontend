@@ -1,7 +1,8 @@
-import { Box, TextField, useTheme } from "@mui/material"
-import { useRouter } from "next/router"
-import { useEffect, useRef, useState } from "react"
-import { embedText, saveText } from "../api/texts"
+import { Box, TextField, useTheme } from "@mui/material";
+import { useRouter } from "next/router";
+import { useEffect, useRef, useState } from "react";
+import { useDebouncedCallback } from "use-debounce";
+import { embedText, saveText } from "../api/texts";
 
 function useInterval(callback, delay) {
     const savedCallback = useRef();
@@ -61,9 +62,16 @@ export default function NoteEditor({ note, setNote, desktopMode }) {
         saveNote()
     }, 1000)
 
-    const setContent = (val) => {
-        setNote({ ...note, content: val })
-        setShouldSave(true)
+    const handleSave = useDebouncedCallback(
+        (ev) => {
+            setShouldSave(true)
+        }, 1000
+    )
+
+    const setContent = (e) => {
+        setNote({ ...note, content: e.target.value })
+        handleSave()
+
     }
 
     return (
@@ -72,7 +80,7 @@ export default function NoteEditor({ note, setNote, desktopMode }) {
                 fullWidth
                 multiline
                 value={note.content}
-                onChange={(e) => { setContent(e.target.value) }}
+                onChange={(e) => { setContent(e) }}
                 maxRows={Infinity}
                 sx={{
                     backgroundColor: theme.palette.background.secondary,

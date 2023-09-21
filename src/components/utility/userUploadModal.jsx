@@ -61,7 +61,7 @@ export default function UserUploadModal({ open, handleClose }) {
             formData.append('file', file)
 
             uploadFile(formData, (data, status) => {
-                if (resp.success) {
+                if (status === 200) {
                     message = `${file.name} Successfully Uploaded. File will appear in list once processing is completed.`
                     requestCallback(message)
                 } else {
