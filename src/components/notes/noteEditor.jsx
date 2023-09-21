@@ -71,7 +71,6 @@ export default function NoteEditor({ note, setNote, desktopMode }) {
     const setContent = (e) => {
         setNote({ ...note, content: e.target.value })
         handleSave()
-
     }
 
     return (

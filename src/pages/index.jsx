@@ -3,8 +3,10 @@ import { getChatById, getChats } from "@/components/api/chats";
 import { getAvailableTexts, getTextById } from "@/components/api/texts";
 import { getCurrentUser } from "@/components/api/users";
 import CondensedBotList from "@/components/bots/condensedBotList";
+import NewBotModal from "@/components/bots/newBotModal";
 import ChatList from "@/components/chats/chatList";
 import ChatsContainer from "@/components/chats/chatsContainer";
+import NewChatModal from "@/components/chats/newChatModal";
 import DesktopNavbar from "@/components/navbar/desktop_navbar";
 import NotesContainer from "@/components/notes/notesContainer";
 import EditableTextField from "@/components/settings/editableTextField";
@@ -37,6 +39,8 @@ export default function Index() {
     const [selectedChat, setSelectedChat] = useState({})
     const [selectedNote, setSelectedNote] = useState({})
     const [selectedBot, setSelectedBot] = useState({})
+    const [newBotModalVisible, setNewBotModalVisible] = useState(false)
+    const [conversationModalVisible, setConversationModalVisible] = useState(false)
 
 
     useEffect(() => {
@@ -79,6 +83,11 @@ export default function Index() {
         }
 
     }, [searchParams])
+
+    const handleBotProfileClose = () => {
+        getUserBots(setBots)
+        setNewBotModalVisible(false)
+    }
 
     const handleNameChange = (val) => {
         var split = val.split(" ")
@@ -195,6 +204,12 @@ export default function Index() {
                                 title={<Typography variant="body2">{chatsTitle}</Typography>}
                             >
                                 <ChatList chats={chats} desktopMode={true} />
+                                <NewChatModal
+                                    open={conversationModalVisible}
+                                    handleClose={() => { setConversationModalVisible(false) }}
+                                    updateUserFunc={setUser}
+                                    user={user}
+                                />
                             </CollapsibleCard>
                         </Box>
                         <Box sx={{ width: "100%", pb: 4 }}>
@@ -207,6 +222,11 @@ export default function Index() {
                                 title={<Typography variant="body2">{botsTitle}</Typography>}
                             >
                                 <CondensedBotList user={user} setBots={setBots} bots={bots} desktopMode={true} />
+                                <NewBotModal
+                                    user={user}
+                                    handleClose={handleBotProfileClose}
+                                    open={newBotModalVisible}
+                                />
                             </CollapsibleCard>
                         </Box>
                         <Box sx={{ width: "100%", pb: 4 }}>

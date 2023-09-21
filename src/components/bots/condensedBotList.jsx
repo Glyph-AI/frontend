@@ -31,6 +31,7 @@ export default function CondensedBotList({ bots, setBots, user, desktopMode }) {
     const handleBotProfileClose = () => {
         getUserBots(setBots)
         setBotModalVisible(false)
+        setSelectedBot(null)
     }
 
     const handleBotClick = (item) => {

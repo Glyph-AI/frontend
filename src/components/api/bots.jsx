@@ -35,3 +35,9 @@ export const getStoreBots = (callback) => {
         callback(data)
     })
 }
+
+export const addShared = (sharing_code, callback) => {
+    genericRequest("/bots/add-shared", "POST", JSON.stringify({ sharing_code: sharing_code }), (data) => {
+        callback(data)
+    })
+}

@@ -1,10 +1,16 @@
 import { useTheme } from "@emotion/react";
-import { Star } from "@mui/icons-material";
 import { Avatar, Box, Button, Typography } from "@mui/material";
+import { addShared, getStoreBots } from "../api/bots";
 
-export default function BotCard({ bot, isStore, CardProps }) {
+export default function BotCard({ bot, isStore, setBots, CardProps }) {
     const ownedBackground = "rgba(47, 128, 237, 0.1)"
     const theme = useTheme()
+
+    const handleSharingAdd = () => {
+        addShared(bot.sharing_code, (data) => {
+            getStoreBots(setBots)
+        })
+    }
 
     return (
         <Box {...CardProps} sx={{ width: "50%", backgroundColor: isStore ? theme.palette.background.secondary : ownedBackground, borderRadius: "8px", padding: "16px" }}>
@@ -29,7 +35,7 @@ export default function BotCard({ bot, isStore, CardProps }) {
             {
                 isStore && (
                     <Box sx={{ display: "flex", width: "100%", marginTop: "8px" }}>
-                        <Box sx={{ flex: 1, display: 'flex', alignItems: "center", width: "90%" }}>
+                        {/* <Box sx={{ flex: 1, display: 'flex', alignItems: "center", width: "90%" }}>
                             <Button
                                 startIcon={<Star />}
                                 sx={{
@@ -47,7 +53,7 @@ export default function BotCard({ bot, isStore, CardProps }) {
                             >
                                 12
                             </Button>
-                        </Box>
+                        </Box> */}
                         <Box sx={{ display: 'flex', alignItems: "center", }}>
                             <Button
                                 sx={{
@@ -59,6 +65,7 @@ export default function BotCard({ bot, isStore, CardProps }) {
                                     minWidth: 0,
                                     backgroundColor: theme.palette.common.blue,
                                 }}
+                                onClick={handleSharingAdd}
                             >
                                 Add
                             </Button>

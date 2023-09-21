@@ -78,7 +78,7 @@ export default function BotStoreModal({ open, handleClose, handleOpen }) {
                         <Masonry columns={2} spacing={2} sx={{ display: "-webkit-box", minHeight: "90%", pb: "50px" }}>
                             {
                                 storeBots.map((item, idx) => {
-                                    return (<BotCard key={idx} bot={item} isStore={true} />)
+                                    return (<BotCard key={idx} bot={item} isStore={true} setBots={setStoreBots} />)
                                 })
                             }
                         </Masonry>
