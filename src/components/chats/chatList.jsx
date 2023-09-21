@@ -119,7 +119,6 @@ export default function ChatList({ chats, setChats, desktopMode }) {
         <StyledList dense={false}>
             {
                 chats.map((el, idx) => {
-                    console.log(idx, el)
                     return (
                         <ChatListItem
                             key={idx}

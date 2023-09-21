@@ -1,7 +1,7 @@
 import { getBotById, getUserBots } from "@/components/api/bots";
 import { getChatById, getChats } from "@/components/api/chats";
 import { getAvailableTexts, getTextById } from "@/components/api/texts";
-import { getCurrentUser } from "@/components/api/users";
+import { getCurrentUser, updateProfile } from "@/components/api/users";
 import CondensedBotList from "@/components/bots/condensedBotList";
 import NewBotModal from "@/components/bots/newBotModal";
 import ChatList from "@/components/chats/chatList";
@@ -98,7 +98,6 @@ export default function Index() {
     }
 
     const handleNameSubmit = () => {
-        setIsNamedFocused(false)
         var split = name.split(" ")
         var first_name = split[0]
         split.splice(0, 1)
@@ -110,7 +109,7 @@ export default function Index() {
                 last_name: last_name
             }
 
-            genericRequest("/profile", "PATCH", JSON.stringify(data), (data) => {
+            updateProfile(data, (data) => {
                 setUser(data)
                 setName(`${data.first_name} ${data.last_name}`)
             })
@@ -123,7 +122,9 @@ export default function Index() {
         if (!user.subscribed) {
             return "Glyph Free"
         } else {
-            return `${user.subscription_price_tier.name} / ${user.subscription_renewal_date}`
+            const d = user.subscription_renewal_date
+            const renewal_date = `${d.getMonth() + 1}.${d.getDate()}.${d.getFullYear()}`
+            return `${user.subscription_price_tier.name} / ${renewal_date}`
         }
     }
 

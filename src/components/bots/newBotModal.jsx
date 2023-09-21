@@ -74,10 +74,8 @@ export default function NewBotModal({ open, handleClose, user, editMode }) {
         getAvailableTexts(setAvailableTexts)
         setBot(emptyBot)
         getPerosonas(setPersonas)
-        console.log("Use Effect fired again")
         let bot_id = searchParams.get("bot_id")
         if (editMode && bot_id) {
-            console.log("HERE")
             getBot(bot_id, (data) => {
                 setBot(data);
                 setName(data.name);
@@ -101,7 +99,6 @@ export default function NewBotModal({ open, handleClose, user, editMode }) {
     }
 
     const handleStore = () => {
-        console.log(bot.available_in_store)
         const data = {
             id: bot.id,
             available_in_store: true
