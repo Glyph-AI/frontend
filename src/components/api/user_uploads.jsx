@@ -9,5 +9,5 @@ export const archiveUrl = (data, callback) => {
 export const uploadFile = (formData, callback) => {
     genericRequest("/user_upload", "POST", formData, (data, status) => {
         callback(data, status)
-    })
+    }, {})
 }
