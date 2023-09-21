@@ -22,6 +22,7 @@ const emptyBot = {
 
 export default function NewBotModal({ open, handleClose, user, editMode }) {
     const [name, setName] = useState("")
+    const [description, setDescription] = useState("")
     const [bot, setBot] = useState(null)
     const [availableTexts, setAvailableTexts] = useState([])
     const [selectedPersonaId, setSelectedPersonaId] = useState(null)
@@ -39,6 +40,7 @@ export default function NewBotModal({ open, handleClose, user, editMode }) {
     const handleCreate = () => {
         if (!editMode) {
             bot.name = name
+            bot.description = description
             bot.persona_id = selectedPersonaId
             createBot(bot, (data) => {
                 setName("")
@@ -48,6 +50,7 @@ export default function NewBotModal({ open, handleClose, user, editMode }) {
             })
         } else {
             bot.name = name
+            bot.description = description
             updateBotById(bot.id, bot, (data) => {
                 setName("")
                 setBot(emptyBot)
@@ -79,6 +82,7 @@ export default function NewBotModal({ open, handleClose, user, editMode }) {
             getBot(bot_id, (data) => {
                 setBot(data);
                 setName(data.name);
+                setDescription(data.description)
                 setHeaderText(data.name);
                 setSelectedPersonaId(data.persona.id)
             })
@@ -257,6 +261,25 @@ export default function NewBotModal({ open, handleClose, user, editMode }) {
                         >
                             {editMode ? "Update" : "Create"}
                         </Button>
+                    </Box>
+                </Box>
+                <Box sx={{ mt: "30px", mb: "16px" }}>
+                    <Typography sx={{ fontWeight: 700, }} color={theme.palette.common.textSecondary} variant="body2">Description</Typography>
+                </Box>
+                <Box sx={{ width: "100%", display: "flex", marginTop: "32px", p: 1 }}>
+                    <Box sx={{ flex: 1, marginRight: "24px" }}>
+                        <TextField
+                            value={description}
+                            onChange={(ev) => { setDescription(ev.target.value) }}
+                            fullWidth
+                            multiline
+                            minRows={2}
+                            maxRows={10}
+                            placeholder="Add a Description..."
+                            variant="outlined"
+                            size="small"
+                            sx={{ border: '1px solid #2F80ED', borderRadius: "8px" }}
+                        />
                     </Box>
                 </Box>
                 <Box sx={{ height: "75%", pb: 4 }}>

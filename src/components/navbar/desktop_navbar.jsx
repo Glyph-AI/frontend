@@ -1,9 +1,9 @@
+import { Apps, ChatBubble, Contacts, Settings } from "@mui/icons-material";
 import { Avatar, Box, IconButton, styled, useTheme } from "@mui/material";
-import { ChatBubble, Contacts, InsertDriveFile, Router, Settings } from "@mui/icons-material";
-import NewChatIcon from "./new_chat_icon";
-import { useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { useRouter } from "next/router";
+import { useState } from "react";
+import DesktopStoreModal from "../bots/desktopStoreModal";
 
 const StyledIconButton = styled(IconButton)(() => {
     const theme = useTheme()
@@ -32,9 +32,15 @@ function NavbarButton({ active, children, ...props }) {
 }
 
 export default function DesktopNavbar({ activeTab, setActiveTab, user }) {
+    const [storeModalVisible, setStoreModalVisible] = useState(false)
     const theme = useTheme()
     const router = useRouter()
     const searchParams = useSearchParams()
+
+    const showStore = () => {
+        setActiveTab("store");
+        setStoreModalVisible(true)
+    }
 
     return (
         <Box sx={{ pt: 4, borderRadius: 2, height: "100%", width: "80px", backgroundColor: theme.palette.primary.main }}>
@@ -53,6 +59,13 @@ export default function DesktopNavbar({ activeTab, setActiveTab, user }) {
             <NavbarButton onClick={() => { setActiveTab("settings") }} active={activeTab === "settings"}>
                 <Settings sx={{ fontSize: "42px" }} />
             </NavbarButton>
+            <NavbarButton onClick={showStore} active={activeTab === "store"}>
+                <Apps sx={{ fontSize: "42px" }} />
+            </NavbarButton>
+            <DesktopStoreModal
+                open={storeModalVisible}
+                handleClose={() => { setStoreModalVisible(false); setActiveTab("profile") }}
+            />
         </Box>
     )
 }

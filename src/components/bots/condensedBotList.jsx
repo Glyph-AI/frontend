@@ -18,6 +18,7 @@ function CondensedBotListItem({ bot, ...props }) {
             </ListItemIcon>
             <ListItemText
                 primary={bot.name}
+                secondary={bot.description}
             />
         </StyledListItem>
     )
