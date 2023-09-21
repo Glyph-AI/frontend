@@ -52,7 +52,6 @@ export default function CollapsibleCard({ avatar, title, children, newItemFunc, 
 
     const handleSearch = (ev) => {
         setSearchValue(ev.target.value)
-        console.log(searchFunc)
         searchFunc(ev.target.value)
     }
 

@@ -2,7 +2,7 @@ import { useTheme } from "@emotion/react"
 import { AccountBox, ChevronRight, Info, Logout, Notifications } from "@mui/icons-material"
 import { List, ListItemButton, ListItemIcon, ListItemText } from "@mui/material"
 import { useState } from "react"
-import { updateProfile } from "../api/users"
+import { logoutUser, updateProfile } from "../api/users"
 import SubscriptionsDialog from "../subscriptions/subscriptionsDialog"
 import { StyledSwitch } from "../utility/styled/styledSwitch"
 
