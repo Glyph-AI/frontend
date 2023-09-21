@@ -394,7 +394,7 @@ export default function DataSelectTabs({ isSelectable, bot, setBot, user, conten
                 </SwipeableViews>
                 <UserUploadModal
                     open={fileUploadModalOpen}
-                    handleClose={() => { }}
+                    handleClose={() => { setFileUploadModalOpen(false) }}
                 />
             </Box>
         </>
