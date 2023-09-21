@@ -85,7 +85,6 @@ export default function LayoutWithNav({ showNavigation = true, children }) {
         getCurrentUser(handleUserInfo)
 
         if (!smallScreen) {
-            console.log("HERE2")
             router.push("/")
         }
     }, [smallScreen])
