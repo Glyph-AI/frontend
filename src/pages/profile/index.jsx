@@ -1,19 +1,18 @@
-import { useRouter } from "next/router";
-import { Avatar, Badge, Box, ListItem, ListItemText, List, Divider, Typography, LinearProgress, useMediaQuery, TextField, ListItemIcon } from "@mui/material";
-import { styled } from '@mui/material/styles';
+import { getCurrentUser } from "@/components/api/users";
+import EditableTextField from "@/components/settings/editableTextField";
+import UsageBars from "@/components/settings/usageBars";
+import BackgroundBox from "@/components/utility/common/backgroundBox";
+import { getCookie } from "@/components/utility/cookie_helper";
+import FileUploadModal from "@/components/utility/fileUploadModal";
+import BaseHeader from "@/components/utility/headers/baseHeader";
+import LayoutWithNav from "@/components/utility/layouts/layout_with_nav";
+import { genericRequest, getRequest } from "@/components/utility/request_helper";
 import { theme } from "@/components/utility/theme";
 import FileUploadIcon from '@mui/icons-material/FileUpload';
-import { AccountBox, ChevronRight, Edit, FlashOffOutlined, Info, Logout, Notifications } from "@mui/icons-material";
+import { Avatar, Badge, Box, Divider, Typography, useMediaQuery } from "@mui/material";
+import { styled } from '@mui/material/styles';
+import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import { genericRequest, getRequest } from "@/components/utility/request_helper";
-import { getCookie } from "@/components/utility/cookie_helper";
-import LayoutWithNav from "@/components/utility/layouts/layout_with_nav";
-import BaseHeader from "@/components/utility/headers/baseHeader";
-import { getCurrentUser, logoutUser } from "@/components/api/users";
-import BackgroundBox from "@/components/utility/common/backgroundBox";
-import FileUploadModal from "@/components/utility/fileUploadModal";
-import UsageBars from "@/components/settings/usageBars";
-import EditableTextField from "@/components/settings/editableTextField";
 import SettingsContainer from "../../components/settings/settingsContainer";
 
 
@@ -104,10 +103,6 @@ export default function Profile() {
         }
     }
 
-    const handleUploadClose = () => {
-        setUploadModalOpen(false)
-    }
-
     const subscriptionManageClick = () => {
         if (user.subscribed && !inTwa) {
             window.location.href = stripeUrl
@@ -118,7 +113,15 @@ export default function Profile() {
         }
     }
 
-    const progressBarWidth = smallScreen ? "90%" : "30%"
+    const subscriptionText = () => {
+        if (!user.subscribed) {
+            return "Glyph Free"
+        } else {
+            const d = new Date(user.subscription_renewal_date)
+            const renewal_date = `${d.getMonth() + 1}.${d.getDate()}.${d.getFullYear()}`
+            return `${user.subscription_price_tier.name} / ${renewal_date}`
+        }
+    }
 
     return (
         <LayoutWithNav>
@@ -150,7 +153,7 @@ export default function Profile() {
                         <Box sx={{ marginTop: "8px", display: "flex", flexWrap: "wrap", alignItems: "center", width: "100%" }}>
                             <EditableTextField placeholder={name} handleChange={handleNameChange} handleSubmit={handleNameSubmit} />
 
-                            <Typography color={theme.palette.common.subtitleBlue} variant="body2">Glyph Lite / 10.01.23</Typography>
+                            <Typography color={theme.palette.common.subtitleBlue} variant="body2">{subscriptionText()}</Typography>
                         </Box>
                     </Box>
                 </Box>
