@@ -13,9 +13,10 @@ import EditableTextField from "@/components/settings/editableTextField";
 import UsageBars from "@/components/settings/usageBars";
 import CollapsibleCard from "@/components/utility/cardTypes/collapsibleCard";
 import DataSelectTabs from "@/components/utility/common/dataSelectTabs";
+import { getIsSsrMobile } from "@/components/utility/contexts/isSsrMobileContext";
 import { getCookie } from "@/components/utility/cookie_helper";
 import DesktopLayout from "@/components/utility/layouts/desktop_layout";
-import { darkTheme, theme } from "@/components/utility/theme";
+import { theme } from "@/components/utility/theme";
 import { ChatBubble, Contacts, Settings } from "@mui/icons-material";
 import { Avatar, Box, Divider, Icon, Paper, Typography, useMediaQuery } from "@mui/material";
 import { useSearchParams } from "next/navigation";
@@ -24,11 +25,9 @@ import { useEffect, useState } from "react";
 import SettingsContainer from "../components/settings/settingsContainer";
 
 export default function Index() {
-    const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
-    const currentTheme = prefersDarkMode ? darkTheme : theme
-    const smallScreen = useMediaQuery(currentTheme.breakpoints.down("md"))
     const router = useRouter()
     const searchParams = useSearchParams()
+    const smallScreen = useMediaQuery(theme.breakpoints.down("md"))
 
     const [user, setUser] = useState({})
     const [name, setName] = useState("")
@@ -47,7 +46,6 @@ export default function Index() {
         if (smallScreen) {
             router.push("/chats")
         }
-
         const activeSession = getCookie("active_session")
         if (activeSession !== "true") {
             console.log("REDIRECTING TO LOGIN")
@@ -82,7 +80,7 @@ export default function Index() {
             })
         }
 
-    }, [searchParams])
+    }, [searchParams, smallScreen])
 
     const handleBotProfileClose = () => {
         getUserBots(setBots)
@@ -314,4 +312,18 @@ export default function Index() {
             </Box>
         </DesktopLayout>
     )
+}
+
+export async function getServerSideProps(context) {
+    const isMobile = getIsSsrMobile(context)
+    if (isMobile) {
+        return {
+            redirect: {
+                permanent: false,
+                destination: "/chats"
+            }
+        }
+    }
+
+    return { props: {} }
 }

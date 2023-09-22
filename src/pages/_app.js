@@ -1,18 +1,21 @@
-import '@/styles/globals.css'
-import styles from '@chatscope/chat-ui-kit-styles/dist/default/styles.min.css';
-import "@uiw/react-md-editor/markdown-editor.css";
+import { IsSsrMobileContext } from '@/components/utility/contexts/isSsrMobileContext';
+import { theme } from '@/components/utility/theme';
+import '@/styles/globals.css';
+import { useMediaQuery } from '@mui/material';
 import "@uiw/react-markdown-preview/markdown.css";
-import { AnimatePresence } from 'framer-motion'
-import { useEffect } from 'react'
-import Script from 'next/script'
+import "@uiw/react-md-editor/markdown-editor.css";
+import { AnimatePresence } from 'framer-motion';
+import Script from 'next/script';
+import { useEffect } from 'react';
 
 const env = process.env.NEXT_PUBLIC_ENVIRONMENT
 
 export default function App({ Component, pageProps }) {
+  const smallScreen = useMediaQuery(theme.breakpoints.down("md"))
+
   useEffect(() => {
     console.log("HERE")
     window.addEventListener("resize", (ev) => {
-      console.log(window.visualViewport.height)
       document.body.style.height = window.visualViewport.height + "px"
     }, true);
   }, [])
@@ -36,9 +39,11 @@ export default function App({ Component, pageProps }) {
           </>
         )
       }
-      <AnimatePresence mode="wait" initial={false}>
-        <Component {...pageProps} />
-      </AnimatePresence>
+      <IsSsrMobileContext.Provider value={pageProps.isSsrMobile}>
+        <AnimatePresence mode="wait" initial={false}>
+          <Component {...pageProps} />
+        </AnimatePresence>
+      </IsSsrMobileContext.Provider>
     </>
 
   )
