@@ -120,7 +120,7 @@ export default function Index() {
         if (!user.subscribed) {
             return "Glyph Free"
         } else {
-            const d = user.subscription_renewal_date
+            const d = new Date(user.subscription_renewal_date)
             const renewal_date = `${d.getMonth() + 1}.${d.getDate()}.${d.getFullYear()}`
             return `${user.subscription_price_tier.name} / ${renewal_date}`
         }
