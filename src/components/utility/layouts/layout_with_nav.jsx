@@ -8,6 +8,7 @@ import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { getCurrentUser } from '../../api/users.jsx';
 import Navbar from '../../navbar/navbar.jsx';
+import { getIsSsrMobile } from '../contexts/isSsrMobileContext.jsx';
 import { genericRequest } from '../request_helper.jsx';
 import { theme } from '../theme.jsx';
 
@@ -48,12 +49,12 @@ export default function LayoutWithNav({ showNavigation = true, children }) {
                 if (Notification.permission === 'granted') {
                     navigator.serviceWorker.register('/service-worker.js')
                         .then((registration) => {
-                            console.log("SW Registered: ", registration)
+                            console.log("SW Registered")
                         });
 
                     navigator.serviceWorker.register(`/service-worker.js?firebaseConfig=${JSON.stringify(FIREBASE_CONFIG)}`)
                         .then((registration) => {
-                            console.log("Firebase SW Registered: ", registration)
+                            console.log("Firebase SW Registered")
                         });
 
                     // update user record with notification permissions accepted
@@ -82,11 +83,10 @@ export default function LayoutWithNav({ showNavigation = true, children }) {
     }
 
     useEffect(() => {
-        getCurrentUser(handleUserInfo)
-
         if (!smallScreen) {
             router.push("/")
         }
+        getCurrentUser(handleUserInfo)
     }, [smallScreen])
 
     return (
@@ -124,4 +124,19 @@ export default function LayoutWithNav({ showNavigation = true, children }) {
             }
         </ThemeProvider>
     )
+}
+
+export async function getServerSideProps(context) {
+    const isMobile = getIsSsrMobile(context)
+    console.log("HERE", isMobile)
+    if (!isMobile) {
+        return {
+            redirect: {
+                permanent: false,
+                destination: "/"
+            }
+        }
+    }
+
+    return { props: {} }
 }
