@@ -1,9 +1,9 @@
-import { ArrowBack, Info, InfoOutlined, MoreVert, Notifications } from "@mui/icons-material";
-import { Avatar, Box, Divider, IconButton, List, ListItem, ListItemIcon, ListItemText, Typography, useTheme } from "@mui/material";
+import { ArrowBack, InfoOutlined, MoreVert, Notifications } from "@mui/icons-material";
+import { Avatar, Box, Divider, IconButton, ListItemIcon, ListItemText, Typography, useTheme } from "@mui/material";
+import { useRouter } from "next/router";
+import { StyledList } from "../styled/styledList";
 import { StyledListItem } from "../styled/styledListItem";
 import { StyledSwitch } from "../styled/styledSwitch";
-import { StyledList } from "../styled/styledList";
-import { useRouter } from "next/router";
 
 export default function GlyphImageHeader() {
     const theme = useTheme()
@@ -27,13 +27,17 @@ export default function GlyphImageHeader() {
             </Box>
             <Box sx={{ pt: 4 }}>
                 <StyledList>
-                    <StyledListItem sx={{ pl: 4 }}>
+                    <StyledListItem
+                        isButton={true}
+                        onClick={() => { router.push("https://discord.com/channels/1103348778104279110/1107050513696030871/1126965614930571356") }}
+                        sx={{ pl: 4 }}
+                    >
                         <ListItemIcon>
                             <InfoOutlined />
                         </ListItemIcon>
                         <ListItemText>
                             <Typography color={theme.palette.common.subtitleBlue} variant="body2">
-                                Need help? Visit support here
+                                Need help? Get support on our discord here
                             </Typography>
                         </ListItemText>
                     </StyledListItem>
