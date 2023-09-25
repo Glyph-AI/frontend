@@ -1,7 +1,7 @@
 import { getBotById, getUserBots } from "@/components/api/bots";
 import { getChatById, getChats } from "@/components/api/chats";
 import { getAvailableTexts, getTextById } from "@/components/api/texts";
-import { getCurrentUser, updateProfile } from "@/components/api/users";
+import { getCurrentUser, getStripeUrl, updateProfile } from "@/components/api/users";
 import CondensedBotList from "@/components/bots/condensedBotList";
 import NewBotModal from "@/components/bots/newBotModal";
 import ChatList from "@/components/chats/chatList";
@@ -43,12 +43,18 @@ export default function Index() {
     const [newBotModalVisible, setNewBotModalVisible] = useState(false)
     const [conversationModalVisible, setConversationModalVisible] = useState(false)
     const [uploadModalOpen, setUploadModalOpen] = useState(false)
+    const [stripeUrl, setStripeUrl] = useState("")
 
 
     useEffect(() => {
         if (smallScreen) {
             router.push("/chats")
         }
+
+        getStripeUrl((url) => {
+            setStripeUrl(url)
+        })
+
         const activeSession = getCookie("active_session")
         if (activeSession !== "true") {
             console.log("REDIRECTING TO LOGIN")
@@ -300,7 +306,7 @@ export default function Index() {
                                 }
                                 title={<Typography variant="body2">Settings</Typography>}
                             >
-                                <SettingsContainer user={user} />
+                                <SettingsContainer user={user} stripeUrl={stripeUrl} />
 
                             </CollapsibleCard>
                         </Box>
