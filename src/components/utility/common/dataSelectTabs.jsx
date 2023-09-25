@@ -282,7 +282,17 @@ export default function DataSelectTabs({ isSelectable, bot, setBot, user, conten
                     label={<Typography sx={{ fontWeight: 500 }} variant="body2">Tools</Typography>}
                 />
             </StyledTabs>
-            <Box className="test" sx={{ maxHeight: contentHeight || "90%" }}>
+            <Box
+                className="test"
+                sx={{
+                    maxHeight: contentHeight || "90%",
+                    overflowX: "scroll",
+                    scrollbarWidth: "none",
+                    "::-webkit-scrollbar": {
+                        display: "none"
+                    },
+                }}
+            >
                 <SwipeableViews
                     axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
                     index={tabValue}

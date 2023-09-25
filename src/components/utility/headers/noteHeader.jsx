@@ -1,13 +1,13 @@
 "use client";
-import { ArrowBack, Delete, MoreVert } from "@mui/icons-material";
-import { Box, Divider, IconButton, Typography, useTheme } from "@mui/material";
-import { useRouter } from "next/router";
-import { StyledAppBar } from "../styled/styledAppBar";
-import { StyledToolbar } from "../styled/styledToolbar";
-import { useEffect, useState } from "react";
-import { useSearchParams } from "next/navigation";
 import { deleteText, getAvailableTexts, saveText } from "@/components/api/texts";
 import EditableTextField from "@/components/settings/editableTextField";
+import { ArrowBack, Delete } from "@mui/icons-material";
+import { Box, Divider, IconButton, Typography, useTheme } from "@mui/material";
+import { useSearchParams } from "next/navigation";
+import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
+import { StyledAppBar } from "../styled/styledAppBar";
+import { StyledToolbar } from "../styled/styledToolbar";
 
 
 export default function NoteHeader({ note, setNote, user, desktopMode, setAvailableTexts }) {
@@ -69,7 +69,7 @@ export default function NoteHeader({ note, setNote, user, desktopMode, setAvaila
                     }
                     <Box sx={{ paddingLeft: "8px", flex: 1 }}>
                         <EditableTextField placeholder={note.name} handleChange={handleNameChange} handleSubmit={handleNameSubmit} />
-                        <Typography variant="body2" sx={{ color: theme.palette.common.subtitleBlue }}>{note.content.length} characters</Typography>
+                        <Typography variant="body2" sx={{ color: theme.palette.common.subtitleBlue }}>{note.content?.length} characters</Typography>
                     </Box>
                     <IconButton edge="end" onClick={() => { handleDelete() }}>
                         <Delete sx={{ color: desktopMode ? theme.palette.primary.main : "rgba(0,0,0,0.54)" }} />
