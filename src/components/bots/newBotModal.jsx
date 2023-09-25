@@ -1,270 +1,309 @@
-import { Dialog, DialogContent, DialogTitle, TextField, Box, Divider, Typography, DialogActions, Button, Select, MenuItem, InputLabel, Alert, AlertTitle, Drawer, List, ListItem, ListItemAvatar, Checkbox, ListItemText, useMediaQuery, Backdrop } from "@mui/material";
+import { CopyAll } from "@mui/icons-material";
+import { Box, Button, Dialog, ListItemButton, ListItemText, SwipeableDrawer, TextField, Typography, useMediaQuery, useTheme } from "@mui/material";
+import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import { genericRequest, getRequest } from "../utility/request_helper";
-import { useRouter } from "next/router";
-import { useUserContext } from "@/context/user";
-import { Note } from "@mui/icons-material";
-import { theme } from "../utility/theme";
+import { createBot, getBot, updateBotById } from "../api/bots";
+import { getPerosonas } from "../api/personas";
+import { getAvailableTexts } from "../api/texts";
+import { Puller, StyledBox } from "../chats/newChatModal";
+import DataSelectTabs from "../utility/common/dataSelectTabs";
+import { StyledList } from "../utility/styled/styledList";
+import { StyledListItem } from "../utility/styled/styledListItem";
 
-export default function NewBotModal({ open, handleClose }) {
+const emptyBot = {
+    id: null,
+    name: null,
+    persona_id: {},
+    enabled_tools: [],
+    enabled_texts: [],
+    sharing_enabled: false,
+    sharing_code: null,
+}
+
+export default function NewBotModal({ open, handleClose, user, editMode }) {
     const [name, setName] = useState("")
-    const [personas, setPersonas] = useState([])
-    const [botPersona, setBotPersona] = useState(null)
+    const [description, setDescription] = useState("")
+    const [bot, setBot] = useState(null)
     const [availableTexts, setAvailableTexts] = useState([])
-    const [availableTools, setAvailableTools] = useState([])
-    const [texts, setTexts] = useState([])
-    const [tools, setTools] = useState([])
-    const [botCode, setBotCode] = useState("")
-    const [user, setUser] = useState({})
-    const [showCreation, setShowCreation] = useState(false)
+    const [selectedPersonaId, setSelectedPersonaId] = useState(null)
+    const [personas, setPersonas] = useState([])
+    const [headerText, setHeaderText] = useState("Create Bot")
+
+    const searchParams = useSearchParams()
+
+    const buttonDisabled = !(selectedPersonaId && name)
+    const theme = useTheme()
     const smallScreen = useMediaQuery(theme.breakpoints.down("md"))
-    const router = useRouter()
 
-    const onAdd = () => {
-        if (botCode !== "") {
-            // we're adding a shared bot
-            const data = {
-                sharing_code: botCode
-            }
-            genericRequest("/bots/add-shared", "POST", JSON.stringify(data), () => {
-                setBotCode("")
-                handleClose()
-            }, { "Content-Type": "application/json" })
-        } else {
-            const data = {
-                name: name,
-                sharing_enabled: false,
-                persona_id: botPersona,
-                enabled_texts: texts,
-                enabled_tools: tools
-            }
+    const ContainerComponent = smallScreen ? SwipeableDrawer : Dialog
 
-            genericRequest("/bots", "POST", JSON.stringify(data), () => {
+    const handleCreate = () => {
+        if (!editMode) {
+            bot.name = name
+            bot.description = description
+            bot.persona_id = selectedPersonaId
+            createBot(bot, (data) => {
                 setName("")
-                setBotPersona(null)
-                setTexts([])
-                setTools([])
-                handleClose()
-            }, { "Content-Type": "application/json" })
+                setSelectedPersonaId(null)
+                setBot(emptyBot)
+                close()
+            })
+        } else {
+            bot.name = name
+            bot.description = description
+            updateBotById(bot.id, bot, (data) => {
+                setName("")
+                setBot(emptyBot)
+                close()
+            })
         }
+
     }
 
-    const getUser = () => {
-        getRequest("/profile", (data) => {
-            setUser(data)
-            if (data.allowed_bots == -1) {
-                setShowCreation(true)
-            } else if (data.bots_left <= 0) {
-                setShowCreation(false)
-            } else {
-                setShowCreation(true)
-            }
-
-            return true
-        })
+    const close = () => {
+        setBot(emptyBot)
+        setSelectedPersonaId(null)
+        setHeaderText("Create Bot")
+        setName("")
+        handleClose()
     }
 
-    const sortItems = (data) => {
-        const sorted = data.sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
-
-        return sorted
-    }
 
     useEffect(() => {
-        const params = new Proxy(new URLSearchParams(window.location.search), {
-            get: (searchParams, prop) => searchParams.get(prop),
-        });
+        // let bot_code = params.bot_code
+        // if (bot_code !== undefined || bot_code !== null) {
+        //     setBotCode(bot_code || "")
+        // }
+        getAvailableTexts(setAvailableTexts)
+        setBot(emptyBot)
+        getPerosonas(setPersonas)
+        let bot_id = searchParams.get("bot_id")
+        if (editMode && bot_id) {
+            getBot(bot_id, (data) => {
+                setBot(data);
+                setName(data.name);
+                setDescription(data.description)
+                setHeaderText(data.name);
+                setSelectedPersonaId(data.persona.id)
+            })
+        }
+    }, [searchParams])
 
-        let bot_code = params.bot_code
-        if (bot_code !== undefined || bot_code !== null) {
-            setBotCode(bot_code || "")
+    const toggleSharing = () => {
+        const data = {
+            id: bot.id,
+            sharing_enabled: !bot.sharing_enabled
         }
 
-        getRequest("/personas", (data) => {
-            setPersonas(data)
+        updateBotById(bot.id, data, (data) => {
+            setBot(data);
+            setName(data.name)
+            setHeaderText(data.name)
         })
-
-        getRequest("/texts", (data) => {
-            setAvailableTexts(sortItems(data))
-        })
-
-        getRequest("/tools", (data) => {
-            setAvailableTools(sortItems(data))
-        })
-
-        getUser()
-
-
-    }, [])
-
-    const addDisabled = () => {
-        if (botCode !== "") {
-            return false
-        } else if (name !== "" && botPersona !== null) {
-            return false
-        } else if (!showCreation) {
-            return false
-        }
-
-        return true
     }
 
-    const isEnabledForBot = (targetList, id) => {
-        if (targetList !== undefined) {
-            var item = targetList.find(i => i.id === id)
-            if (item === undefined) {
-                return false
-            } else {
-                return true
-            }
+    const handleStore = () => {
+        const data = {
+            id: bot.id,
+            available_in_store: true
         }
-        return false
+
+        updateBotById(bot.id, data, (data) => {
+            setBot(data);
+            setName(data.name)
+            setHeaderText(data.name)
+        })
     }
 
-    const handleCheck = (stateFunc, stateObj, item) => {
-        var newStateObj = stateObj
-        if (newStateObj.includes(item)) {
-            var filtered = newStateObj.filter(i => i.id !== item.id)
-            stateFunc(filtered)
-        } else {
-            stateFunc([...newStateObj, item])
-        }
-    }
-
-
-    const renderBotCreation = () => {
-        if (showCreation) {
-            return (
-                <Box sx={{ position: "relative" }}>
-                    <Backdrop sx={{ position: "absolute" }} open={botCode !== "" && botCode !== null} />
-                    <Box sx={{ display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "center" }}>
-                        <Typography sx={{ width: "100%", textAlign: "center", fontSize: 20, marginBottom: "8px" }}>Create New Bot</Typography>
-                        <TextField disabled={botCode !== "" && botCode !== null} fullWidth label="Name" value={name} onChange={(e) => { setName(e.target.value) }} />
-                    </Box>
-                    <Box sx={{ marginTop: "8px", display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "center" }}>
-                        <TextField select onChange={(e) => { setBotPersona(e.target.value) }} fullWidth label="Persona">
-                            {
-                                personas && personas.map((p, idx) => {
-                                    return (
-                                        <MenuItem key={idx} value={p.id}>{p.name}</MenuItem>
-                                    )
-                                })
-                            }
-                        </TextField>
-                    </Box>
-                    <Box sx={{ mt: "8px", display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "center" }}>
-                        <Typography variant="h6">Files & Notes</Typography>
-                    </Box>
-                    <Box sx={{ maxHeight: "150px", overflowY: "scroll", marginTop: "8px", display: "flex", flexWrap: "wrap", backgroundColor: "#f6f6f6" }}>
-                        <List>
-                            {
-                                availableTexts && availableTexts.map((item, idx) => {
-                                    return (
-                                        <>
-                                            <ListItem>
-                                                <ListItemAvatar>
-                                                    <Checkbox
-                                                        tabIndex={-1}
-                                                        disabledRipple
-                                                        onClick={() => { handleCheck(setTexts, texts, item) }}
-                                                        edge="start"
-                                                        checked={isEnabledForBot(texts, item.id)}
-                                                    />
-                                                </ListItemAvatar>
-                                                <ListItemText>
-                                                    {item.name || item.id}
-                                                </ListItemText>
-                                            </ListItem>
-                                            <Divider variant="inset" component="li" />
-                                        </>
-                                    )
-                                })
-
-                            }
-                        </List>
-                    </Box>
-                    <Box sx={{ mt: "8px", display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "center" }}>
-                        <Typography variant="h6">Tools</Typography>
-                    </Box>
-                    <Box sx={{ maxHeight: "150px", overflowY: "scroll", marginTop: "8px", display: "flex", flexWrap: "wrap", backgroundColor: "#f6f6f6" }}>
-                        <List>
-                            {
-                                availableTools && availableTools.map((item, idx) => {
-                                    if (item.user_configurable) {
-                                        return (
-                                            <>
-                                                <ListItem>
-                                                    <ListItemAvatar>
-                                                        <Checkbox
-                                                            tabIndex={-1}
-                                                            disabledRipple
-                                                            onClick={() => { handleCheck(setTools, tools, item) }}
-                                                            edge="start"
-                                                            checked={isEnabledForBot(tools, item.id)}
-                                                        />
-                                                    </ListItemAvatar>
-                                                    <ListItemText>
-                                                        {item.name}
-                                                    </ListItemText>
-                                                </ListItem>
-                                                <Divider variant="inset" component="li" />
-                                            </>
-                                        )
-                                    }
-                                })
-
-                            }
-                        </List>
-                    </Box>
-                    <Divider sx={{ mt: "8px", mb: "8px" }} flexItem >OR</Divider>
-                    <Box sx={{ position: "relative", display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "center" }}>
-                        <Backdrop sx={{ position: "absolute" }} open={name !== "" && name !== null} />
-                        <Typography sx={{ width: "100%", textAlign: "center", fontSize: 20, marginBottom: "8px" }}>Sharing Code</Typography>
-                        <TextField disabled={name !== "" && name !== null} fullWidth label="Code" value={botCode} onChange={(e) => { setBotCode(e.target.value) }} />
-                    </Box>
-                </Box>
-            )
-        } else {
+    const renderSharing = () => {
+        if (editMode) {
             return (
                 <>
-                    <Box sx={{ display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "center" }}>
-                        <Typography sx={{ width: "100%", textAlign: "center", fontSize: 20, marginBottom: "8px" }}>Create New Bot</Typography>
+                    <Box sx={{ mt: "30px", mb: "16px" }}>
+                        <Typography sx={{ fontWeight: 700, }} color={theme.palette.common.textSecondary} variant="body2">Sharing Settings</Typography>
                     </Box>
-                    <Alert severity="info" onClick={() => { router.push("/profile") }}>
-                        <AlertTitle>User Not Subscribed</AlertTitle>
-                        You cannot create new bots unless you are subscribed! Click Here!
-                    </Alert>
+                    <Box sx={{ display: "flex", alignItems: "center", width: "100%" }}>
+                        <Box sx={{ flex: 1, pl: 1 }}>
+                            <Typography sx={{ fontWeight: 500, fontSize: "16px" }} variant="body2">Sharing</Typography>
+                        </Box>
+                        <Button variant="text" onClick={toggleSharing}>
+                            {bot?.sharing_enabled ? "Disable" : "Enable"} Sharing
+                        </Button>
+                    </Box>
+                    {
+                        bot?.sharing_enabled && (
+                            <>
+                                <Box sx={{ display: "flex", alignItems: "center", width: "100%" }}>
+                                    <Box sx={{ flex: 1, pl: 1 }}>
+                                        <Typography
+                                            color={theme.palette.common.textSecondary}
+                                            variant="body2"
+                                        >
+                                            Code: {bot.sharing_code}
+                                            <CopyAll
+                                                sx={{ ml: "4px", fontSize: "14px" }}
+                                                onClick={() => {
+                                                    navigator.clipboard.writeText(bot.sharing_code)
+                                                }}
+                                            />
+                                        </Typography>
+                                    </Box>
+                                </Box>
+                                <Box sx={{ display: "flex", alignItems: "center", width: "100%" }}>
+                                    <Box sx={{ flex: 1, pl: 1, pt: 1, pb: 1 }}>
+                                        <Typography
+                                            color={theme.palette.common.textSecondary}
+                                            variant="body2"
+                                        >
+                                            Sharing URL: {`glyphassistant.com/bots?bot_code=${bot.sharing_code}`}
+                                            <CopyAll
+                                                sx={{ ml: "4px", fontSize: "14px" }}
+                                                onClick={() => {
+                                                    navigator.clipboard.writeText(`glyphassistant.com/bots?bot_code=${bot.sharing_code}`)
+                                                }}
+                                            />
+                                        </Typography>
+                                    </Box>
+                                </Box>
+                            </>
+                        )
+                    }
+                    <Box sx={{ display: "flex", alignItems: "center", width: "100%" }}>
+                        <Box sx={{ flex: 1, pl: 1 }}>
+                            <Typography sx={{ fontWeight: 500, fontSize: "16px" }} variant="body2">Bot Store</Typography>
+                        </Box>
+                        <Button disabled={bot?.available_in_store} variant="text" onClick={handleStore}>
+                            {bot?.available_in_store ? "Already In Store" : "Add to Bot Store"}
+                        </Button>
+                    </Box>
+                </>
+            )
+        }
+    }
+
+    const renderPersonas = () => {
+        if (!editMode) {
+            return (
+                <>
+                    <Box sx={{ mt: "30px", mb: "16px" }}>
+                        <Typography sx={{ fontWeight: 700, }} color={theme.palette.common.textSecondary} variant="body2">Select Persona</Typography>
+                    </Box>
+                    <StyledList>
+                        {
+                            personas && personas.map((item, idx) => (
+                                <StyledListItem
+                                    key={idx}
+                                    onClick={() => { setSelectedPersonaId(item.id) }}
+                                    sx={{ backgroundColor: item.id === selectedPersonaId ? theme.palette.common.selectedBackground : null }}
+                                >
+                                    <ListItemButton disableRipple>
+                                        <ListItemText>
+                                            {item.name}
+                                        </ListItemText>
+                                    </ListItemButton>
+                                </StyledListItem>
+                            ))
+                        }
+                    </StyledList>
                 </>
             )
         }
 
-        return null
     }
 
     return (
-        <Drawer
-            anchor={"bottom"}
+        <ContainerComponent
+            anchor="bottom"
             open={open}
-            onClose={handleClose}
+            onClose={close}
+            onOpen={() => { }}
+            sx={{ "& .MuiPaper-root": { width: smallScreen ? "100%" : "50%", height: "100%" } }}
         >
-            <Box sx={{ display: "flex", alignItems: "center", justifyContent: "center", padding: "8px", flexWrap: "wrap", width: "100%" }}>
-                <Box sx={{ width: "100%", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                    <Typography variant="h5">Add Bot</Typography>
+            {
+                smallScreen && (
+                    <StyledBox
+                        sx={{
+                            position: 'absolute',
+                            top: 10,
+                            borderTopLeftRadius: 8,
+                            borderTopRightRadius: 8,
+                            visibility: 'visible',
+                            right: 0,
+                            left: 0,
+                            marginBottom: "8px"
+                        }}
+                    >
+                        <Puller />
+                    </StyledBox>
+                )
+            }
+            <Box
+                sx={{ padding: "16px" }}
+            >
+                <Box sx={{ marginTop: smallScreen ? "24px" : 0 }}>
+                    <Typography variant="h5">{headerText}</Typography>
                 </Box>
-                <Box sx={{ marginBottom: "16px" }}>
+                <Box sx={{ width: "100%", display: "flex", marginTop: "32px", p: 1 }}>
+                    <Box sx={{ flex: 1, marginRight: "24px" }}>
+                        <TextField
+                            value={name}
+                            onChange={(ev) => { setName(ev.target.value) }}
+                            fullWidth variant="standard"
+                            placeholder="Name this bot"
+                        />
+                    </Box>
+                    <Box width={{ width: "20%", display: "flex", justifyContent: "right", "& .MuiButtonBase-root": { padding: "4px 8px" } }}>
+                        <Button
+                            disabled={buttonDisabled}
+                            variant="contained"
+                            onClick={handleCreate}
+
+                        >
+                            {editMode ? "Update" : "Create"}
+                        </Button>
+                    </Box>
+                </Box>
+                <Box sx={{ mt: "30px", mb: "16px" }}>
+                    <Typography sx={{ fontWeight: 700, }} color={theme.palette.common.textSecondary} variant="body2">Description</Typography>
+                </Box>
+                <Box sx={{ width: "100%", display: "flex", marginTop: "32px", p: 1 }}>
+                    <Box sx={{ flex: 1, marginRight: "24px" }}>
+                        <TextField
+                            value={description}
+                            onChange={(ev) => { setDescription(ev.target.value) }}
+                            fullWidth
+                            multiline
+                            minRows={2}
+                            maxRows={10}
+                            placeholder="Add a Description..."
+                            variant="outlined"
+                            size="small"
+                            sx={{ border: '1px solid #2F80ED', borderRadius: "8px" }}
+                        />
+                    </Box>
+                </Box>
+                <Box sx={{ height: "75%", pb: 4 }}>
                     {
-                        renderBotCreation()
+                        renderSharing()
                     }
-                </Box>
-                <Box sx={{ width: "100%", display: "flex" }}>
-                    <Box sx={{ display: "flex", justifyContent: "flex-start", width: "50%", padding: "0 0 8px 24px" }}>
-                        <Button varient="conteint" onClick={() => { handleClose() }}>Cancel</Button>
+                    {
+                        renderPersonas()
+                    }
+                    <Box sx={{ mt: "30px", mb: "16px" }}>
+                        <Typography sx={{ fontWeight: 700, }} color={theme.palette.common.textSecondary} variant="body2">Enable Notes, Tools & Files</Typography>
                     </Box>
-                    <Box sx={{ display: "flex", justifyContent: "flex-end", width: "50%", padding: "0 24px 8px 0" }}>
-                        <Button variant="contained" disabled={addDisabled()} onClick={() => { onAdd() }}>Add</Button>
-                    </Box>
+                    <DataSelectTabs
+                        contentHeight={"50%"}
+                        setBot={setBot}
+                        isSelectable={true}
+                        bot={bot}
+                        user={user}
+                        createMode={!editMode}
+                        avaialbleTexts={availableTexts}
+                        setAvailableTexts={setAvailableTexts}
+                    />
                 </Box>
             </Box>
-        </Drawer>
+        </ContainerComponent>
     )
 }
