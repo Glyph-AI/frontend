@@ -1,4 +1,4 @@
-import { Mic, Send } from "@mui/icons-material";
+import { Send } from "@mui/icons-material";
 import { Box, Divider, IconButton, TextField, useTheme } from "@mui/material";
 
 export default function MessageInput({ user, inputProps, sendProps, onSubmit, desktopMode }) {
@@ -38,13 +38,13 @@ export default function MessageInput({ user, inputProps, sendProps, onSubmit, de
             <IconButton name="submit" type="submit" {...sendProps} sx={{ marginRight: "8px" }}>
                 <Send />
             </IconButton>
-            {
+            {/* {
                 user.conversation_mode && (
                     <IconButton sx={{ backgroundColor: theme.palette.common.blue }}>
                         <Mic sx={{ color: "white" }} />
                     </IconButton>
                 )
-            }
+            } */}
 
         </Box>
     )
