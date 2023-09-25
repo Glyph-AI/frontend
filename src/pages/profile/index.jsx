@@ -159,7 +159,7 @@ export default function Profile() {
                 </Box>
                 <UsageBars user={user} dense={smallScreen} />
                 <Divider sx={{ width: "100%" }} />
-                <SettingsContainer user={user} />
+                <SettingsContainer user={user} stripeUrl={stripeUrl} />
             </BackgroundBox>
             <FileUploadModal
                 open={uploadModalOpen}

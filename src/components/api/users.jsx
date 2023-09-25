@@ -17,3 +17,9 @@ export const updateProfile = (data, callback) => {
         callback(data)
     })
 }
+
+export const getStripeUrl = (callback) => {
+    getRequest("/subscriptions/customer-portal-session", (data) => {
+        callback(data.url)
+    })
+}
