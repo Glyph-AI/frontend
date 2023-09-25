@@ -15,14 +15,16 @@ import CollapsibleCard from "@/components/utility/cardTypes/collapsibleCard";
 import DataSelectTabs from "@/components/utility/common/dataSelectTabs";
 import { getIsSsrMobile } from "@/components/utility/contexts/isSsrMobileContext";
 import { getCookie } from "@/components/utility/cookie_helper";
+import FileUploadModal from "@/components/utility/fileUploadModal";
 import DesktopLayout from "@/components/utility/layouts/desktop_layout";
 import { theme } from "@/components/utility/theme";
-import { ChatBubble, Contacts, Settings } from "@mui/icons-material";
-import { Avatar, Box, Divider, Icon, Paper, Typography, useMediaQuery } from "@mui/material";
+import { ChatBubble, Contacts, FileUpload, Settings } from "@mui/icons-material";
+import { Avatar, Badge, Box, Divider, Icon, Paper, Typography, useMediaQuery } from "@mui/material";
 import { useSearchParams } from "next/navigation";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import SettingsContainer from "../components/settings/settingsContainer";
+import { SmallAvatar } from "./profile";
 
 export default function Index() {
     const router = useRouter()
@@ -40,6 +42,7 @@ export default function Index() {
     const [selectedBot, setSelectedBot] = useState({})
     const [newBotModalVisible, setNewBotModalVisible] = useState(false)
     const [conversationModalVisible, setConversationModalVisible] = useState(false)
+    const [uploadModalOpen, setUploadModalOpen] = useState(false)
 
 
     useEffect(() => {
@@ -207,6 +210,27 @@ export default function Index() {
                                 }
                                 title={<Typography variant="body2">Profile</Typography>}
                             >
+                                <Box sx={{ display: "flex", width: "100%", justifyContent: "center", pl: 3, pt: 1 }}>
+                                    <Badge
+                                        overlap="circular"
+                                        sx={{ padding: "-8px" }}
+                                        onClick={() => { setUploadModalOpen(true) }}
+                                        badgeContent={
+                                            <SmallAvatar>
+                                                <FileUpload />
+                                            </SmallAvatar>
+                                        }
+                                        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+                                    >
+                                        <Avatar
+                                            src={
+                                                user.profile_picture_location
+                                            }
+                                            sx={{ height: 64, width: 64, fontSize: 90, backgroundColor: "#fff" }}
+                                            alt={user.first_name}
+                                        />
+                                    </Badge>
+                                </Box>
                                 <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
                                     <Box sx={{ pl: 1 }}>
                                         <EditableTextField placeholder={name} handleChange={handleNameChange} handleSubmit={handleNameSubmit} />
@@ -216,6 +240,12 @@ export default function Index() {
                                     <Typography color={theme.palette.common.subtitleBlue} variant="body2">{subscriptionText()}</Typography>
                                 </Box>
                                 <UsageBars user={user} dense={false} />
+                                <FileUploadModal
+                                    open={uploadModalOpen}
+                                    handleClose={() => { setUploadModalOpen(false) }}
+                                    setRecord={setUser}
+                                    uploadUrl={"/profile/picture"}
+                                />
                             </CollapsibleCard>
                         </Box>
                         <Box sx={{ width: "100%", pb: 4 }}>

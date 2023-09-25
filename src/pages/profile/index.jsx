@@ -18,7 +18,7 @@ import SettingsContainer from "../../components/settings/settingsContainer";
 
 
 
-const SmallAvatar = styled(Avatar)(({ theme }) => ({
+export const SmallAvatar = styled(Avatar)(({ theme }) => ({
     width: 32,
     height: 32,
     color: "rgba(255, 255, 255, 1)",
