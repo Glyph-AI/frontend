@@ -1,4 +1,4 @@
-import { getRequest, genericRequest } from "../utility/request_helper"
+import { genericRequest, getRequest } from "../utility/request_helper"
 
 const getChatDateSafe = (chat) => {
     if (chat.last_message === null) {
@@ -35,5 +35,11 @@ export const sendMessage = (data, chatId, callback) => {
 export const getChatById = (chat_id, setter) => {
     getRequest(`/chats/${chat_id}`, (data) => {
         setter(data)
+    })
+}
+
+export const getChatTokenById = (chat_id, setter) => {
+    getRequest(`/chats/token/${chat_id}`, (data) => {
+        setter(data.chat_token)
     })
 }

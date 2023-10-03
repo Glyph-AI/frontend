@@ -1,6 +1,7 @@
 "use client";
 import NewBotModal from "@/components/bots/newBotModal";
-import { ArrowBack, MoreVert } from "@mui/icons-material";
+import ChatApiKeyModal from "@/components/chats/chatAPIKeyModal";
+import { ArrowBack, Hub, MoreVert } from "@mui/icons-material";
 import { Avatar, Box, Divider, IconButton, Typography, useTheme } from "@mui/material";
 import { useSearchParams } from "next/navigation";
 import { useRouter } from "next/router";
@@ -11,6 +12,7 @@ import { StyledToolbar } from "../styled/styledToolbar";
 
 export default function ChatHeader({ bot, user, chat, desktopMode }) {
     const [botModalOpen, setBotModalOpen] = useState(false)
+    const [apiModalOpen, setApiModalOpen] = useState(false)
     const theme = useTheme()
     const router = useRouter()
     const searchParams = useSearchParams()
@@ -111,6 +113,13 @@ export default function ChatHeader({ bot, user, chat, desktopMode }) {
                             </IconButton>
                         )
                     }
+                    {
+                        desktopMode && (
+                            <IconButton edge="end" onClick={() => { setApiModalOpen(true) }}>
+                                <Hub sx={{ color: desktopMode ? theme.palette.primary.main : "rgba(0,0,0,0.54)" }} />
+                            </IconButton>
+                        )
+                    }
 
                 </StyledToolbar>
                 <Divider sx={{ width: "100%" }} />
@@ -122,6 +131,11 @@ export default function ChatHeader({ bot, user, chat, desktopMode }) {
                             user={user}
                             editMode={true}
                         />
+                    )
+                }
+                {
+                    desktopMode && (
+                        <ChatApiKeyModal open={apiModalOpen} handleClose={() => { setApiModalOpen(false) }} chatId={chat.id} />
                     )
                 }
 
